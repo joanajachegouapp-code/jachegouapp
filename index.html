@@ -599,7 +599,7 @@ async function chamarAI(prompt, texto) {
   const r = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
     headers: { 'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true' },
-    body: JSON.stringify({ model:'claude-haiku-4-5-20251001', max_tokens:500, messages:[{role:'user',content:prompt+'\n'+texto}] })
+    body: JSON.stringify({ model:'claude-sonnet-4-6', max_tokens:500, messages:[{role:'user',content:prompt+'\n'+texto}] })
   });
   const d = await r.json();
   const raw = d.content?.find(b => b.type==='text')?.text || '{}';
@@ -616,25 +616,55 @@ async function processarEmail() {
     if (!p) { document.getElementById('loading').style.display='none'; return; }
 
     if (p.tipo === 'atualizacao') {
-      // Tentar associar automaticamente
+      // Tentar associar automaticamente por rastreio
       const rastreio = (p.rastreio||'').toLowerCase().trim();
+      const loja = (p.loja||'').toLowerCase().trim();
       let idx = -1;
+
       if (rastreio) {
         idx = orders.findIndex(o => o.estado !== 'entregue' && o.rastreio && o.rastreio.toLowerCase().trim() === rastreio);
         if (idx === -1) idx = orders.findIndex(o => o.estado !== 'entregue' && o.rastreio && (o.rastreio.toLowerCase().includes(rastreio) || rastreio.includes(o.rastreio.toLowerCase().trim())));
       }
+      // Tentar associar por loja se não encontrou por rastreio
+      if (idx === -1 && loja) {
+        idx = orders.findIndex(o => o.estado !== 'entregue' && (o.loja||'').toLowerCase().trim() === loja);
+      }
+
       document.getElementById('loading').style.display = 'none';
+
       if (idx !== -1) {
+        // Associar ao card existente
+        if (p.rastreio) orders[idx].rastreio = p.rastreio;
         if (p.local) orders[idx].local = p.local;
         if (p.pin) orders[idx].pin = p.pin;
         if (p.dataLimite) orders[idx].dataLimite = p.dataLimite;
         if (p.estado && p.estado !== 'manter') orders[idx].estado = p.estado;
-        guardar(); document.getElementById('email-txt').value = '';
-        goTab('ativas'); toast(p.pin ? '✓ ' + orders[idx].loja + ' · pin: ' + p.pin : '✓ encomenda atualizada');
+        guardar();
+        document.getElementById('email-txt').value = '';
+        goTab('ativas');
+        toast(p.pin ? '✓ ' + orders[idx].loja + ' · pin: ' + p.pin : '✓ encomenda atualizada');
       } else {
-        mostrarAssociar(p);
+        // Criar card novo com os dados disponíveis do email de transportadora
+        orders.unshift({
+          loja: p.loja || 'Transportadora',
+          produto: p.produto || '',
+          data: p.data || '',
+          dataLimite: p.dataLimite || '',
+          local: p.local || '',
+          pin: p.pin || '',
+          codigo: p.codigo || '',
+          rastreio: p.rastreio || '',
+          estado: (p.estado && p.estado !== 'manter') ? p.estado : 'enviado',
+          tipo: p.tipo_entrega || 'recolha',
+          criado: new Date().toISOString()
+        });
+        guardar();
+        document.getElementById('email-txt').value = '';
+        goTab('ativas');
+        toast('✓ nova encomenda criada');
       }
     } else {
+      // Email de confirmação de compra — mostrar formulário para confirmar
       document.getElementById('f-loja').value = p.loja||'';
       document.getElementById('f-produto').value = p.produto||'';
       document.getElementById('f-data').value = p.data||'';
@@ -692,41 +722,7 @@ function tipoChange() {
   if (lbl) lbl.textContent = tipo === 'casa' ? 'data prevista de entrega' : 'data limite de levantamento';
 }
 
-// ── ASSOCIAR EMAIL ────────────────────────────────────
-function mostrarAssociar(dados) {
-  window._assocDados = dados;
-  const ativas = orders.filter(o => o.estado !== 'entregue');
-  const modal = document.createElement('div');
-  modal.className = 'modal-bg'; modal.id = 'modal-assoc';
-  const itens = ativas.map(o => {
-    const idx = orders.indexOf(o);
-    return '<div style="background:#fff;border-radius:14px;padding:14px 16px;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between">' +
-      '<div><div style="font-size:15px;font-weight:800">' + (o.loja||'Loja') + '</div>' +
-      '<div style="font-size:12px;color:#888">' + (o.produto||'—') + '</div>' +
-      (o.rastreio?'<div style="font-size:11px;color:#bbb;font-family:monospace">'+o.rastreio+'</div>':'') + '</div>' +
-      '<button onclick="associar(' + idx + ')" style="font-size:13px;font-weight:700;color:#E8604A;background:#FFF0EE;border:none;cursor:pointer;padding:6px 12px;border-radius:8px;font-family:inherit">associar</button>' +
-    '</div>';
-  }).join('') || '<div style="color:#888;text-align:center;padding:1rem">não tens encomendas ativas.</div>';
 
-  modal.innerHTML = '<div class="modal-box"><button class="modal-close" onclick="fecharModal(\'modal-assoc\')">✕</button>' +
-    '<h2>a qual pertence?</h2>' +
-    '<div class="modal-sub">' + (dados.rastreio ? 'código: ' + dados.rastreio + ' — sem correspondência automática' : 'email sem número de rastreamento') + '</div>' +
-    itens +
-    '<button class="btn" onclick="fecharModal(\'modal-assoc\')" style="margin-top:8px;border:1.5px solid #e5e5e0">cancelar</button></div>';
-  document.body.appendChild(modal);
-}
-
-function associar(idx) {
-  const d = window._assocDados || {};
-  if (d.local) orders[idx].local = d.local;
-  if (d.pin) orders[idx].pin = d.pin;
-  if (d.dataLimite) orders[idx].dataLimite = d.dataLimite;
-  if (d.estado && d.estado !== 'manter') orders[idx].estado = d.estado;
-  if (d.rastreio && !orders[idx].rastreio) orders[idx].rastreio = d.rastreio;
-  guardar(); fecharModal('modal-assoc');
-  document.getElementById('email-txt').value = '';
-  goTab('ativas'); toast(d.pin ? '✓ pin: ' + d.pin : '✓ encomenda atualizada');
-}
 
 // ── EDITAR ────────────────────────────────────────────
 function abrirEditar(idx) {
