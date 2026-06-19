@@ -12,7 +12,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 body { font-family: 'Inter', -apple-system, sans-serif; background: #f5f5f0; color: #111; min-height: 100vh; }
- 
+
 /* ── HOMEPAGE ── */
 #home { position: fixed; inset: 0; background: #fff; z-index: 9999; display: flex; flex-direction: column; }
 #home.off { display: none; }
@@ -26,20 +26,20 @@ body { font-family: 'Inter', -apple-system, sans-serif; background: #f5f5f0; col
 .hbtn-e { background: #111; color: #fff; }
 .hbtn-g .gdot { width: 20px; height: 20px; border-radius: 50%; background: #E8604A; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 900; color: #fff; flex-shrink: 0; }
 #home-terms { font-size: 11px; color: #bbb; text-align: center; }
- 
+
 /* ── APP ── */
 #app { display: none; }
 #app.on { display: block; padding-bottom: 80px; }
- 
+
 /* ── HEADER ── */
 .top-bar { background: #f5f5f0; padding: 52px 20px 10px; position: sticky; top: 0; z-index: 10; }
 .app-title { font-size: 28px; font-weight: 900; letter-spacing: -1px; }
 .app-sub { font-size: 13px; color: #888; margin-top: 2px; font-weight: 500; }
- 
+
 /* ── TABS ── */
 .tab { display: none; }
 .tab.on { display: block; }
- 
+
 /* ── CARDS ── */
 .cards { padding: 10px 16px; display: flex; flex-direction: column; gap: 10px; }
 .card { border-radius: 24px; padding: 20px 20px 16px; display: flex; flex-direction: column; }
@@ -65,7 +65,7 @@ body { font-family: 'Inter', -apple-system, sans-serif; background: #f5f5f0; col
 .btn-entregue { flex: 1; padding: 12px 8px; border-radius: 14px; border: none; background: rgba(0,0,0,0.22); color: #fff; font-size: 13px; font-weight: 800; cursor: pointer; font-family: inherit; }
 .btn-update { width: 100%; margin-top: 6px; padding: 7px; border-radius: 10px; border: none; background: transparent; font-size: 11px; font-weight: 600; cursor: pointer; color: #fff; opacity: 0.35; font-family: inherit; }
 .card-nota { font-size: 12px; background: rgba(0,0,0,0.1); border-radius: 10px; padding: 8px 12px; margin-top: 6px; line-height: 1.5; color: #fff; }
- 
+
 /* ── HISTÓRICO ── */
 .hist-wrap { padding: 0 16px; }
 .hist-month { font-size: 11px; font-weight: 700; color: #888; letter-spacing: 1px; text-transform: uppercase; padding: 16px 0 8px; }
@@ -77,7 +77,7 @@ body { font-family: 'Inter', -apple-system, sans-serif; background: #f5f5f0; col
 .hist-right { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; flex-shrink: 0; }
 .hist-date { font-size: 11px; color: #bbb; font-weight: 600; }
 .btn-reativar { font-size: 11px; font-weight: 700; color: #E8604A; background: none; border: none; cursor: pointer; font-family: inherit; }
- 
+
 /* ── ADICIONAR ── */
 .add-wrap { padding: 16px; }
 .add-hint { font-size: 14px; color: #666; background: #fff; border-radius: 16px; padding: 14px 16px; margin-bottom: 14px; line-height: 1.5; }
@@ -95,7 +95,7 @@ body { font-family: 'Inter', -apple-system, sans-serif; background: #f5f5f0; col
 .spinner { display: inline-block; width: 18px; height: 18px; border: 2px solid #e5e5e0; border-top-color: #111; border-radius: 50%; animation: spin 0.8s linear infinite; margin-right: 8px; vertical-align: middle; }
 @keyframes spin { to { transform: rotate(360deg); } }
 .extracted { display: none; margin-top: 14px; }
- 
+
 /* ── CALENDÁRIO ── */
 .cal-wrap { padding: 16px; }
 .cal-nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
@@ -118,7 +118,7 @@ body { font-family: 'Inter', -apple-system, sans-serif; background: #f5f5f0; col
 .cal-legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: #666; font-weight: 600; }
 .cal-dot { width: 10px; height: 10px; border-radius: 50%; }
 .cal-detail-title { font-size: 15px; font-weight: 800; margin-bottom: 10px; }
- 
+
 /* ── CONFIG ── */
 .cfg-wrap { padding: 16px; }
 .cfg-card { background: #fff; border-radius: 18px; padding: 18px; margin-bottom: 12px; }
@@ -127,28 +127,28 @@ body { font-family: 'Inter', -apple-system, sans-serif; background: #f5f5f0; col
 .api-input { width: 100%; padding: 12px 14px; border: 1.5px solid #e5e5e0; border-radius: 12px; font-size: 14px; font-family: monospace; color: #111; background: #f5f5f0; }
 .api-save { margin-top: 8px; padding: 12px; border: none; border-radius: 12px; background: #111; color: #fff; font-size: 14px; font-weight: 700; width: 100%; cursor: pointer; font-family: inherit; }
 .api-ok { font-size: 13px; color: #2a7a2a; margin-top: 6px; display: none; font-weight: 600; }
- 
+
 /* ── MODAIS ── */
-.modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 1000; display: flex; align-items: flex-end; }
-.modal-box { background: #f5f5f0; border-radius: 24px 24px 0 0; padding: 20px 20px 40px; width: 100%; max-height: 88vh; overflow-y: auto; }
+.modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 1000; display: flex; align-items: flex-end; justify-content: center; }
+.modal-box { background: #f5f5f0; border-radius: 24px 24px 0 0; padding: 20px 20px 40px; width: 100%; max-height: 88vh; overflow-y: auto; -webkit-overflow-scrolling: touch; }
 .modal-box h2 { font-size: 20px; font-weight: 900; margin-bottom: 4px; letter-spacing: -0.5px; }
 .modal-sub { font-size: 13px; color: #888; margin-bottom: 16px; }
 .modal-close { float: right; background: #e5e5e0; border: none; border-radius: 50%; width: 30px; height: 30px; font-size: 16px; cursor: pointer; }
- 
+
 /* ── NAV ── */
 .nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(245,245,240,0.95); backdrop-filter: blur(12px); border-top: 1px solid #e5e5e0; display: none; padding: 10px 0 24px; z-index: 20; }
 .nav.on { display: flex; }
 .nav-btn { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; font-size: 9px; color: #aaa; cursor: pointer; padding: 4px 0; border: none; background: none; font-family: inherit; font-weight: 600; }
 .nav-btn.on { color: #111; }
 .nav-dot { width: 4px; height: 4px; border-radius: 50%; background: #111; }
- 
+
 /* ── TOAST ── */
 .toast { position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%); background: #111; color: #fff; padding: 12px 24px; border-radius: 20px; font-size: 14px; font-weight: 600; z-index: 9998; opacity: 0; transition: opacity 0.3s; pointer-events: none; white-space: nowrap; }
 .toast.on { opacity: 1; }
- 
+
 /* ── NOTIF ── */
 .notif-bar { background: #E8604A; color: #fff; padding: 10px 16px; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: space-between; cursor: pointer; }
- 
+
 /* ── EMPTY ── */
 .empty { text-align: center; padding: 4rem 1rem; color: #aaa; }
 .empty-icon { font-size: 48px; margin-bottom: 12px; }
@@ -156,7 +156,7 @@ body { font-family: 'Inter', -apple-system, sans-serif; background: #f5f5f0; col
 </style>
 </head>
 <body>
- 
+
 <!-- HOMEPAGE -->
 <div id="home">
   <div id="home-hero">
@@ -172,24 +172,24 @@ body { font-family: 'Inter', -apple-system, sans-serif; background: #f5f5f0; col
     <div id="home-terms">ao entrar aceitas os termos e privacidade</div>
   </div>
 </div>
- 
+
 <!-- APP -->
 <div id="app">
   <div class="top-bar">
     <div class="app-title">Já Chegou<span style="color:#E8604A">?</span></div>
     <div class="app-sub" id="subtitle">0 ativas</div>
   </div>
- 
+
   <div id="notif-wrap"></div>
- 
+
   <div id="tab-ativas" class="tab on">
     <div class="cards" id="cards-list"></div>
   </div>
- 
+
   <div id="tab-historico" class="tab">
     <div class="hist-wrap" id="hist-list"></div>
   </div>
- 
+
   <div id="tab-adicionar" class="tab">
     <div class="add-wrap">
       <div class="add-hint">cola qualquer email de encomenda — confirmação de loja ou transportadora. a IA identifica e trata automaticamente.</div>
@@ -224,7 +224,7 @@ body { font-family: 'Inter', -apple-system, sans-serif; background: #f5f5f0; col
       </div>
     </div>
   </div>
- 
+
   <div id="tab-calendario" class="tab">
     <div class="cal-wrap">
       <div class="cal-nav">
@@ -248,7 +248,7 @@ body { font-family: 'Inter', -apple-system, sans-serif; background: #f5f5f0; col
       <div id="cal-detail"></div>
     </div>
   </div>
- 
+
   <div id="tab-conta" class="tab">
     <div class="cfg-wrap">
       <div class="cfg-card">
@@ -278,7 +278,7 @@ body { font-family: 'Inter', -apple-system, sans-serif; background: #f5f5f0; col
     </div>
   </div>
 </div>
- 
+
 <!-- NAV -->
 <nav class="nav" id="nav">
   <button class="nav-btn on" id="nb-ativas" onclick="goTab('ativas')">
@@ -302,9 +302,9 @@ body { font-family: 'Inter', -apple-system, sans-serif; background: #f5f5f0; col
     conta
   </button>
 </nav>
- 
+
 <div class="toast" id="toast"></div>
- 
+
 <script>
 // ── DADOS ──────────────────────────────────────────────
 const LOJAS = {
@@ -330,7 +330,7 @@ const LOJAS = {
   'lanidor':{'tipo':'casa','sep':false,'nota':'entrega em casa'},
   'wook':{'tipo':'casa','sep':false,'nota':'entrega em casa'},
 };
- 
+
 const ESTADO_CFG = {
   vermelho:   { label: 'Para Levantar',       cls: 'c-red' },
   enviado:    { label: 'Enviada',         cls: 'c-orange' },
@@ -339,7 +339,7 @@ const ESTADO_CFG = {
 const ORDEM = ['vermelho','enviado','preparacao'];
 const MESES = ['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
 const MESES_S = ['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
- 
+
 function carregarDados() {
   const chaves = ['chegou_orders','encomendas_v4','encomendas_v3','encomendas_v2','encomendas'];
   for (const k of chaves) {
@@ -358,16 +358,16 @@ function carregarDados() {
   }
   return [];
 }
- 
+
 let orders = carregarDados();
- 
+
 function guardar() {
   localStorage.setItem('chegou_orders', JSON.stringify(orders));
   renderAtivas(); renderHistorico(); atualizarSub();
   const cal = document.getElementById('tab-calendario');
   if (cal && cal.classList.contains('on')) renderCal();
 }
- 
+
 function atualizarSub() {
   const n = orders.filter(o => o.estado !== 'entregue').length;
   const lev = orders.filter(o => o.estado === 'vermelho').length;
@@ -375,22 +375,27 @@ function atualizarSub() {
   if (lev > 0) t += ' · ' + lev + ' para levantar';
   document.getElementById('subtitle').textContent = t;
 }
- 
+
 // ── HOMEPAGE ──────────────────────────────────────────
 function entrar() {
   localStorage.setItem('chegou_entrou', '1');
   document.getElementById('home').classList.add('off');
   document.getElementById('app').classList.add('on');
   document.getElementById('nav').classList.add('on');
+  // Garantir dot na tab ativas
+  const nb = document.getElementById('nb-ativas');
+  if (nb && !nb.querySelector('.nav-dot')) {
+    const dot = document.createElement('div'); dot.className = 'nav-dot'; nb.appendChild(dot);
+  }
 }
- 
+
 // ── TOAST ─────────────────────────────────────────────
 function toast(msg) {
   const t = document.getElementById('toast');
   t.textContent = msg; t.classList.add('on');
   setTimeout(() => t.classList.remove('on'), 2500);
 }
- 
+
 // ── PARSE DATA ────────────────────────────────────────
 function parseData(s) {
   if (!s) return null;
@@ -400,7 +405,7 @@ function parseData(s) {
   if (m) return new Date(+m[1], +m[2]-1, +m[3]);
   return null;
 }
- 
+
 function deadlineStr(o) {
   const d = parseData(o.dataLimite || o.data);
   if (!d) return '';
@@ -412,25 +417,25 @@ function deadlineStr(o) {
   if (diff === 1) return 'amanhã';
   return 'até ' + fmt;
 }
- 
+
 // ── RENDER ATIVAS ─────────────────────────────────────
 function renderAtivas() {
   const el = document.getElementById('cards-list');
   const ativas = orders.filter(o => o.estado !== 'entregue')
     .sort((a,b) => ORDEM.indexOf(a.estado) - ORDEM.indexOf(b.estado));
- 
+
   if (!ativas.length) {
     el.innerHTML = '<div class="empty"><div class="empty-icon">📭</div><p>nenhuma encomenda ativa.<br>adiciona a tua primeira encomenda.</p></div>';
     return;
   }
- 
+
   el.innerHTML = ativas.map(o => {
     const idx = orders.indexOf(o);
     const cfg = ESTADO_CFG[o.estado] || ESTADO_CFG['preparacao'];
     const dl = deadlineStr(o);
     const info = LOJAS[(o.loja||'').toLowerCase().trim()];
     const local = o.local || (o.tipo === 'casa' ? 'Casa' : '');
- 
+
     const pinH = o.pin
       ? '<div class="card-pin">' + o.pin + '</div><div class="card-pin-label">P I N</div>'
       : '<div class="card-spacer"></div>';
@@ -445,7 +450,7 @@ function renderAtivas() {
       ? '<button class="btn-entregue" onclick="marcarEntregue(' + idx + ')">entregue ✓</button>'
       : '';
     const notaH = (info && info.sep && o.tipo !== 'casa') ? '<div class="card-nota">' + info.nota + '</div>' : '';
- 
+
     return '<div class="card ' + cfg.cls + '">' +
       '<div class="card-top"><div class="card-estado-label">' + cfg.label + '</div>' + (dl ? '<div class="card-deadline">' + dl + '</div>' : '') + '</div>' +
       '<div class="card-produto">' + (o.produto || '—') + '</div>' +
@@ -461,7 +466,7 @@ function renderAtivas() {
     '</div>';
   }).join('');
 }
- 
+
 // ── RENDER HISTÓRICO ──────────────────────────────────
 function renderHistorico() {
   const el = document.getElementById('hist-list');
@@ -487,20 +492,20 @@ function renderHistorico() {
       }).join('');
   }).join('');
 }
- 
+
 function marcarEntregue(i) {
   orders[i].estadoAnt = orders[i].estado;
   orders[i].estado = 'entregue';
   orders[i].dataEntrega = new Date().toLocaleDateString('pt-PT',{day:'2-digit',month:'short',year:'numeric'});
   guardar(); toast('entregue! guardado no histórico ✓');
 }
- 
+
 function reativar(i) {
   orders[i].estado = orders[i].estadoAnt || 'preparacao';
   orders[i].dataEntrega = '';
   guardar(); goTab('ativas'); toast('encomenda reativada ✓');
 }
- 
+
 // ── TABS ──────────────────────────────────────────────
 function goTab(tab) {
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('on'));
@@ -511,10 +516,10 @@ function goTab(tab) {
   const dot = document.createElement('div'); dot.className = 'nav-dot'; btn.appendChild(dot);
   if (tab === 'calendario') renderCal();
 }
- 
+
 // ── CALENDÁRIO ────────────────────────────────────────
 let calY = new Date().getFullYear(), calM = new Date().getMonth(), calSel = null;
- 
+
 function renderCal() {
   const lbl = document.getElementById('cal-title');
   if (lbl) lbl.textContent = MESES[calM] + ' ' + calY;
@@ -524,7 +529,7 @@ function renderCal() {
   const off = first === 0 ? 6 : first - 1;
   const hoje = new Date();
   const hoje_d = new Date(); hoje_d.setHours(0,0,0,0);
- 
+
   const mapa = {};
   orders.filter(o => o.estado !== 'entregue').forEach(o => {
     let d = parseData(o.dataLimite || o.data);
@@ -534,7 +539,7 @@ function renderCal() {
       const day = d.getDate(); if (!mapa[day]) mapa[day] = []; mapa[day].push(o);
     }
   });
- 
+
   let html = '';
   for (let i = 0; i < off; i++) html += '<div class="cal-day empty"></div>';
   for (let d = 1; d <= dias; d++) {
@@ -549,7 +554,7 @@ function renderCal() {
   cont.innerHTML = html;
   if (calSel) calMostrar(calSel);
 }
- 
+
 function calClick(d) { calSel = d; renderCal(); }
 function calMostrar(d) {
   const es = orders.filter(o => {
@@ -577,7 +582,7 @@ function calMostrar(d) {
 }
 function calPrev() { calM--; if (calM<0){calM=11;calY--;} calSel=null; renderCal(); }
 function calNext() { calM++; if (calM>11){calM=0;calY++;} calSel=null; renderCal(); }
- 
+
 // ── AI ────────────────────────────────────────────────
 const HOJE = new Date();
 const PROMPT_GERAL = `Analisa este email de encomenda. Hoje é ${HOJE.getDate()}/${HOJE.getMonth()+1}/${HOJE.getFullYear()} (${['domingo','segunda','terça','quarta','quinta','sexta','sábado'][HOJE.getDay()]}). Responde APENAS com JSON sem markdown:
@@ -587,12 +592,12 @@ estado: "preparacao"=confirmada, "enviado"=em trânsito, "vermelho"=chegou ao po
 tipo_entrega: "recolha"=ponto levantamento, "casa"=entrega em morada
 IMPORTANTE: dataLimite deve ser SEMPRE uma data no formato DD/MM/AAAA. Se o email diz "quinta-feira" ou "amanhã" ou "Friday June 20", converte para a data real.
 Email:`;
- 
+
 const PROMPT_UPDATE = `Analisa este email de transportadora. Responde APENAS com JSON sem markdown:
 {"rastreio":"ou vazio","dataLimite":"DD/MM/AAAA ou vazio","local":"ou vazio","pin":"código pin ou vazio","estado":"manter"}
 estado: "vermelho"=chegou ao ponto, "enviado"=em trânsito, "manter"=sem info nova
 Email:`;
- 
+
 async function chamarAI(prompt, texto) {
   const key = localStorage.getItem('anthropic_key') || '';
   if (!key) { alert('vai a conta e adiciona a tua chave api anthropic.'); return null; }
@@ -605,7 +610,7 @@ async function chamarAI(prompt, texto) {
   const raw = d.content?.find(b => b.type==='text')?.text || '{}';
   return JSON.parse(raw.replace(/```json|```/g,'').trim());
 }
- 
+
 async function processarEmail() {
   const txt = document.getElementById('email-txt').value.trim();
   if (!txt) { alert('cola primeiro o texto do email.'); return; }
@@ -614,7 +619,7 @@ async function processarEmail() {
   try {
     const p = await chamarAI(PROMPT_GERAL, txt);
     if (!p) { document.getElementById('loading').style.display='none'; return; }
- 
+
     if (p.tipo === 'atualizacao') {
       // Tentar associar automaticamente
       const rastreio = (p.rastreio||'').toLowerCase().trim();
@@ -654,20 +659,20 @@ async function processarEmail() {
     document.getElementById('loading').style.display = 'none';
   }
 }
- 
+
 function guardarEncomenda() {
   const loja = document.getElementById('f-loja').value.trim();
   if (!loja) { alert('preenche o nome da loja.'); return; }
   orders.unshift({ loja, produto: document.getElementById('f-produto').value, data: document.getElementById('f-data').value, dataLimite: document.getElementById('f-datalimite').value, local: document.getElementById('f-local').value, pin: document.getElementById('f-pin').value, codigo: document.getElementById('f-codigo').value, estado: document.getElementById('f-estado').value, tipo: document.getElementById('f-tipo').value, criado: new Date().toISOString() });
   guardar(); resetForm(); goTab('ativas'); toast('encomenda guardada!');
 }
- 
+
 function resetForm() {
   document.getElementById('email-txt').value = '';
   document.getElementById('form').style.display = 'none';
   document.getElementById('loading').style.display = 'none';
 }
- 
+
 function notaLoja() {
   const info = LOJAS[(document.getElementById('f-loja')?.value||'').toLowerCase().trim()];
   const n = document.getElementById('f-nota'); if (!n) return;
@@ -680,7 +685,7 @@ function notaLoja() {
     else { n.style.display='none'; }
   } else { n.style.display='none'; }
 }
- 
+
 function tipoChange() {
   const tipo = document.getElementById('f-tipo')?.value||'recolha';
   const pf = document.getElementById('field-pin'); if(pf) pf.style.display = tipo==='casa'?'none':'block';
@@ -691,7 +696,7 @@ function tipoChange() {
   const lbl = document.getElementById('label-datalimite');
   if (lbl) lbl.textContent = tipo === 'casa' ? 'data prevista de entrega' : 'data limite de levantamento';
 }
- 
+
 // ── ASSOCIAR EMAIL ────────────────────────────────────
 function mostrarAssociar(dados) {
   window._assocDados = dados;
@@ -707,15 +712,15 @@ function mostrarAssociar(dados) {
       '<button onclick="associar(' + idx + ')" style="font-size:13px;font-weight:700;color:#E8604A;background:#FFF0EE;border:none;cursor:pointer;padding:6px 12px;border-radius:8px;font-family:inherit">associar</button>' +
     '</div>';
   }).join('') || '<div style="color:#888;text-align:center;padding:1rem">não tens encomendas ativas.</div>';
- 
+
   modal.innerHTML = '<div class="modal-box"><button class="modal-close" onclick="fecharModal(\'modal-assoc\')">✕</button>' +
     '<h2>a qual pertence?</h2>' +
     '<div class="modal-sub">' + (dados.rastreio ? 'código: ' + dados.rastreio + ' — sem correspondência automática' : 'email sem número de rastreamento') + '</div>' +
     itens +
     '<button class="btn" onclick="fecharModal(\'modal-assoc\')" style="margin-top:8px;border:1.5px solid #e5e5e0">cancelar</button></div>';
-  document.body.appendChild(modal);
+  abrirModal(modal);
 }
- 
+
 function associar(idx) {
   const d = window._assocDados || {};
   if (d.local) orders[idx].local = d.local;
@@ -727,7 +732,7 @@ function associar(idx) {
   document.getElementById('email-txt').value = '';
   goTab('ativas'); toast(d.pin ? '✓ pin: ' + d.pin : '✓ encomenda atualizada');
 }
- 
+
 // ── EDITAR ────────────────────────────────────────────
 function abrirEditar(idx) {
   window._editIdx = idx;
@@ -751,7 +756,7 @@ function abrirEditar(idx) {
     '<button class="btn p" onclick="guardarEditar()" style="margin-top:8px">guardar</button>' +
     '<button class="btn d" onclick="apagarEncomenda()" style="margin-top:8px">apagar encomenda</button>' +
     '</div>';
-  document.body.appendChild(modal);
+  abrirModal(modal);
   document.getElementById('e-loja').value = o.loja||'';
   document.getElementById('e-produto').value = o.produto||'';
   document.getElementById('e-local').value = o.local||'';
@@ -760,7 +765,7 @@ function abrirEditar(idx) {
   document.getElementById('e-datalimite').value = o.dataLimite||'';
   document.getElementById('e-data').value = o.data||'';
 }
- 
+
 function guardarEditar() {
   const i = window._editIdx;
   orders[i].loja = document.getElementById('e-loja').value;
@@ -774,11 +779,11 @@ function guardarEditar() {
   orders[i].data = document.getElementById('e-data').value;
   guardar(); fecharModal('modal-edit'); toast('atualizado ✓');
 }
- 
+
 function apagarEncomenda() {
   if (confirm('apagar esta encomenda?')) { orders.splice(window._editIdx,1); guardar(); fecharModal('modal-edit'); toast('apagada'); }
 }
- 
+
 // ── ATUALIZAR COM EMAIL ───────────────────────────────
 function abrirAtualizar(idx) {
   window._updateIdx = idx;
@@ -795,9 +800,9 @@ function abrirAtualizar(idx) {
     '<button class="btn p" onclick="processarUpdate()">extrair com ia ✦</button>' +
     '<button class="btn" onclick="fecharModal(\'modal-update\')" style="margin-top:8px;border:1.5px solid #e5e5e0">cancelar</button>' +
     '</div>';
-  document.body.appendChild(modal);
+  abrirModal(modal);
 }
- 
+
 async function processarUpdate() {
   const txt = document.getElementById('update-txt').value.trim();
   if (!txt) { alert('cola primeiro o texto do email.'); return; }
@@ -816,9 +821,11 @@ async function processarUpdate() {
   } catch(e) { alert('erro. tenta de novo.'); }
   document.getElementById('update-load').style.display = 'none';
 }
- 
-function fecharModal(id) { const m = document.getElementById(id); if (m) m.remove(); }
- 
+
+function fecharModal(id) { const m = document.getElementById(id); if (m) m.remove(); document.body.style.overflow = ''; }
+
+function abrirModal(el) { document.body.style.overflow = 'hidden'; document.body.appendChild(el); }
+
 // ── NOTIFICAÇÕES ──────────────────────────────────────
 function verificarNotifs() {
   const hoje = new Date(); hoje.setHours(0,0,0,0);
@@ -845,7 +852,7 @@ function verificarNotifs() {
     setTimeout(() => { if(wrap) wrap.innerHTML=''; }, 8000);
   } else { wrap.innerHTML = ''; }
 }
- 
+
 // ── CONFIG ────────────────────────────────────────────
 function guardarKey() {
   const k = document.getElementById('api-key').value.trim(); if (!k) return;
@@ -853,21 +860,21 @@ function guardarKey() {
   document.getElementById('api-ok').style.display = 'block';
   setTimeout(() => document.getElementById('api-ok').style.display='none', 2000);
 }
- 
+
 function exportar() {
   const blob = new Blob([JSON.stringify(orders,null,2)],{type:'application/json'});
   const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
   a.download = 'chegou-backup-' + new Date().toISOString().split('T')[0] + '.json'; a.click();
   toast('backup exportado ✓');
 }
- 
+
 function importar(e) {
   const f = e.target.files[0]; if (!f) return;
   const r = new FileReader();
   r.onload = ev => { try { const d = JSON.parse(ev.target.result); if(Array.isArray(d)){orders=d;guardar();toast(d.length+' encomendas importadas ✓');}else alert('ficheiro inválido.'); } catch(e){alert('erro ao importar.');} };
   r.readAsText(f);
 }
- 
+
 function diag() {
   let s = 'localStorage:\n';
   for (let i=0;i<localStorage.length;i++) { const k=localStorage.key(i); if(k==='anthropic_key'){s+=k+': [chave api]\n';continue;} try{const v=JSON.parse(localStorage.getItem(k));s+=k+':'+(Array.isArray(v)?v.length+' items':typeof v)+'\n';}catch(e){s+=k+': texto\n';} }
@@ -875,20 +882,33 @@ function diag() {
   if(orders.length>0) s+='\n\nprimeira:\n'+JSON.stringify(orders[0],null,2);
   alert(s);
 }
- 
+
 function apagarTudo() { if(confirm('apagar tudo?')){orders=[];guardar();toast('apagado');} }
- 
+
 // ── INIT ──────────────────────────────────────────────
 const savedKey = localStorage.getItem('anthropic_key');
 if (savedKey) document.getElementById('api-key').value = savedKey;
- 
+
 // Mostrar app ou homepage
 if (localStorage.getItem('chegou_entrou') || orders.length > 0) {
   document.getElementById('home').classList.add('off');
   document.getElementById('app').classList.add('on');
   document.getElementById('nav').classList.add('on');
 }
- 
+
+// Garantir que a tab ativas está ativa e o nav está correto
+(function initTab() {
+  const tab = document.getElementById('tab-ativas');
+  if (tab) tab.classList.add('on');
+  const nb = document.getElementById('nb-ativas');
+  if (nb) {
+    nb.classList.add('on');
+    if (!nb.querySelector('.nav-dot')) {
+      const dot = document.createElement('div'); dot.className = 'nav-dot'; nb.appendChild(dot);
+    }
+  }
+})();
+
 renderAtivas();
 renderHistorico();
 atualizarSub();
@@ -898,4 +918,3 @@ setInterval(verificarNotifs, 30*60*1000);
 <script>if('serviceWorker' in navigator){navigator.serviceWorker.register('service-worker.js');}</script>
 </body>
 </html>
- 
