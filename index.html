@@ -14,7 +14,8 @@
 body { font-family: 'Inter', -apple-system, sans-serif; background: #f5f5f0; color: #111; min-height: 100vh; }
 
 /* ── HOMEPAGE ── */
-#home { position: fixed; inset: 0; background: #fff; z-index: 9999; display: flex; flex-direction: column; }
+#home { position: fixed; inset: 0; background: #fff; z-index: 9999; display: none; flex-direction: column; }
+#home.show { display: flex; }
 #home.off { display: none; }
 #home-hero { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 48px 28px 24px; }
 #home-logo { font-size: 58px; font-weight: 900; color: #111; letter-spacing: -3px; line-height: 1; margin-bottom: 14px; }
@@ -387,7 +388,7 @@ function atualizarSub() {
 // ── HOMEPAGE ──────────────────────────────────────────
 function entrar() {
   localStorage.setItem('chegou_entrou', '1');
-  document.getElementById('home').classList.add('off');
+  document.getElementById('home').classList.remove('show');
   document.getElementById('app').classList.add('on');
   const nb = document.getElementById('nb-ativas');
   if (nb && !nb.querySelector('.nav-dot')) {
@@ -918,10 +919,13 @@ if (savedKey) document.getElementById('api-key').value = savedKey;
 const savedMorada = localStorage.getItem('morada_casa');
 if (savedMorada) document.getElementById('morada-casa').value = savedMorada;
 
-// Mostrar app ou homepage
+// Mostrar home ou app
 if (localStorage.getItem('chegou_entrou') || orders.length > 0) {
-  document.getElementById('home').classList.add('off');
+  // Já entrou — app visível, home escondido (já está none por CSS)
   document.getElementById('app').classList.add('on');
+} else {
+  // Primeira vez — mostrar homepage
+  document.getElementById('home').classList.add('show');
 }
 
 // Garantir que a tab ativas está ativa e o nav está correto
