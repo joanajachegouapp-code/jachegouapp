@@ -14,24 +14,80 @@
 body { font-family: 'Inter', -apple-system, sans-serif; background: #f5f5f0; color: #111; min-height: 100vh; }
 
 /* ── HOMEPAGE ── */
-#home { position: fixed; inset: 0; background: #fff; z-index: 9999; display: none; flex-direction: column; }
-#home.show { display: flex; }
+#home { position: fixed; inset: 0; background: #fff; z-index: 9999; overflow-y: auto; display: flex; flex-direction: column; }
 #home.off { display: none; }
-#home-hero { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 48px 28px 24px; }
-#home-logo { font-size: 58px; font-weight: 900; color: #111; letter-spacing: -3px; line-height: 1; margin-bottom: 14px; }
-#home-logo span { color: #E8604A; }
-#home-tagline { font-size: 18px; color: #888; font-weight: 400; line-height: 1.5; }
-#home-btns { padding: 20px 24px 52px; display: flex; flex-direction: column; gap: 10px; }
-.hbtn { width: 100%; padding: 16px; border-radius: 16px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: inherit; border: none; display: flex; align-items: center; justify-content: center; gap: 10px; }
+
+/* HERO */
+.hero { flex-shrink: 0; display: flex; flex-direction: column; padding: 56px 28px 0; background: #fff; }
+.hero-eyebrow { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #E8604A; margin-bottom: 20px; }
+.hero-eyebrow-dot { width: 6px; height: 6px; border-radius: 50%; background: #E8604A; animation: pulse 2s infinite; }
+@keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(0.8); } }
+.hero-logo { font-size: 62px; font-weight: 900; color: #111; letter-spacing: -4px; line-height: 0.92; margin-bottom: 20px; }
+.hero-logo span { color: #E8604A; }
+.hero-tagline { font-size: 17px; color: #666; font-weight: 500; line-height: 1.55; margin-bottom: 36px; max-width: 280px; }
+
+/* MOCKUP */
+.mockup-wrap { display: flex; flex-direction: column; padding-bottom: 0; position: relative; }
+.mockup-label { font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #bbb; margin-bottom: 12px; }
+.mockup-cards { display: flex; flex-direction: column; gap: 10px; position: relative; }
+.m-card { border-radius: 22px; padding: 18px 20px 14px; position: relative; overflow: hidden; }
+.m-card-red { background: #E8604A; color: #fff; }
+.m-card-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 4px; }
+.m-card-estado { font-size: 18px; font-weight: 900; letter-spacing: -0.5px; }
+.m-card-deadline { font-size: 14px; font-weight: 900; color: rgba(0,0,0,0.35); }
+.m-card-produto { font-size: 15px; font-weight: 800; margin-bottom: 1px; }
+.m-card-loja { font-size: 12px; font-weight: 700; opacity: 0.6; margin-bottom: 10px; }
+.m-card-pin { font-size: 52px; font-weight: 900; line-height: 0.9; letter-spacing: -3px; margin-bottom: 2px; }
+.m-card-pin-label { font-size: 9px; font-weight: 700; letter-spacing: 5px; opacity: 0.35; text-align: right; margin-bottom: 12px; }
+.m-card-local { font-size: 15px; font-weight: 800; letter-spacing: -0.3px; margin-bottom: 10px; }
+.m-card-actions { display: flex; gap: 8px; }
+.m-btn-maps { flex: 1; padding: 10px 8px; border-radius: 12px; border: none; background: #fff; font-size: 12px; font-weight: 800; color: #E8604A; font-family: inherit; }
+.m-btn-ok { flex: 1.2; padding: 10px 8px; border-radius: 12px; border: none; background: rgba(0,0,0,0.2); color: #fff; font-size: 12px; font-weight: 800; font-family: inherit; }
+.card-peek { border-radius: 22px; padding: 14px 20px; background: #F07020; color: #fff; margin-bottom: -60px; position: relative; z-index: 0; }
+.mockup-fade { height: 80px; background: linear-gradient(to bottom, transparent, #fff); position: relative; z-index: 2; margin-top: -10px; }
+
+/* STATS */
+.stat-bar { background: #f5f5f0; padding: 18px 24px; display: flex; gap: 0; flex-shrink: 0; }
+.stat { flex: 1; text-align: center; padding: 0 8px; border-right: 1px solid #e5e5e0; }
+.stat:last-child { border-right: none; }
+.stat-num { font-size: 24px; font-weight: 900; letter-spacing: -1.5px; color: #111; line-height: 1; margin-bottom: 3px; }
+.stat-num span { color: #E8604A; }
+.stat-label { font-size: 10px; font-weight: 700; color: #aaa; text-transform: uppercase; letter-spacing: 0.5px; line-height: 1.3; }
+
+/* FEATURES */
+.features { background: #fff; padding: 0 24px 28px; flex-shrink: 0; }
+.feature-list { display: flex; flex-direction: column; gap: 0; }
+.feature-item { display: flex; align-items: flex-start; gap: 14px; padding: 16px 0; border-bottom: 1px solid #f0f0ec; }
+.feature-item:last-child { border-bottom: none; }
+.feature-icon { width: 38px; height: 38px; border-radius: 11px; display: flex; align-items: center; justify-content: center; font-size: 17px; flex-shrink: 0; margin-top: 1px; }
+.fi-red { background: #FFF0EE; }
+.fi-dark { background: #F0F0F0; }
+.fi-orange { background: #FFF5EC; }
+.feature-text-title { font-size: 14px; font-weight: 800; margin-bottom: 2px; letter-spacing: -0.2px; }
+.feature-text-sub { font-size: 12px; color: #888; line-height: 1.5; font-weight: 500; }
+
+/* HOW IT WORKS */
+.how { background: #111; color: #fff; padding: 28px 24px 32px; flex-shrink: 0; }
+.how-title { font-size: 22px; font-weight: 900; letter-spacing: -1px; margin-bottom: 20px; }
+.how-title span { color: #E8604A; }
+.steps { display: flex; flex-direction: column; gap: 14px; }
+.step { display: flex; align-items: flex-start; gap: 14px; }
+.step-num { width: 28px; height: 28px; border-radius: 50%; background: #E8604A; color: #fff; font-size: 12px; font-weight: 900; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+.step-body-title { font-size: 14px; font-weight: 800; margin-bottom: 2px; }
+.step-body-sub { font-size: 12px; color: #888; line-height: 1.45; }
+
+/* CTA */
+.cta-wrap { background: #fff; padding: 20px 20px 52px; display: flex; flex-direction: column; gap: 10px; flex-shrink: 0; }
+.cta-kicker { font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #bbb; text-align: center; margin-bottom: 4px; }
+.hbtn { width: 100%; padding: 16px; border-radius: 16px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: inherit; border: none; display: flex; align-items: center; justify-content: center; gap: 10px; letter-spacing: -0.2px; }
 .hbtn-g { background: #fff; color: #111; border: 1.5px solid #e5e5e0 !important; }
 .hbtn-e { background: #111; color: #fff; }
-.hbtn-g .gdot { width: 20px; height: 20px; border-radius: 50%; background: #E8604A; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 900; color: #fff; flex-shrink: 0; }
-#home-terms { font-size: 11px; color: #bbb; text-align: center; }
+.gdot { width: 20px; height: 20px; border-radius: 50%; background: #E8604A; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 900; color: #fff; flex-shrink: 0; }
+.cta-terms { font-size: 11px; color: #bbb; text-align: center; margin-top: 2px; }
 
 /* ── APP ── */
 #app { display: none; }
-#app.on { display: block; padding-bottom: 100px; }
-#app.on .cards { padding-bottom: 20px; }
+#app.on { display: block; padding-bottom: 80px; }
 
 /* ── HEADER ── */
 .top-bar { background: #f5f5f0; padding: 52px 20px 10px; position: sticky; top: 0; z-index: 10; }
@@ -131,14 +187,14 @@ body { font-family: 'Inter', -apple-system, sans-serif; background: #f5f5f0; col
 .api-ok { font-size: 13px; color: #2a7a2a; margin-top: 6px; display: none; font-weight: 600; }
 
 /* ── MODAIS ── */
-.modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 1000; display: flex; align-items: flex-end; justify-content: center; }
-.modal-box { background: #f5f5f0; border-radius: 24px 24px 0 0; padding: 20px 20px 40px; width: 100%; max-height: 88vh; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+.modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 1000; display: flex; align-items: flex-end; }
+.modal-box { background: #f5f5f0; border-radius: 24px 24px 0 0; padding: 20px 20px 40px; width: 100%; max-height: 88vh; overflow-y: auto; }
 .modal-box h2 { font-size: 20px; font-weight: 900; margin-bottom: 4px; letter-spacing: -0.5px; }
 .modal-sub { font-size: 13px; color: #888; margin-bottom: 16px; }
 .modal-close { float: right; background: #e5e5e0; border: none; border-radius: 50%; width: 30px; height: 30px; font-size: 16px; cursor: pointer; }
 
 /* ── NAV ── */
-.nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(245,245,240,0.95); backdrop-filter: blur(12px); border-top: 1px solid #e5e5e0; display: flex; padding: 10px 0 24px; z-index: 20; }
+.nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(245,245,240,0.95); backdrop-filter: blur(12px); border-top: 1px solid #e5e5e0; display: none; padding: 10px 0 24px; z-index: 20; }
 .nav.on { display: flex; }
 .nav-btn { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; font-size: 9px; color: #aaa; cursor: pointer; padding: 4px 0; border: none; background: none; font-family: inherit; font-weight: 600; }
 .nav-btn.on { color: #111; }
@@ -161,18 +217,149 @@ body { font-family: 'Inter', -apple-system, sans-serif; background: #f5f5f0; col
 
 <!-- HOMEPAGE -->
 <div id="home">
-  <div id="home-hero">
-    <div id="home-logo">Já Chegou<span>?</span></div>
-    <div id="home-tagline">reencaminha o email.<br>esquece o resto.</div>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-eyebrow">
+      <div class="hero-eyebrow-dot"></div>
+      PWA gratuita
+    </div>
+    <div class="hero-logo">Já<br>Chegou<span>?</span></div>
+    <div class="hero-tagline">
+      Reencaminha o email.<br>
+      A app trata do resto.
+    </div>
+
+    <!-- MOCKUP -->
+    <div class="mockup-wrap">
+      <div class="mockup-label">as tuas encomendas</div>
+      <div class="mockup-cards">
+        <!-- Cartão por baixo (peek) -->
+        <div class="card-peek">
+          <div class="m-card-head">
+            <div class="m-card-estado">Enviada</div>
+            <div class="m-card-deadline" style="color:rgba(255,255,255,0.4)">amanhã</div>
+          </div>
+          <div class="m-card-produto">Camisola de linho bege</div>
+          <div class="m-card-loja">ASOS</div>
+        </div>
+        <!-- Cartão principal -->
+        <div class="m-card m-card-red" style="position:relative;z-index:1">
+          <div class="m-card-head">
+            <div class="m-card-estado">Para Levantar</div>
+            <div class="m-card-deadline">hoje!</div>
+          </div>
+          <div class="m-card-produto">Sapatilhas Nike Air Max</div>
+          <div class="m-card-loja">Zara · CTT Expresso</div>
+          <div class="m-card-pin">7842</div>
+          <div class="m-card-pin-label">P I N</div>
+          <div class="m-card-local">CTT Benfica — Estrada de Benfica 498</div>
+          <div class="m-card-actions">
+            <button class="m-btn-maps">maps ↗</button>
+            <button class="m-btn-ok">entregue ✓</button>
+          </div>
+        </div>
+      </div>
+      <div class="mockup-fade"></div>
+    </div>
   </div>
-  <div id="home-btns">
+
+  <!-- STATS -->
+  <div class="stat-bar">
+    <div class="stat">
+      <div class="stat-num">3<span>s</span></div>
+      <div class="stat-label">para adicionar</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num"><span>∞</span></div>
+      <div class="stat-label">lojas suportadas</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">0<span>€</span></div>
+      <div class="stat-label">custo</div>
+    </div>
+  </div>
+
+  <!-- FEATURES -->
+  <div class="features">
+    <div class="feature-list">
+      <div class="feature-item">
+        <div class="feature-icon fi-red">✉️</div>
+        <div>
+          <div class="feature-text-title">Cola o email, a IA faz o resto</div>
+          <div class="feature-text-sub">Loja, produto, pin e data limite extraídos automaticamente do email de confirmação.</div>
+        </div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon fi-orange">📍</div>
+        <div>
+          <div class="feature-text-title">Pin sempre à mão</div>
+          <div class="feature-text-sub">O código de levantamento aparece em destaque no cartão, mesmo sem internet no ponto.</div>
+        </div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon fi-dark">🗓️</div>
+        <div>
+          <div class="feature-text-title">Alertas antes de perder a encomenda</div>
+          <div class="feature-text-sub">Notificações no dia anterior ao prazo. Nunca mais tens de pagar reenvio.</div>
+        </div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon fi-red">🔄</div>
+        <div>
+          <div class="feature-text-title">Emails de transportadora associados</div>
+          <div class="feature-text-sub">Chegou email dos CTT, DPD ou Chronopost? A app atualiza a encomenda certa automaticamente.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- COMO FUNCIONA -->
+  <div class="how">
+    <div class="how-title">Como <span>funciona</span></div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div>
+          <div class="step-body-title">Recebeste um email de encomenda</div>
+          <div class="step-body-sub">Confirmação de compra da Zara, ASOS, Shein, Amazon — qualquer loja.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div>
+          <div class="step-body-title">Colas o texto aqui</div>
+          <div class="step-body-sub">Seleciona tudo no email, copia e cola no campo de texto da app.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div>
+          <div class="step-body-title">A IA extrai tudo em segundos</div>
+          <div class="step-body-sub">Loja, produto, data limite, pin e local identificados automaticamente.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div>
+          <div class="step-body-title">Aparece o cartão — pronto a usar</div>
+          <div class="step-body-sub">Pin gigante, botão de maps, alerta de prazo. Tudo num único ecrã.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CTA / LOGIN -->
+  <div class="cta-wrap">
+    <div class="cta-kicker">começa agora · é grátis</div>
     <button class="hbtn hbtn-g" onclick="entrar()">
-      <div class="gdot" style="width:20px;height:20px;border-radius:50%;background:#E8604A;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;color:#fff;flex-shrink:0">G</div>
+      <div class="gdot">G</div>
       entrar com Google
     </button>
     <button class="hbtn hbtn-e" onclick="entrar()">entrar com email</button>
-    <div id="home-terms">ao entrar aceitas os termos e privacidade</div>
+    <div class="cta-terms">ao entrar aceitas os termos e privacidade</div>
   </div>
+
 </div>
 
 <!-- APP -->
@@ -261,13 +448,6 @@ body { font-family: 'Inter', -apple-system, sans-serif; background: #f5f5f0; col
         <div class="api-ok" id="api-ok">✓ guardado</div>
       </div>
       <div class="cfg-card">
-        <h3>🏠 a minha morada</h3>
-        <p>quando a IA detetar esta morada num email, o card mostra apenas "Em casa" sem revelar a morada.</p>
-        <input class="api-input" type="text" id="morada-casa" placeholder="ex: Rua das Flores 12, Lisboa" style="font-family:inherit" />
-        <button class="api-save" onclick="guardarMorada()">guardar</button>
-        <div class="api-ok" id="morada-ok">✓ guardado</div>
-      </div>
-      <div class="cfg-card">
         <h3>backup</h3>
         <p>exporta as tuas encomendas antes de atualizar a app.</p>
         <button class="btn p" onclick="exportar()" style="margin-top:0">exportar backup</button>
@@ -341,9 +521,9 @@ const LOJAS = {
 };
 
 const ESTADO_CFG = {
-  vermelho:   { label: 'Para Levantar',       cls: 'c-red' },
-  enviado:    { label: 'Enviada',         cls: 'c-orange' },
-  preparacao: { label: 'Em Preparação',  cls: 'c-amber' },
+  vermelho:   { label: 'Para Levantar', cls: 'c-red' },
+  enviado:    { label: 'Enviada',       cls: 'c-orange' },
+  preparacao: { label: 'Em Preparação', cls: 'c-amber' },
 };
 const ORDEM = ['vermelho','enviado','preparacao'];
 const MESES = ['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
@@ -388,12 +568,9 @@ function atualizarSub() {
 // ── HOMEPAGE ──────────────────────────────────────────
 function entrar() {
   localStorage.setItem('chegou_entrou', '1');
-  document.getElementById('home').classList.remove('show');
+  document.getElementById('home').classList.add('off');
   document.getElementById('app').classList.add('on');
-  const nb = document.getElementById('nb-ativas');
-  if (nb && !nb.querySelector('.nav-dot')) {
-    const dot = document.createElement('div'); dot.className = 'nav-dot'; nb.appendChild(dot);
-  }
+  document.getElementById('nav').classList.add('on');
 }
 
 // ── TOAST ─────────────────────────────────────────────
@@ -441,8 +618,7 @@ function renderAtivas() {
     const cfg = ESTADO_CFG[o.estado] || ESTADO_CFG['preparacao'];
     const dl = deadlineStr(o);
     const info = LOJAS[(o.loja||'').toLowerCase().trim()];
-    const ehCasa = o.tipo === 'casa';
-    const local = ehCasa ? 'Em casa 🏠' : (o.local || '');
+    const local = o.local || (o.tipo === 'casa' ? 'Casa' : '');
 
     const pinH = o.pin
       ? '<div class="card-pin">' + o.pin + '</div><div class="card-pin-label">P I N</div>'
@@ -451,7 +627,7 @@ function renderAtivas() {
       ? '<div class="card-codigo"><span class="card-codigo-label">código da encomenda</span><span>' + o.codigo + '</span></div>'
       : '';
     const localH = local ? '<div class="card-local">' + local + '</div>' : '';
-    const mapsH = (!ehCasa && o.local)
+    const mapsH = o.local
       ? '<button class="btn-maps" data-url="https://maps.google.com/?q=' + encodeURIComponent(o.local) + '" onclick="window.open(this.dataset.url,\'_blank\')">maps ↗</button>'
       : '';
     const entH = (o.estado === 'vermelho' || o.tipo === 'casa')
@@ -463,8 +639,7 @@ function renderAtivas() {
       '<div class="card-top"><div class="card-estado-label">' + cfg.label + '</div>' + (dl ? '<div class="card-deadline">' + dl + '</div>' : '') + '</div>' +
       '<div class="card-produto">' + (o.produto || '—') + '</div>' +
       '<div class="card-loja-nome">' + (o.loja || '') + '</div>' +
-      pinH + localH +
-      codigoH +
+      pinH + localH + codigoH +
       '<div class="card-actions">' + mapsH +
         '<button class="btn-edit" onclick="abrirEditar(' + idx + ')">editar ✏</button>' +
         entH +
@@ -629,7 +804,6 @@ async function processarEmail() {
     if (!p) { document.getElementById('loading').style.display='none'; return; }
 
     if (p.tipo === 'atualizacao') {
-      // Tentar associar automaticamente
       const rastreio = (p.rastreio||'').toLowerCase().trim();
       let idx = -1;
       if (rastreio) {
@@ -652,14 +826,11 @@ async function processarEmail() {
       document.getElementById('f-produto').value = p.produto||'';
       document.getElementById('f-data').value = p.data||'';
       document.getElementById('f-datalimite').value = p.dataLimite||'';
-      // Se o local for a morada de casa, guardar como flag e não mostrar morada
-      const localOriginal = p.local||'';
-      const ehCasa = p.tipo_entrega === 'casa' || eMoradaCasa(localOriginal);
-      document.getElementById('f-local').value = ehCasa ? '' : localOriginal;
+      document.getElementById('f-local').value = p.local||'';
       document.getElementById('f-pin').value = p.pin||'';
       document.getElementById('f-codigo').value = p.codigo||'';
       document.getElementById('f-estado').value = p.estado||'preparacao';
-      document.getElementById('f-tipo').value = ehCasa ? 'casa' : (p.tipo_entrega||'recolha');
+      document.getElementById('f-tipo').value = p.tipo_entrega||'recolha';
       notaLoja(); tipoChange();
       document.getElementById('form').style.display = 'block';
       document.getElementById('loading').style.display = 'none';
@@ -687,10 +858,8 @@ function resetForm() {
 function notaLoja() {
   const info = LOJAS[(document.getElementById('f-loja')?.value||'').toLowerCase().trim()];
   const n = document.getElementById('f-nota'); if (!n) return;
-  const tipo = document.getElementById('f-tipo')?.value || 'recolha';
   if (info) {
     if (info.tipo !== 'ambos') { const t = document.getElementById('f-tipo'); if(t) t.value = info.tipo; tipoChange(); }
-    // Só mostrar nota se for relevante para o tipo de entrega atual
     const tipoAtual = document.getElementById('f-tipo')?.value || 'recolha';
     if (info.sep && tipoAtual === 'recolha') { n.style.display='block'; n.textContent=info.nota; }
     else { n.style.display='none'; }
@@ -729,7 +898,7 @@ function mostrarAssociar(dados) {
     '<div class="modal-sub">' + (dados.rastreio ? 'código: ' + dados.rastreio + ' — sem correspondência automática' : 'email sem número de rastreamento') + '</div>' +
     itens +
     '<button class="btn" onclick="fecharModal(\'modal-assoc\')" style="margin-top:8px;border:1.5px solid #e5e5e0">cancelar</button></div>';
-  abrirModal(modal);
+  document.body.appendChild(modal);
 }
 
 function associar(idx) {
@@ -767,7 +936,7 @@ function abrirEditar(idx) {
     '<button class="btn p" onclick="guardarEditar()" style="margin-top:8px">guardar</button>' +
     '<button class="btn d" onclick="apagarEncomenda()" style="margin-top:8px">apagar encomenda</button>' +
     '</div>';
-  abrirModal(modal);
+  document.body.appendChild(modal);
   document.getElementById('e-loja').value = o.loja||'';
   document.getElementById('e-produto').value = o.produto||'';
   document.getElementById('e-local').value = o.local||'';
@@ -811,7 +980,7 @@ function abrirAtualizar(idx) {
     '<button class="btn p" onclick="processarUpdate()">extrair com ia ✦</button>' +
     '<button class="btn" onclick="fecharModal(\'modal-update\')" style="margin-top:8px;border:1.5px solid #e5e5e0">cancelar</button>' +
     '</div>';
-  abrirModal(modal);
+  document.body.appendChild(modal);
 }
 
 async function processarUpdate() {
@@ -833,9 +1002,7 @@ async function processarUpdate() {
   document.getElementById('update-load').style.display = 'none';
 }
 
-function fecharModal(id) { const m = document.getElementById(id); if (m) m.remove(); document.body.style.overflow = ''; }
-
-function abrirModal(el) { document.body.style.overflow = 'hidden'; document.body.appendChild(el); }
+function fecharModal(id) { const m = document.getElementById(id); if (m) m.remove(); }
 
 // ── NOTIFICAÇÕES ──────────────────────────────────────
 function verificarNotifs() {
@@ -872,23 +1039,6 @@ function guardarKey() {
   setTimeout(() => document.getElementById('api-ok').style.display='none', 2000);
 }
 
-function guardarMorada() {
-  const m = document.getElementById('morada-casa').value.trim();
-  localStorage.setItem('morada_casa', m);
-  document.getElementById('morada-ok').style.display = 'block';
-  setTimeout(() => document.getElementById('morada-ok').style.display='none', 2000);
-}
-
-function eMoradaCasa(local) {
-  const morada = (localStorage.getItem('morada_casa') || '').toLowerCase().trim();
-  if (!morada || !local) return false;
-  const l = local.toLowerCase().trim();
-  // Compara palavras-chave principais da morada (rua, número, cidade)
-  const palavras = morada.split(/[\s,]+/).filter(p => p.length > 3);
-  const matches = palavras.filter(p => l.includes(p));
-  return matches.length >= Math.min(2, palavras.length);
-}
-
 function exportar() {
   const blob = new Blob([JSON.stringify(orders,null,2)],{type:'application/json'});
   const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
@@ -916,30 +1066,12 @@ function apagarTudo() { if(confirm('apagar tudo?')){orders=[];guardar();toast('a
 // ── INIT ──────────────────────────────────────────────
 const savedKey = localStorage.getItem('anthropic_key');
 if (savedKey) document.getElementById('api-key').value = savedKey;
-const savedMorada = localStorage.getItem('morada_casa');
-if (savedMorada) document.getElementById('morada-casa').value = savedMorada;
 
-// Mostrar home ou app
 if (localStorage.getItem('chegou_entrou') || orders.length > 0) {
-  // Já entrou — app visível, home escondido (já está none por CSS)
+  document.getElementById('home').classList.add('off');
   document.getElementById('app').classList.add('on');
-} else {
-  // Primeira vez — mostrar homepage
-  document.getElementById('home').classList.add('show');
+  document.getElementById('nav').classList.add('on');
 }
-
-// Garantir que a tab ativas está ativa e o nav está correto
-(function initTab() {
-  const tab = document.getElementById('tab-ativas');
-  if (tab) tab.classList.add('on');
-  const nb = document.getElementById('nb-ativas');
-  if (nb) {
-    nb.classList.add('on');
-    if (!nb.querySelector('.nav-dot')) {
-      const dot = document.createElement('div'); dot.className = 'nav-dot'; nb.appendChild(dot);
-    }
-  }
-})();
 
 renderAtivas();
 renderHistorico();
