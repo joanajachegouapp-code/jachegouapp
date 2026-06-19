@@ -221,6 +221,9 @@ body { font-family: 'Inter', -apple-system, sans-serif; background: #f5f5f0; col
 
   <!-- HERO -->
   <div class="hero">
+    <div style="display:flex;justify-content:flex-end;margin-bottom:8px">
+      <button id="home-close" onclick="entrar()" style="display:none;background:#f0f0ec;border:none;border-radius:50%;width:32px;height:32px;font-size:16px;cursor:pointer;font-family:inherit">✕</button>
+    </div>
     <div class="hero-eyebrow">
       <div class="hero-eyebrow-dot"></div>
       PWA gratuita
@@ -442,6 +445,13 @@ body { font-family: 'Inter', -apple-system, sans-serif; background: #f5f5f0; col
   <div id="tab-conta" class="tab">
     <div class="cfg-wrap">
       <div class="cfg-card">
+        <h3>a minha morada</h3>
+        <p>a IA compara esta morada com a do email — se coincide, o card mostra "Casa" automaticamente.</p>
+        <input class="api-input" type="text" id="minha-morada" placeholder="ex: Rua das Flores 12, 2.º Dto, Lisboa" style="font-family:inherit" />
+        <button class="api-save" onclick="guardarMorada()">guardar</button>
+        <div class="api-ok" id="morada-ok">✓ guardado</div>
+      </div>
+      <div class="cfg-card">
         <h3>chave api anthropic</h3>
         <p>necessária para analisar emails automaticamente. obtém em console.anthropic.com</p>
         <input class="api-input" type="password" id="api-key" placeholder="sk-ant-..." />
@@ -464,6 +474,11 @@ body { font-family: 'Inter', -apple-system, sans-serif; background: #f5f5f0; col
         <h3>apagar tudo</h3>
         <p>remove todas as encomendas guardadas.</p>
         <button class="btn d" onclick="apagarTudo()" style="margin-top:0">apagar tudo</button>
+      </div>
+      <div class="cfg-card">
+        <h3>apresentação</h3>
+        <p>ver a página de apresentação da app.</p>
+        <button class="btn" onclick="verHomepage()" style="margin-top:0;border:1.5px solid #e5e5e0">ver apresentação</button>
       </div>
     </div>
   </div>
@@ -620,17 +635,18 @@ function renderAtivas() {
     const cfg = ESTADO_CFG[o.estado] || ESTADO_CFG['preparacao'];
     const dl = deadlineStr(o);
     const info = LOJAS[(o.loja||'').toLowerCase().trim()];
-    const local = o.local || (o.tipo === 'casa' ? 'Casa' : '');
+    const local = o.tipo === 'casa' ? '🏠 Casa' : (o.local || '');
+    const localMaps = o.local && o.tipo !== 'casa' ? o.local : '';
 
     const pinH = o.pin
       ? '<div class="card-pin">' + o.pin + '</div><div class="card-pin-label">P I N</div>'
-      : '<div class="card-spacer"></div>';
+      : (o.tipo === 'casa' ? '' : '<div class="card-spacer"></div>');
     const codigoH = o.codigo
       ? '<div class="card-codigo"><span class="card-codigo-label">código da encomenda</span><span>' + o.codigo + '</span></div>'
       : '';
     const localH = local ? '<div class="card-local">' + local + '</div>' : '';
-    const mapsH = o.local
-      ? '<button class="btn-maps" data-url="https://maps.google.com/?q=' + encodeURIComponent(o.local) + '" onclick="window.open(this.dataset.url,\'_blank\')">maps ↗</button>'
+    const mapsH = localMaps
+      ? '<button class="btn-maps" data-url="https://maps.google.com/?q=' + encodeURIComponent(localMaps) + '" onclick="window.open(this.dataset.url,\'_blank\')">maps ↗</button>'
       : '';
     const entH = (o.estado === 'vermelho' || o.tipo === 'casa')
       ? '<button class="btn-entregue" onclick="marcarEntregue(' + idx + ')">entregue ✓</button>'
@@ -770,13 +786,20 @@ function calNext() { calM++; if (calM>11){calM=0;calY++;} calSel=null; renderCal
 
 // ── AI ────────────────────────────────────────────────
 const HOJE = new Date();
-const PROMPT_GERAL = `Analisa este email de encomenda. Hoje é ${HOJE.getDate()}/${HOJE.getMonth()+1}/${HOJE.getFullYear()} (${['domingo','segunda','terça','quarta','quinta','sexta','sábado'][HOJE.getDay()]}). Responde APENAS com JSON sem markdown:
+
+function buildPromptGeral() {
+  const morada = localStorage.getItem('chegou_morada') || '';
+  const moradaInstr = morada
+    ? `A morada de casa do utilizador é: "${morada}". Se a morada de entrega do email for a mesma (ou muito semelhante), usa tipo_entrega="casa". Caso contrário usa "recolha".`
+    : 'Se o email indicar entrega numa morada (não num ponto de recolha/loja), usa tipo_entrega="casa".';
+  return `Analisa este email de encomenda. Hoje é ${HOJE.getDate()}/${HOJE.getMonth()+1}/${HOJE.getFullYear()} (${['domingo','segunda','terça','quarta','quinta','sexta','sábado'][HOJE.getDay()]}). Responde APENAS com JSON sem markdown:
 {"tipo":"novo|atualizacao","loja":"ou vazio","produto":"ou vazio","data":"DD/MM/AAAA ou vazio","dataLimite":"data prevista entrega ou data limite levantamento SEMPRE em DD/MM/AAAA — converte dias da semana (ex: quinta-feira, amanhã, this friday) para a data concreta usando a data de hoje como referência","rastreio":"número rastreamento ou vazio","codigo":"número ou código da encomenda (ex: #ZR-20481, PT123456789) ou vazio","local":"local levantamento ou entrega ou vazio","pin":"código pin de levantamento ou vazio","estado":"preparacao","tipo_entrega":"recolha|casa"}
 tipo: "novo"=email confirmação compra, "atualizacao"=email transportadora sobre encomenda já existente
 estado: "preparacao"=confirmada, "enviado"=em trânsito, "vermelho"=chegou ao ponto levantamento
-tipo_entrega: "recolha"=ponto levantamento, "casa"=entrega em morada
+tipo_entrega: ${moradaInstr}
 IMPORTANTE: dataLimite deve ser SEMPRE uma data no formato DD/MM/AAAA. Se o email diz "quinta-feira" ou "amanhã" ou "Friday June 20", converte para a data real.
 Email:`;
+}
 
 const PROMPT_UPDATE = `Analisa este email de transportadora. Responde APENAS com JSON sem markdown:
 {"rastreio":"ou vazio","dataLimite":"DD/MM/AAAA ou vazio","local":"ou vazio","pin":"código pin ou vazio","estado":"manter"}
@@ -802,7 +825,7 @@ async function processarEmail() {
   document.getElementById('loading').style.display = 'block';
   document.getElementById('form').style.display = 'none';
   try {
-    const p = await chamarAI(PROMPT_GERAL, txt);
+    const p = await chamarAI(buildPromptGeral(), txt);
     if (!p) { document.getElementById('loading').style.display='none'; return; }
 
     if (p.tipo === 'atualizacao') {
@@ -847,7 +870,9 @@ async function processarEmail() {
 function guardarEncomenda() {
   const loja = document.getElementById('f-loja').value.trim();
   if (!loja) { alert('preenche o nome da loja.'); return; }
-  orders.unshift({ loja, produto: document.getElementById('f-produto').value, data: document.getElementById('f-data').value, dataLimite: document.getElementById('f-datalimite').value, local: document.getElementById('f-local').value, pin: document.getElementById('f-pin').value, codigo: document.getElementById('f-codigo').value, estado: document.getElementById('f-estado').value, tipo: document.getElementById('f-tipo').value, criado: new Date().toISOString() });
+  const tipo = document.getElementById('f-tipo').value;
+  const localVal = document.getElementById('f-local').value;
+  orders.unshift({ loja, produto: document.getElementById('f-produto').value, data: document.getElementById('f-data').value, dataLimite: document.getElementById('f-datalimite').value, local: localVal, pin: document.getElementById('f-pin').value, codigo: document.getElementById('f-codigo').value, estado: document.getElementById('f-estado').value, tipo, criado: new Date().toISOString() });
   guardar(); resetForm(); goTab('ativas'); toast('encomenda guardada!');
 }
 
@@ -1041,6 +1066,13 @@ function guardarKey() {
   setTimeout(() => document.getElementById('api-ok').style.display='none', 2000);
 }
 
+function guardarMorada() {
+  const m = document.getElementById('minha-morada').value.trim(); if (!m) return;
+  localStorage.setItem('chegou_morada', m);
+  document.getElementById('morada-ok').style.display = 'block';
+  setTimeout(() => document.getElementById('morada-ok').style.display='none', 2000);
+}
+
 function exportar() {
   const blob = new Blob([JSON.stringify(orders,null,2)],{type:'application/json'});
   const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
@@ -1065,9 +1097,18 @@ function diag() {
 
 function apagarTudo() { if(confirm('apagar tudo?')){orders=[];guardar();toast('apagado');} }
 
+function verHomepage() {
+  document.getElementById('home').classList.add('on');
+  document.getElementById('home').classList.remove('off');
+  document.getElementById('home-close').style.display = 'block';
+}
+
 // ── INIT ──────────────────────────────────────────────
 const savedKey = localStorage.getItem('anthropic_key');
 if (savedKey) document.getElementById('api-key').value = savedKey;
+
+const savedMorada = localStorage.getItem('chegou_morada');
+if (savedMorada) document.getElementById('minha-morada').value = savedMorada;
 
 if (localStorage.getItem('chegou_entrou') || orders.length > 0) {
   // utilizador já registado — vai direto para a app
