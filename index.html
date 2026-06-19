@@ -137,8 +137,8 @@ body { font-family: 'Inter', -apple-system, sans-serif; background: #f5f5f0; col
 .modal-close { float: right; background: #e5e5e0; border: none; border-radius: 50%; width: 30px; height: 30px; font-size: 16px; cursor: pointer; }
 
 /* ── NAV ── */
-.nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(245,245,240,0.95); backdrop-filter: blur(12px); border-top: 1px solid #e5e5e0; display: flex; padding: 10px 0 24px; z-index: 20; visibility: hidden; }
-.nav.on { visibility: visible; }
+.nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(245,245,240,0.95); backdrop-filter: blur(12px); border-top: 1px solid #e5e5e0; display: flex; padding: 10px 0 24px; z-index: 20; }
+.nav.on { display: flex; }
 .nav-btn { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; font-size: 9px; color: #aaa; cursor: pointer; padding: 4px 0; border: none; background: none; font-family: inherit; font-weight: 600; }
 .nav-btn.on { color: #111; }
 .nav-dot { width: 4px; height: 4px; border-radius: 50%; background: #111; }
@@ -258,6 +258,13 @@ body { font-family: 'Inter', -apple-system, sans-serif; background: #f5f5f0; col
         <input class="api-input" type="password" id="api-key" placeholder="sk-ant-..." />
         <button class="api-save" onclick="guardarKey()">guardar</button>
         <div class="api-ok" id="api-ok">✓ guardado</div>
+      </div>
+      <div class="cfg-card">
+        <h3>🏠 a minha morada</h3>
+        <p>quando a IA detetar esta morada num email, o card mostra apenas "Em casa" sem revelar a morada.</p>
+        <input class="api-input" type="text" id="morada-casa" placeholder="ex: Rua das Flores 12, Lisboa" style="font-family:inherit" />
+        <button class="api-save" onclick="guardarMorada()">guardar</button>
+        <div class="api-ok" id="morada-ok">✓ guardado</div>
       </div>
       <div class="cfg-card">
         <h3>backup</h3>
@@ -382,8 +389,6 @@ function entrar() {
   localStorage.setItem('chegou_entrou', '1');
   document.getElementById('home').classList.add('off');
   document.getElementById('app').classList.add('on');
-  document.getElementById('nav').classList.add('on');
-  // Garantir dot na tab ativas
   const nb = document.getElementById('nb-ativas');
   if (nb && !nb.querySelector('.nav-dot')) {
     const dot = document.createElement('div'); dot.className = 'nav-dot'; nb.appendChild(dot);
@@ -435,7 +440,8 @@ function renderAtivas() {
     const cfg = ESTADO_CFG[o.estado] || ESTADO_CFG['preparacao'];
     const dl = deadlineStr(o);
     const info = LOJAS[(o.loja||'').toLowerCase().trim()];
-    const local = o.local || (o.tipo === 'casa' ? 'Casa' : '');
+    const ehCasa = o.tipo === 'casa';
+    const local = ehCasa ? 'Em casa 🏠' : (o.local || '');
 
     const pinH = o.pin
       ? '<div class="card-pin">' + o.pin + '</div><div class="card-pin-label">P I N</div>'
@@ -444,7 +450,7 @@ function renderAtivas() {
       ? '<div class="card-codigo"><span class="card-codigo-label">código da encomenda</span><span>' + o.codigo + '</span></div>'
       : '';
     const localH = local ? '<div class="card-local">' + local + '</div>' : '';
-    const mapsH = o.local
+    const mapsH = (!ehCasa && o.local)
       ? '<button class="btn-maps" data-url="https://maps.google.com/?q=' + encodeURIComponent(o.local) + '" onclick="window.open(this.dataset.url,\'_blank\')">maps ↗</button>'
       : '';
     const entH = (o.estado === 'vermelho' || o.tipo === 'casa')
@@ -645,11 +651,14 @@ async function processarEmail() {
       document.getElementById('f-produto').value = p.produto||'';
       document.getElementById('f-data').value = p.data||'';
       document.getElementById('f-datalimite').value = p.dataLimite||'';
-      document.getElementById('f-local').value = p.local||'';
+      // Se o local for a morada de casa, guardar como flag e não mostrar morada
+      const localOriginal = p.local||'';
+      const ehCasa = p.tipo_entrega === 'casa' || eMoradaCasa(localOriginal);
+      document.getElementById('f-local').value = ehCasa ? '' : localOriginal;
       document.getElementById('f-pin').value = p.pin||'';
       document.getElementById('f-codigo').value = p.codigo||'';
       document.getElementById('f-estado').value = p.estado||'preparacao';
-      document.getElementById('f-tipo').value = p.tipo_entrega||'recolha';
+      document.getElementById('f-tipo').value = ehCasa ? 'casa' : (p.tipo_entrega||'recolha');
       notaLoja(); tipoChange();
       document.getElementById('form').style.display = 'block';
       document.getElementById('loading').style.display = 'none';
@@ -862,6 +871,23 @@ function guardarKey() {
   setTimeout(() => document.getElementById('api-ok').style.display='none', 2000);
 }
 
+function guardarMorada() {
+  const m = document.getElementById('morada-casa').value.trim();
+  localStorage.setItem('morada_casa', m);
+  document.getElementById('morada-ok').style.display = 'block';
+  setTimeout(() => document.getElementById('morada-ok').style.display='none', 2000);
+}
+
+function eMoradaCasa(local) {
+  const morada = (localStorage.getItem('morada_casa') || '').toLowerCase().trim();
+  if (!morada || !local) return false;
+  const l = local.toLowerCase().trim();
+  // Compara palavras-chave principais da morada (rua, número, cidade)
+  const palavras = morada.split(/[\s,]+/).filter(p => p.length > 3);
+  const matches = palavras.filter(p => l.includes(p));
+  return matches.length >= Math.min(2, palavras.length);
+}
+
 function exportar() {
   const blob = new Blob([JSON.stringify(orders,null,2)],{type:'application/json'});
   const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
@@ -889,12 +915,13 @@ function apagarTudo() { if(confirm('apagar tudo?')){orders=[];guardar();toast('a
 // ── INIT ──────────────────────────────────────────────
 const savedKey = localStorage.getItem('anthropic_key');
 if (savedKey) document.getElementById('api-key').value = savedKey;
+const savedMorada = localStorage.getItem('morada_casa');
+if (savedMorada) document.getElementById('morada-casa').value = savedMorada;
 
 // Mostrar app ou homepage
 if (localStorage.getItem('chegou_entrou') || orders.length > 0) {
   document.getElementById('home').classList.add('off');
   document.getElementById('app').classList.add('on');
-  document.getElementById('nav').classList.add('on');
 }
 
 // Garantir que a tab ativas está ativa e o nav está correto
