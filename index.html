@@ -5,95 +5,90 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Já Chegou?">
-<meta name="theme-color" content="#f5f5f0">
+<meta name="theme-color" content="#D9ECEC">
 <link rel="manifest" href="manifest.json">
 <title>Já Chegou?</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-body { font-family: 'Inter', -apple-system, sans-serif; background: #f5f5f0; color: #111; min-height: 100vh; }
+body { font-family: 'Inter', -apple-system, sans-serif; background: #D9ECEC; color: #111; min-height: 100vh; }
 
 /* ── HOMEPAGE ── */
-#home { position: fixed; inset: 0; background: #fff; z-index: 9999; overflow-y: auto; display: none; flex-direction: column; }
+#home { position: fixed; inset: 0; background: #D9ECEC; z-index: 9999; overflow-y: auto; display: none; flex-direction: column; }
 #home.on { display: flex; }
 #home.off { display: none; }
 
 /* HERO */
-.hero { flex-shrink: 0; display: flex; flex-direction: column; padding: 56px 28px 0; background: #fff; }
-.hero-eyebrow { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #E8604A; margin-bottom: 20px; }
-.hero-eyebrow-dot { width: 6px; height: 6px; border-radius: 50%; background: #E8604A; animation: pulse 2s infinite; }
-@keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(0.8); } }
-.hero-logo { font-size: 62px; font-weight: 900; color: #111; letter-spacing: -4px; line-height: 0.92; margin-bottom: 20px; }
-.hero-logo span { color: #E8604A; }
-.hero-tagline { font-size: 17px; color: #666; font-weight: 500; line-height: 1.55; margin-bottom: 36px; max-width: 280px; }
+.hero { flex-shrink: 0; display: flex; flex-direction: column; padding: 64px 28px 32px; }
+.hero-eyebrow { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #FF0000; margin-bottom: 14px; display: flex; align-items: center; gap: 6px; }
+.hero-eyebrow-dot { width: 6px; height: 6px; border-radius: 50%; background: #FF0000; animation: pulse 2s infinite; }
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+.hero-logo { font-size: 58px; font-weight: 900; color: #111; letter-spacing: -4px; line-height: 0.92; margin-bottom: 14px; }
+.hero-logo span { color: #FF0000; }
+.hero-tagline { font-size: 16px; color: #444; font-weight: 500; line-height: 1.5; margin-bottom: 36px; }
 
 /* MOCKUP */
-.mockup-wrap { display: flex; flex-direction: column; padding-bottom: 0; position: relative; }
-.mockup-label { font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #bbb; margin-bottom: 12px; }
+.mockup-wrap { display: flex; flex-direction: column; position: relative; }
+.mockup-label { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #999; margin-bottom: 10px; }
 .mockup-cards { display: flex; flex-direction: column; gap: 10px; position: relative; }
-.m-card { border-radius: 22px; padding: 18px 20px 14px; position: relative; overflow: hidden; }
-.m-card-red { background: #E8604A; color: #fff; }
+.m-card { border-radius: 22px; padding: 18px 20px 14px; }
+.m-card-red { background: #FF0000; color: #fff; }
 .m-card-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 4px; }
-.m-card-estado { font-size: 18px; font-weight: 900; letter-spacing: -0.5px; }
-.m-card-deadline { font-size: 14px; font-weight: 900; color: rgba(0,0,0,0.35); }
+.m-card-estado { font-size: 17px; font-weight: 900; }
+.m-card-deadline { font-size: 13px; font-weight: 700; opacity: 0.5; }
 .m-card-produto { font-size: 15px; font-weight: 800; margin-bottom: 1px; }
 .m-card-loja { font-size: 12px; font-weight: 700; opacity: 0.6; margin-bottom: 10px; }
-.m-card-pin { font-size: 52px; font-weight: 900; line-height: 0.9; letter-spacing: -3px; margin-bottom: 2px; }
+.m-card-pin { font-size: 52px; font-weight: 900; line-height: 0.9; letter-spacing: -3px; margin-bottom: 2px; text-align: right; }
 .m-card-pin-label { font-size: 9px; font-weight: 700; letter-spacing: 5px; opacity: 0.35; text-align: right; margin-bottom: 12px; }
-.m-card-local { font-size: 15px; font-weight: 800; letter-spacing: -0.3px; margin-bottom: 10px; }
+.m-card-local { font-size: 14px; font-weight: 800; margin-bottom: 10px; }
 .m-card-actions { display: flex; gap: 8px; }
-.m-btn-maps { flex: 1; padding: 10px 8px; border-radius: 12px; border: none; background: #fff; font-size: 12px; font-weight: 800; color: #E8604A; font-family: inherit; }
-.m-btn-ok { flex: 1.2; padding: 10px 8px; border-radius: 12px; border: none; background: rgba(0,0,0,0.2); color: #fff; font-size: 12px; font-weight: 800; font-family: inherit; }
-.card-peek { border-radius: 22px; padding: 14px 20px; background: #F07020; color: #fff; margin-bottom: -60px; position: relative; z-index: 0; }
-.mockup-fade { height: 80px; background: linear-gradient(to bottom, transparent, #fff); position: relative; z-index: 2; margin-top: -10px; }
+.m-btn-maps { flex: 1; padding: 10px 8px; border-radius: 12px; border: none; background: #fff; font-size: 12px; font-weight: 800; color: #FF0000; font-family: inherit; }
+.m-btn-ok { flex: 1; padding: 10px 8px; border-radius: 12px; border: none; background: rgba(0,0,0,0.2); color: #fff; font-size: 12px; font-weight: 800; font-family: inherit; }
+.card-peek { border-radius: 22px; padding: 14px 20px; background: #F472B6; color: #fff; margin-bottom: -60px; position: relative; z-index: 0; }
+.mockup-fade { height: 80px; background: linear-gradient(to bottom, transparent, #D9ECEC); position: relative; z-index: 2; margin-top: -10px; }
 
-/* STATS */
-.stat-bar { background: #f5f5f0; padding: 18px 24px; display: flex; gap: 0; flex-shrink: 0; }
-.stat { flex: 1; text-align: center; padding: 0 8px; border-right: 1px solid #e5e5e0; }
-.stat:last-child { border-right: none; }
-.stat-num { font-size: 24px; font-weight: 900; letter-spacing: -1.5px; color: #111; line-height: 1; margin-bottom: 3px; }
-.stat-num span { color: #E8604A; }
-.stat-label { font-size: 10px; font-weight: 700; color: #aaa; text-transform: uppercase; letter-spacing: 0.5px; line-height: 1.3; }
-
-/* FEATURES */
-.features { background: #fff; padding: 0 24px 28px; flex-shrink: 0; }
-.feature-list { display: flex; flex-direction: column; gap: 0; }
-.feature-item { display: flex; align-items: flex-start; gap: 14px; padding: 16px 0; border-bottom: 1px solid #f0f0ec; }
+/* FEATURES — sem caixas, só lista limpa */
+.features { padding: 4px 28px 28px; flex-shrink: 0; }
+.feature-list { display: flex; flex-direction: column; }
+.feature-item { display: flex; align-items: center; gap: 14px; padding: 13px 0; border-bottom: 1px solid rgba(0,0,0,0.07); }
 .feature-item:last-child { border-bottom: none; }
-.feature-icon { width: 38px; height: 38px; border-radius: 11px; display: flex; align-items: center; justify-content: center; font-size: 17px; flex-shrink: 0; margin-top: 1px; }
-.fi-red { background: #FFF0EE; }
-.fi-dark { background: #F0F0F0; }
-.fi-orange { background: #FFF5EC; }
-.feature-text-title { font-size: 14px; font-weight: 800; margin-bottom: 2px; letter-spacing: -0.2px; }
-.feature-text-sub { font-size: 12px; color: #888; line-height: 1.5; font-weight: 500; }
+.feature-icon { width: 34px; height: 34px; border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.fi-red { background: rgba(255,0,0,0.12); color: #FF0000; }
+.fi-orange { background: rgba(244,114,182,0.15); color: #c4005a; }
+.fi-dark { background: rgba(255,85,0,0.12); color: #FF5500; }
+.feature-text-title { font-size: 14px; font-weight: 800; color: #111; }
 
-/* HOW IT WORKS */
-.how { background: #111; color: #fff; padding: 28px 24px 32px; flex-shrink: 0; }
-.how-title { font-size: 22px; font-weight: 900; letter-spacing: -1px; margin-bottom: 20px; }
-.how-title span { color: #E8604A; }
-.steps { display: flex; flex-direction: column; gap: 14px; }
-.step { display: flex; align-items: flex-start; gap: 14px; }
-.step-num { width: 28px; height: 28px; border-radius: 50%; background: #E8604A; color: #fff; font-size: 12px; font-weight: 900; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
-.step-body-title { font-size: 14px; font-weight: 800; margin-bottom: 2px; }
-.step-body-sub { font-size: 12px; color: #888; line-height: 1.45; }
+/* HOW — preto simples */
+.how { background: #111; padding: 28px 28px 32px; flex-shrink: 0; }
+.how-title { font-size: 20px; font-weight: 900; letter-spacing: -0.5px; margin-bottom: 20px; color: #fff; }
+.how-title span { color: #FF0000; }
+.steps { display: flex; flex-direction: column; gap: 16px; }
+.step { display: flex; align-items: center; gap: 16px; }
+.step-num { width: 26px; height: 26px; border-radius: 50%; background: #FF0000; color: #fff; font-size: 12px; font-weight: 900; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.step-body-title { font-size: 14px; font-weight: 700; color: #fff; }
 
 /* CTA */
-.cta-wrap { background: #fff; padding: 20px 20px 52px; display: flex; flex-direction: column; gap: 10px; flex-shrink: 0; }
-.cta-kicker { font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #bbb; text-align: center; margin-bottom: 4px; }
-.hbtn { width: 100%; padding: 16px; border-radius: 16px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: inherit; border: none; display: flex; align-items: center; justify-content: center; gap: 10px; letter-spacing: -0.2px; }
-.hbtn-g { background: #fff; color: #111; border: 1.5px solid #e5e5e0 !important; }
+.cta-wrap { padding: 24px 24px 52px; display: flex; flex-direction: column; gap: 10px; flex-shrink: 0; }
+.cta-kicker { font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #999; text-align: center; margin-bottom: 4px; }
+.hbtn { width: 100%; padding: 16px; border-radius: 16px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: inherit; border: none; display: flex; align-items: center; justify-content: center; gap: 10px; }
+.hbtn-g { background: #C8E6E6; color: #111; }
 .hbtn-e { background: #111; color: #fff; }
-.gdot { width: 20px; height: 20px; border-radius: 50%; background: #E8604A; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 900; color: #fff; flex-shrink: 0; }
-.cta-terms { font-size: 11px; color: #bbb; text-align: center; margin-top: 2px; }
+.gdot { width: 20px; height: 20px; border-radius: 50%; background: #FF0000; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 900; color: #fff; flex-shrink: 0; }
+.cta-terms { font-size: 11px; color: #999; text-align: center; }
+
+/* STATS */
+.stat-bar { padding: 16px 24px; display: flex; flex-shrink: 0; border-top: 1px solid rgba(0,0,0,0.06); border-bottom: 1px solid rgba(0,0,0,0.06); }
+.stat { flex: 1; text-align: center; padding: 0 8px; border-right: 1px solid rgba(0,0,0,0.08); }
+.stat:last-child { border-right: none; }
+.stat-num { font-size: 22px; font-weight: 900; letter-spacing: -1px; color: #111; line-height: 1; margin-bottom: 3px; }
+.stat-num span { color: #FF0000; }
+.stat-label { font-size: 10px; font-weight: 700; color: #888; text-transform: uppercase; letter-spacing: 0.5px; }
 
 /* ── APP ── */
 #app { display: none; }
-#app.on { display: block; padding-bottom: 80px; }
+#app.on { display: block; padding-bottom: 40px; }
 
 /* ── HEADER ── */
-.top-bar { background: #f5f5f0; padding: 52px 20px 10px; position: sticky; top: 0; z-index: 10; }
-.app-title { font-size: 28px; font-weight: 900; letter-spacing: -1px; }
-.app-sub { font-size: 13px; color: #888; margin-top: 2px; font-weight: 500; }
 
 /* ── TABS ── */
 .tab { display: none; }
@@ -101,55 +96,56 @@ body { font-family: 'Inter', -apple-system, sans-serif; background: #f5f5f0; col
 
 /* ── CARDS ── */
 .cards { padding: 10px 16px; display: flex; flex-direction: column; gap: 10px; }
-.card { border-radius: 24px; padding: 20px 20px 16px; display: flex; flex-direction: column; }
-.c-red    { background: #E8604A; color: #fff; }
-.c-orange { background: #F07020; color: #fff; }
-.c-amber  { background: #F0A020; color: #fff; }
-.card-top { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px; }
-.card-estado-label { font-size: 22px; font-weight: 900; letter-spacing: -0.5px; }
-.card-deadline { font-size: 16px; font-weight: 900; color: #000; }
-.card-produto { font-size: 17px; font-weight: 800; margin-bottom: 2px; }
-.card-loja-nome { font-size: 14px; font-weight: 700; opacity: 0.7; margin-bottom: 12px; }
-.card-pin { font-size: 72px; font-weight: 900; line-height: 0.88; letter-spacing: -4px; margin-bottom: 2px; }
-.card-pin-label { font-size: 10px; font-weight: 700; letter-spacing: 5px; opacity: 0.4; text-align: right; margin-bottom: 14px; }
-.card-spacer { height: 40px; }
-.card-local { font-size: 18px; font-weight: 800; letter-spacing: -0.4px; margin-bottom: 8px; }
-.card-codigo { font-size: 14px; font-weight: 800; margin-bottom: 14px; font-family: monospace; letter-spacing: 0.5px; background: rgba(0,0,0,0.1); border-radius: 8px; padding: 6px 10px; display: inline-flex; flex-direction: column; gap: 1px; }
-.card-codigo-label { font-size: 9px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; opacity: 0.55; font-family: 'Inter', sans-serif; }
-.card-actions { display: flex; gap: 8px; }
-.btn-maps { flex: 1; padding: 12px 8px; border-radius: 14px; border: none; background: #fff; font-size: 13px; font-weight: 800; cursor: pointer; font-family: inherit; color: #E8604A; }
-.c-orange .btn-maps { color: #F07020; }
-.c-amber .btn-maps { color: #F0A020; }
-.btn-edit { flex: 1; padding: 12px 8px; border-radius: 14px; border: none; background: rgba(0,0,0,0.15); color: #fff; font-size: 13px; font-weight: 700; cursor: pointer; font-family: inherit; }
-.btn-entregue { flex: 1; padding: 12px 8px; border-radius: 14px; border: none; background: rgba(0,0,0,0.22); color: #fff; font-size: 13px; font-weight: 800; cursor: pointer; font-family: inherit; }
-.btn-update { width: 100%; margin-top: 6px; padding: 7px; border-radius: 10px; border: none; background: transparent; font-size: 11px; font-weight: 600; cursor: pointer; color: #fff; opacity: 0.35; font-family: inherit; }
+.card { border-radius: 22px; padding: 16px 18px 12px; display: flex; flex-direction: column; }
+.c-red    { background: #FF0000; color: #fff; }
+.c-orange { background: #F472B6; color: #fff; }
+.c-amber  { background: #FF5500; color: #fff; }
+.card-top { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 2px; }
+.card-estado-label { font-size: 19px; font-weight: 900; letter-spacing: -0.5px; line-height: 1.1; }
+.card-deadline { font-size: 11px; font-weight: 700; opacity: 0.55; text-transform: uppercase; letter-spacing: 1px; flex-shrink: 0; margin-left: 8px; }
+.card-produto { font-size: 13px; font-weight: 700; margin-bottom: 0px; opacity: 0.9; }
+.card-loja-nome { font-size: 11px; font-weight: 600; opacity: 0.5; margin-bottom: 6px; }
+.card-pin { font-size: 80px; font-weight: 900; line-height: 0.85; letter-spacing: -5px; margin-bottom: 0px; text-align: right; }
+.card-pin-label { font-size: 8px; font-weight: 700; letter-spacing: 5px; opacity: 0.3; text-align: right; margin-bottom: 8px; }
+.card-spacer { height: 24px; }
+.card-local { font-size: 13px; font-weight: 800; letter-spacing: -0.2px; margin-bottom: 10px; opacity: 0.9; }
+.card-codigo { font-size: 11px; font-weight: 800; margin-bottom: 10px; font-family: monospace; letter-spacing: 0.5px; background: rgba(0,0,0,0.1); border-radius: 6px; padding: 4px 8px; display: inline-flex; flex-direction: column; gap: 1px; }
+.card-codigo-label { font-size: 8px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; opacity: 0.55; font-family: 'Inter', sans-serif; }
+.card-actions { display: flex; gap: 6px; }
+.btn-maps { flex: 1; padding: 9px 8px; border-radius: 12px; border: none; background: rgba(255,255,255,0.25); font-size: 12px; font-weight: 800; cursor: pointer; font-family: inherit; color: #fff; }
+.c-red .btn-maps { background: #fff; color: #FF0000; }
+.c-orange .btn-maps { background: rgba(255,255,255,0.25); color: #fff; }
+.c-amber .btn-maps { background: rgba(255,255,255,0.25); color: #fff; }
+.btn-edit { flex: 1; padding: 9px 8px; border-radius: 12px; border: none; background: rgba(0,0,0,0.15); color: #fff; font-size: 12px; font-weight: 700; cursor: pointer; font-family: inherit; }
+.btn-entregue { flex: 1; padding: 9px 8px; border-radius: 12px; border: none; background: rgba(0,0,0,0.22); color: #fff; font-size: 12px; font-weight: 800; cursor: pointer; font-family: inherit; }
+.btn-update { width: 100%; margin-top: 4px; padding: 5px; border-radius: 8px; border: none; background: transparent; font-size: 10px; font-weight: 600; cursor: pointer; color: #fff; opacity: 0.3; font-family: inherit; }
 .card-nota { font-size: 12px; background: rgba(0,0,0,0.1); border-radius: 10px; padding: 8px 12px; margin-top: 6px; line-height: 1.5; color: #fff; }
 
 /* ── HISTÓRICO ── */
 .hist-wrap { padding: 0 16px; }
 .hist-month { font-size: 11px; font-weight: 700; color: #888; letter-spacing: 1px; text-transform: uppercase; padding: 16px 0 8px; }
-.hist-item { background: #fff; border-radius: 16px; padding: 14px 16px; display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
-.hist-icon { width: 40px; height: 40px; border-radius: 12px; background: #E8604A; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 900; color: #fff; flex-shrink: 0; }
+.hist-item { background: #EAF4F4; border-radius: 16px; padding: 14px 16px; display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+.hist-icon { width: 40px; height: 40px; border-radius: 12px; background: #FF0000; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 900; color: #fff; flex-shrink: 0; }
 .hist-info { flex: 1; min-width: 0; }
 .hist-loja { font-size: 15px; font-weight: 800; }
 .hist-produto { font-size: 12px; color: #888; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .hist-right { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; flex-shrink: 0; }
 .hist-date { font-size: 11px; color: #bbb; font-weight: 600; }
-.btn-reativar { font-size: 11px; font-weight: 700; color: #E8604A; background: none; border: none; cursor: pointer; font-family: inherit; }
+.btn-reativar { font-size: 11px; font-weight: 700; color: #FF0000; background: none; border: none; cursor: pointer; font-family: inherit; }
 
 /* ── ADICIONAR ── */
 .add-wrap { padding: 16px; }
-.add-hint { font-size: 14px; color: #666; background: #fff; border-radius: 16px; padding: 14px 16px; margin-bottom: 14px; line-height: 1.5; }
-.add-wrap textarea { width: 100%; min-height: 120px; border: 1.5px solid #e5e5e0; border-radius: 16px; padding: 13px; font-size: 15px; font-family: inherit; color: #111; background: #fff; resize: vertical; }
+.add-hint { font-size: 14px; color: #444; background: #EAF4F4; border-radius: 16px; padding: 14px 16px; margin-bottom: 14px; line-height: 1.5; }
+.add-wrap textarea { width: 100%; min-height: 120px; border: 1.5px solid #e5e5e0; border-radius: 16px; padding: 13px; font-size: 15px; font-family: inherit; color: #111; background: #EAF4F4; resize: vertical; }
 .add-wrap textarea::placeholder { color: #bbb; }
 .form-title { font-size: 11px; color: #888; margin: 16px 0 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
 .field { margin-bottom: 10px; }
 .field label { font-size: 12px; color: #666; display: block; margin-bottom: 4px; font-weight: 600; }
-.field input, .field select { width: 100%; padding: 12px 14px; border: 1.5px solid #e5e5e0; border-radius: 12px; font-size: 15px; background: #fff; color: #111; font-family: inherit; }
+.field input, .field select { width: 100%; padding: 12px 14px; border: 1.5px solid #c8dede; border-radius: 12px; font-size: 15px; background: #EAF4F4; color: #111; font-family: inherit; }
 .field-nota { font-size: 12px; color: #856404; background: #fff3cd; border-radius: 10px; padding: 8px 12px; margin-top: 4px; line-height: 1.5; display: none; }
-.btn { width: 100%; margin-top: 10px; padding: 15px; border: none; border-radius: 14px; background: #fff; color: #111; font-size: 15px; cursor: pointer; font-family: inherit; font-weight: 700; }
+.btn { width: 100%; margin-top: 10px; padding: 15px; border: none; border-radius: 14px; background: #EAF4F4; color: #111; font-size: 15px; cursor: pointer; font-family: inherit; font-weight: 700; }
 .btn.p { background: #111; color: #fff; }
-.btn.d { color: #E8604A; }
+.btn.d { color: #FF0000; }
 .loading { text-align: center; padding: 1.5rem; color: #666; font-size: 14px; display: none; }
 .spinner { display: inline-block; width: 18px; height: 18px; border: 2px solid #e5e5e0; border-top-color: #111; border-radius: 50%; animation: spin 0.8s linear infinite; margin-right: 8px; vertical-align: middle; }
 @keyframes spin { to { transform: rotate(360deg); } }
@@ -159,8 +155,8 @@ body { font-family: 'Inter', -apple-system, sans-serif; background: #f5f5f0; col
 .cal-wrap { padding: 16px; }
 .cal-nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
 .cal-title { font-size: 20px; font-weight: 900; letter-spacing: -0.5px; }
-.cal-arrow { background: #fff; border: none; border-radius: 10px; width: 36px; height: 36px; font-size: 18px; cursor: pointer; font-family: inherit; font-weight: 700; }
-.cal-grid { background: #fff; border-radius: 20px; padding: 14px; margin-bottom: 14px; }
+.cal-arrow { background: #EAF4F4; border: none; border-radius: 10px; width: 36px; height: 36px; font-size: 18px; cursor: pointer; font-family: inherit; font-weight: 700; }
+.cal-grid { background: #EAF4F4; border-radius: 20px; padding: 14px; margin-bottom: 14px; }
 .cal-weekdays { display: grid; grid-template-columns: repeat(7,1fr); margin-bottom: 8px; }
 .cal-wd { text-align: center; font-size: 11px; font-weight: 700; color: #888; }
 .cal-days { display: grid; grid-template-columns: repeat(7,1fr); gap: 3px; }
@@ -169,9 +165,9 @@ body { font-family: 'Inter', -apple-system, sans-serif; background: #f5f5f0; col
 .cal-day.today { font-weight: 900; }
 .cal-day.today::after { content: ''; position: absolute; bottom: 2px; left: 50%; transform: translateX(-50%); width: 4px; height: 4px; border-radius: 50%; background: #111; }
 .cal-day.today { position: relative; }
-.cal-day.has-red { background: #E8604A; color: #fff; font-weight: 900; }
-.cal-day.has-orange { background: #F07020; color: #fff; font-weight: 900; }
-.cal-day.has-amber { background: #F0A020; color: #fff; font-weight: 900; }
+.cal-day.has-red { background: #FF0000; color: #fff; font-weight: 900; }
+.cal-day.has-orange { background: #F472B6; color: #fff; font-weight: 900; }
+.cal-day.has-amber { background: #FF5500; color: #fff; font-weight: 900; }
 .cal-day.selected { outline: 2.5px solid #111; outline-offset: 1px; }
 .cal-legend { display: flex; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; }
 .cal-legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: #666; font-weight: 600; }
@@ -180,33 +176,55 @@ body { font-family: 'Inter', -apple-system, sans-serif; background: #f5f5f0; col
 
 /* ── CONFIG ── */
 .cfg-wrap { padding: 16px; }
-.cfg-card { background: #fff; border-radius: 18px; padding: 18px; margin-bottom: 12px; }
+.cfg-card { background: #EAF4F4; border-radius: 18px; padding: 18px; margin-bottom: 12px; }
 .cfg-card h3 { font-size: 16px; font-weight: 800; margin-bottom: 6px; }
 .cfg-card p { font-size: 13px; color: #666; margin-bottom: 12px; line-height: 1.5; }
-.api-input { width: 100%; padding: 12px 14px; border: 1.5px solid #e5e5e0; border-radius: 12px; font-size: 14px; font-family: monospace; color: #111; background: #f5f5f0; }
+.api-input { width: 100%; padding: 12px 14px; border: 1.5px solid #e5e5e0; border-radius: 12px; font-size: 14px; font-family: monospace; color: #111; background: #EAF4F4; }
 .api-save { margin-top: 8px; padding: 12px; border: none; border-radius: 12px; background: #111; color: #fff; font-size: 14px; font-weight: 700; width: 100%; cursor: pointer; font-family: inherit; }
 .api-ok { font-size: 13px; color: #2a7a2a; margin-top: 6px; display: none; font-weight: 600; }
 
 /* ── MODAIS ── */
 .modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 1000; display: flex; align-items: flex-end; }
-.modal-box { background: #f5f5f0; border-radius: 24px 24px 0 0; padding: 20px 20px 40px; width: 100%; max-height: 88vh; overflow-y: auto; }
+.modal-box { background: #D9ECEC; border-radius: 24px 24px 0 0; padding: 20px 20px 40px; width: 100%; max-height: 88vh; overflow-y: auto; }
 .modal-box h2 { font-size: 20px; font-weight: 900; margin-bottom: 4px; letter-spacing: -0.5px; }
 .modal-sub { font-size: 13px; color: #888; margin-bottom: 16px; }
 .modal-close { float: right; background: #e5e5e0; border: none; border-radius: 50%; width: 30px; height: 30px; font-size: 16px; cursor: pointer; }
 
-/* ── NAV ── */
-.nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(245,245,240,0.95); backdrop-filter: blur(12px); border-top: 1px solid #e5e5e0; display: none; padding: 10px 0 24px; z-index: 20; }
-.nav.on { display: flex; }
-.nav-btn { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; font-size: 9px; color: #aaa; cursor: pointer; padding: 4px 0; border: none; background: none; font-family: inherit; font-weight: 600; }
-.nav-btn.on { color: #111; }
-.nav-dot { width: 4px; height: 4px; border-radius: 50%; background: #111; }
+/* ── NAV / HAMBURGER ── */
+.nav { display: none; } /* escondida — substituída pelo drawer */
+.nav-dot { display: none; }
+
+/* HEADER COM HAMBURGER */
+.top-bar { background: #D9ECEC; padding: 52px 20px 10px; position: sticky; top: 0; z-index: 10; display: flex; align-items: flex-start; justify-content: space-between; }
+.top-bar-left { display: flex; flex-direction: column; }
+.app-title { font-size: 22px; font-weight: 900; letter-spacing: -0.5px; line-height: 1.15; }
+.app-sub { font-size: 13px; color: #888; margin-top: 4px; font-weight: 500; }
+.hamburger { background: #C8E6E6; border: none; border-radius: 14px; width: 42px; height: 42px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px; cursor: pointer; flex-shrink: 0; margin-top: 46px; }
+.hamburger span { display: block; width: 18px; height: 2px; background: #111; border-radius: 2px; transition: all 0.2s; }
+
+/* DRAWER */
+.drawer-bg { position: fixed; inset: 0; background: rgba(0,0,0,0); z-index: 500; pointer-events: none; transition: background 0.25s; }
+.drawer-bg.on { background: rgba(0,0,0,0.3); pointer-events: all; }
+.drawer { position: fixed; top: 0; right: -280px; width: 260px; height: 100%; background: #D9ECEC; z-index: 501; transition: right 0.28s cubic-bezier(.4,0,.2,1); padding: 0; display: flex; flex-direction: column; border-radius: 24px 0 0 24px; }
+.drawer.on { right: 0; }
+.drawer-header { padding: 56px 24px 16px; border-bottom: 1px solid rgba(0,0,0,0.06); }
+.drawer-logo { font-size: 20px; font-weight: 900; letter-spacing: -1px; color: #111; }
+.drawer-logo span { color: #FF0000; }
+.drawer-menu { flex: 1; padding: 12px 0; overflow-y: auto; }
+.drawer-item { display: flex; align-items: center; gap: 14px; padding: 14px 24px; cursor: pointer; border: none; background: none; width: 100%; font-family: inherit; text-align: left; font-size: 15px; font-weight: 700; color: #555; transition: all 0.15s; }
+.drawer-item:active { background: rgba(0,0,0,0.05); }
+.drawer-item.on { color: #111; background: rgba(0,0,0,0.07); }
+.drawer-item svg { flex-shrink: 0; }
+.drawer-item-dot { width: 8px; height: 8px; border-radius: 50%; background: #FF0000; flex-shrink: 0; }
+.drawer-section-label { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #999; padding: 16px 24px 4px; }
+.drawer-close { margin: 0 16px 32px; padding: 14px; border: none; border-radius: 14px; background: rgba(0,0,0,0.08); font-size: 14px; font-weight: 700; color: #666; cursor: pointer; font-family: inherit; }
 
 /* ── TOAST ── */
 .toast { position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%); background: #111; color: #fff; padding: 12px 24px; border-radius: 20px; font-size: 14px; font-weight: 600; z-index: 9998; opacity: 0; transition: opacity 0.3s; pointer-events: none; white-space: nowrap; }
 .toast.on { opacity: 1; }
 
 /* ── NOTIF ── */
-.notif-bar { background: #E8604A; color: #fff; padding: 10px 16px; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: space-between; cursor: pointer; }
+.notif-bar { background: #FF0000; color: #fff; padding: 10px 16px; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: space-between; cursor: pointer; }
 
 /* ── EMPTY ── */
 .empty { text-align: center; padding: 4rem 1rem; color: #aaa; }
@@ -226,12 +244,11 @@ body { font-family: 'Inter', -apple-system, sans-serif; background: #f5f5f0; col
     </div>
     <div class="hero-eyebrow">
       <div class="hero-eyebrow-dot"></div>
-      PWA gratuita
+      grátis · sem registo
     </div>
     <div class="hero-logo">Já<br>Chegou<span>?</span></div>
     <div class="hero-tagline">
-      Reencaminha o email.<br>
-      A app trata do resto.
+      Nunca mais vais perder<br>um PIN nem uma encomenda.
     </div>
 
     <!-- MOCKUP -->
@@ -268,87 +285,24 @@ body { font-family: 'Inter', -apple-system, sans-serif; background: #f5f5f0; col
     </div>
   </div>
 
-  <!-- STATS -->
-  <div class="stat-bar">
-    <div class="stat">
-      <div class="stat-num">3<span>s</span></div>
-      <div class="stat-label">para adicionar</div>
-    </div>
-    <div class="stat">
-      <div class="stat-num"><span>∞</span></div>
-      <div class="stat-label">lojas suportadas</div>
-    </div>
-    <div class="stat">
-      <div class="stat-num">0<span>€</span></div>
-      <div class="stat-label">custo</div>
-    </div>
-  </div>
-
   <!-- FEATURES -->
   <div class="features">
     <div class="feature-list">
       <div class="feature-item">
-        <div class="feature-icon fi-red">✉️</div>
-        <div>
-          <div class="feature-text-title">Cola o email, a IA faz o resto</div>
-          <div class="feature-text-sub">Loja, produto, pin e data limite extraídos automaticamente do email de confirmação.</div>
-        </div>
+        <div class="feature-icon fi-red"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="2,4 12,13 22,4"/></svg></div>
+        <div class="feature-text-title">Cola o email — a IA extrai tudo</div>
       </div>
       <div class="feature-item">
-        <div class="feature-icon fi-orange">📍</div>
-        <div>
-          <div class="feature-text-title">Pin sempre à mão</div>
-          <div class="feature-text-sub">O código de levantamento aparece em destaque no cartão, mesmo sem internet no ponto.</div>
-        </div>
+        <div class="feature-icon fi-red"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="9" y1="7" x2="15" y2="7"/><line x1="9" y1="11" x2="15" y2="11"/><line x1="9" y1="15" x2="12" y2="15"/></svg></div>
+        <div class="feature-text-title">PIN sempre visível, mesmo sem net</div>
       </div>
       <div class="feature-item">
-        <div class="feature-icon fi-dark">🗓️</div>
-        <div>
-          <div class="feature-text-title">Alertas antes de perder a encomenda</div>
-          <div class="feature-text-sub">Notificações no dia anterior ao prazo. Nunca mais tens de pagar reenvio.</div>
-        </div>
+        <div class="feature-icon fi-dark"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
+        <div class="feature-text-title">Alerta antes do prazo acabar</div>
       </div>
       <div class="feature-item">
-        <div class="feature-icon fi-red">🔄</div>
-        <div>
-          <div class="feature-text-title">Emails de transportadora associados</div>
-          <div class="feature-text-sub">Chegou email dos CTT, DPD ou Chronopost? A app atualiza a encomenda certa automaticamente.</div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- COMO FUNCIONA -->
-  <div class="how">
-    <div class="how-title">Como <span>funciona</span></div>
-    <div class="steps">
-      <div class="step">
-        <div class="step-num">1</div>
-        <div>
-          <div class="step-body-title">Recebeste um email de encomenda</div>
-          <div class="step-body-sub">Confirmação de compra da Zara, ASOS, Shein, Amazon — qualquer loja.</div>
-        </div>
-      </div>
-      <div class="step">
-        <div class="step-num">2</div>
-        <div>
-          <div class="step-body-title">Colas o texto aqui</div>
-          <div class="step-body-sub">Seleciona tudo no email, copia e cola no campo de texto da app.</div>
-        </div>
-      </div>
-      <div class="step">
-        <div class="step-num">3</div>
-        <div>
-          <div class="step-body-title">A IA extrai tudo em segundos</div>
-          <div class="step-body-sub">Loja, produto, data limite, pin e local identificados automaticamente.</div>
-        </div>
-      </div>
-      <div class="step">
-        <div class="step-num">4</div>
-        <div>
-          <div class="step-body-title">Aparece o cartão — pronto a usar</div>
-          <div class="step-body-sub">Pin gigante, botão de maps, alerta de prazo. Tudo num único ecrã.</div>
-        </div>
+        <div class="feature-icon fi-orange"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg></div>
+        <div class="feature-text-title">Entrega em casa reconhecida automaticamente</div>
       </div>
     </div>
   </div>
@@ -369,8 +323,13 @@ body { font-family: 'Inter', -apple-system, sans-serif; background: #f5f5f0; col
 <!-- APP -->
 <div id="app">
   <div class="top-bar">
-    <div class="app-title">Já Chegou<span style="color:#E8604A">?</span></div>
-    <div class="app-sub" id="subtitle">0 ativas</div>
+    <div class="top-bar-left">
+      <div class="app-title">a minha encomenda<br><span style="color:#FF0000">já chegou</span><span style="color:#FF0000">?</span></div>
+      <div class="app-sub" id="subtitle">0 ativas</div>
+    </div>
+    <button class="hamburger" onclick="abrirDrawer()" aria-label="menu">
+      <span></span><span></span><span></span>
+    </button>
   </div>
 
   <div id="notif-wrap"></div>
@@ -396,15 +355,15 @@ body { font-family: 'Inter', -apple-system, sans-serif; background: #f5f5f0; col
         <div class="field"><label>produto</label><input type="text" id="f-produto" /></div>
         <div class="field"><label>tipo de entrega</label>
           <select id="f-tipo" onchange="tipoChange()">
-            <option value="recolha">📍 levantamento num ponto</option>
-            <option value="casa">🏠 entrega em casa</option>
+            <option value="recolha">levantamento num ponto</option>
+            <option value="casa">entrega em casa</option>
           </select>
         </div>
         <div class="field"><label>estado</label>
           <select id="f-estado">
-            <option value="preparacao">🟡 em preparação</option>
-            <option value="enviado">🟠 enviada</option>
-            <option value="vermelho">🔴 levantar</option>
+            <option value="preparacao">em preparação</option>
+            <option value="enviado">enviada</option>
+            <option value="vermelho">levantar</option>
           </select>
         </div>
         <div class="field"><label>local</label><input type="text" id="f-local" placeholder="ex: ponto dpd benfica" /></div>
@@ -433,9 +392,9 @@ body { font-family: 'Inter', -apple-system, sans-serif; background: #f5f5f0; col
         <div class="cal-days" id="cal-days"></div>
       </div>
       <div class="cal-legend">
-        <div class="cal-legend-item"><div class="cal-dot" style="background:#E8604A"></div>levantar</div>
-        <div class="cal-legend-item"><div class="cal-dot" style="background:#F07020"></div>enviada</div>
-        <div class="cal-legend-item"><div class="cal-dot" style="background:#F0A020"></div>em preparação</div>
+        <div class="cal-legend-item"><div class="cal-dot" style="background:#FF0000"></div>levantar</div>
+        <div class="cal-legend-item"><div class="cal-dot" style="background:#F472B6"></div>enviada</div>
+        <div class="cal-legend-item"><div class="cal-dot" style="background:#FF5500"></div>em preparação</div>
       </div>
       <div class="cal-detail-title" id="cal-dtitle" style="display:none"></div>
       <div id="cal-detail"></div>
@@ -484,29 +443,50 @@ body { font-family: 'Inter', -apple-system, sans-serif; background: #f5f5f0; col
   </div>
 </div>
 
-<!-- NAV -->
-<nav class="nav" id="nav">
-  <button class="nav-btn on" id="nb-ativas" onclick="goTab('ativas')">
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="18" rx="2"/><path d="M8 3v18M2 9h6M2 15h6"/></svg>
-    ativas<div class="nav-dot"></div>
-  </button>
-  <button class="nav-btn" id="nb-historico" onclick="goTab('historico')">
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-    histórico
-  </button>
-  <button class="nav-btn" id="nb-adicionar" onclick="goTab('adicionar')">
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
-    adicionar
-  </button>
-  <button class="nav-btn" id="nb-calendario" onclick="goTab('calendario')">
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-    calendário
-  </button>
-  <button class="nav-btn" id="nb-conta" onclick="goTab('conta')">
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
-    conta
-  </button>
-</nav>
+<!-- DRAWER -->
+<div class="drawer-bg" id="drawer-bg" onclick="fecharDrawer()"></div>
+<div class="drawer" id="drawer">
+  <div class="drawer-header">
+    <div class="drawer-logo">Já Chegou<span>?</span></div>
+  </div>
+  <div class="drawer-menu">
+    <button class="drawer-item on" id="nb-ativas" onclick="goTab('ativas')">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="18" rx="2"/><path d="M8 3v18M2 9h6M2 15h6"/></svg>
+      ativas
+      <div class="drawer-item-dot" id="dot-ativas"></div>
+    </button>
+    <button class="drawer-item" id="nb-adicionar" onclick="goTab('adicionar')">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+      adicionar encomenda
+    </button>
+    <button class="drawer-item" id="nb-historico" onclick="goTab('historico')">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      histórico
+    </button>
+    <button class="drawer-item" id="nb-calendario" onclick="goTab('calendario')">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      calendário
+    </button>
+
+    <div class="drawer-section-label">ajuda & configurações</div>
+
+    <button class="drawer-item" id="nb-conta" onclick="goTab('conta')">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+      conta & definições
+    </button>
+    <button class="drawer-item" onclick="abrirCardsPreview()">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      como funcionam os cards?
+    </button>
+    <button class="drawer-item" onclick="verHomepage()">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>
+      apresentação da app
+    </button>
+  </div>
+  <button class="drawer-close" onclick="fecharDrawer()">fechar ✕</button>
+</div>
+
+<nav class="nav" id="nav"></nav>
 
 <div class="toast" id="toast"></div>
 
@@ -537,9 +517,9 @@ const LOJAS = {
 };
 
 const ESTADO_CFG = {
-  vermelho:   { label: 'Para Levantar', cls: 'c-red' },
-  enviado:    { label: 'Enviada',       cls: 'c-orange' },
-  preparacao: { label: 'Em Preparação', cls: 'c-amber' },
+  vermelho:   { label: 'Está no Ponto! Vai Já',   cls: 'c-red' },
+  enviado:    { label: 'Em Trânsito! Quase Aí',   cls: 'c-orange' },
+  preparacao: { label: 'Confirmada! A Preparar',  cls: 'c-amber' },
 };
 const ORDEM = ['vermelho','enviado','preparacao'];
 const MESES = ['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
@@ -587,7 +567,6 @@ function entrar() {
   document.getElementById('home').classList.remove('on');
   document.getElementById('home').classList.add('off');
   document.getElementById('app').classList.add('on');
-  document.getElementById('nav').classList.add('on');
 }
 
 // ── TOAST ─────────────────────────────────────────────
@@ -626,7 +605,7 @@ function renderAtivas() {
     .sort((a,b) => ORDEM.indexOf(a.estado) - ORDEM.indexOf(b.estado));
 
   if (!ativas.length) {
-    el.innerHTML = '<div class="empty"><div class="empty-icon">📭</div><p>nenhuma encomenda ativa.<br>adiciona a tua primeira encomenda.</p></div>';
+    el.innerHTML = '<div class="empty"><div class="empty-icon">—</div><p>nenhuma encomenda ativa.<br>adiciona a tua primeira encomenda.</p></div>';
     return;
   }
 
@@ -635,7 +614,7 @@ function renderAtivas() {
     const cfg = ESTADO_CFG[o.estado] || ESTADO_CFG['preparacao'];
     const dl = deadlineStr(o);
     const info = LOJAS[(o.loja||'').toLowerCase().trim()];
-    const local = o.tipo === 'casa' ? '🏠 Casa' : (o.local || '');
+    const local = o.tipo === 'casa' ? 'Casa' : (o.local || '');
     const localMaps = o.local && o.tipo !== 'casa' ? o.local : '';
 
     const pinH = o.pin
@@ -651,7 +630,6 @@ function renderAtivas() {
     const entH = (o.estado === 'vermelho' || o.tipo === 'casa')
       ? '<button class="btn-entregue" onclick="marcarEntregue(' + idx + ')">entregue ✓</button>'
       : '';
-    const notaH = (info && info.sep && o.tipo !== 'casa') ? '<div class="card-nota">' + info.nota + '</div>' : '';
 
     return '<div class="card ' + cfg.cls + '">' +
       '<div class="card-top"><div class="card-estado-label">' + cfg.label + '</div>' + (dl ? '<div class="card-deadline">' + dl + '</div>' : '') + '</div>' +
@@ -662,7 +640,6 @@ function renderAtivas() {
         '<button class="btn-edit" onclick="abrirEditar(' + idx + ')">editar ✏</button>' +
         entH +
       '</div>' +
-      notaH +
       '<button class="btn-update" onclick="abrirAtualizar(' + idx + ')">+ atualizar com novo email</button>' +
     '</div>';
   }).join('');
@@ -673,7 +650,7 @@ function renderHistorico() {
   const el = document.getElementById('hist-list');
   const ents = orders.filter(o => o.estado === 'entregue').reverse();
   if (!ents.length) {
-    el.innerHTML = '<div class="empty"><div class="empty-icon">📦</div><p>ainda sem encomendas entregues.</p></div>';
+    el.innerHTML = '<div class="empty"><div class="empty-icon">—</div><p>ainda sem encomendas entregues.</p></div>';
     return;
   }
   const byM = {};
@@ -710,12 +687,92 @@ function reativar(i) {
 // ── TABS ──────────────────────────────────────────────
 function goTab(tab) {
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('on'));
-  document.querySelectorAll('.nav-btn').forEach(b => { b.classList.remove('on'); const d = b.querySelector('.nav-dot'); if (d) d.remove(); });
+  document.querySelectorAll('.drawer-item').forEach(b => b.classList.remove('on'));
+  document.querySelectorAll('.drawer-item-dot').forEach(d => d.style.display = 'none');
   document.getElementById('tab-' + tab).classList.add('on');
   const btn = document.getElementById('nb-' + tab);
-  btn.classList.add('on');
-  const dot = document.createElement('div'); dot.className = 'nav-dot'; btn.appendChild(dot);
+  if (btn) btn.classList.add('on');
+  const dot = document.getElementById('dot-' + tab);
+  if (dot) dot.style.display = 'block';
   if (tab === 'calendario') renderCal();
+  fecharDrawer();
+}
+
+function abrirCardsPreview() {
+  fecharDrawer();
+  const modal = document.createElement('div');
+  modal.className = 'modal-bg'; modal.id = 'modal-cards';
+  modal.innerHTML = `<div class="modal-box" style="background:#D9ECEC;padding:20px 16px 40px">
+    <button class="modal-close" onclick="fecharModal('modal-cards')" style="background:rgba(0,0,0,0.1)">✕</button>
+    <div style="font-size:20px;font-weight:900;letter-spacing:-0.5px;margin-bottom:4px">Como ler os cards</div>
+    <div style="font-size:13px;color:#666;margin-bottom:20px;font-weight:500">cada cor é um estado da tua encomenda</div>
+
+    <div style="display:flex;flex-direction:column;gap:16px">
+
+      <div>
+        <div style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#FF0000;margin-bottom:6px">— prioridade máxima</div>
+        <div class="card c-red">
+          <div class="card-top"><div class="card-estado-label">Está no Ponto! Vai Já</div><div class="card-deadline">hoje!</div></div>
+          <div class="card-produto">Sapatilhas Nike Air Max</div>
+          <div class="card-loja-nome">Zara · CTT Expresso</div>
+          <div class="card-pin">7842</div>
+          <div class="card-pin-label">P I N</div>
+          <div class="card-local">CTT Benfica — Estrada de Benfica 498</div>
+          <div class="card-actions">
+            <button class="btn-maps" style="color:#FF0000">maps ↗</button>
+            <button class="btn-edit">editar ✏</button>
+            <button class="btn-entregue">entregue ✓</button>
+          </div>
+        </div>
+        <div style="font-size:12px;color:#555;margin-top:8px;line-height:1.5;padding:0 4px">A encomenda chegou ao ponto de recolha. O PIN está aqui — mostra ao balcão. Toca em <b>maps</b> para navegar.</div>
+      </div>
+
+      <div>
+        <div style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#F472B6;margin-bottom:6px">— a caminho</div>
+        <div class="card c-orange">
+          <div class="card-top"><div class="card-estado-label">Em Trânsito! Quase Aí</div><div class="card-deadline">até 24 jun</div></div>
+          <div class="card-produto">Camisola de linho bege</div>
+          <div class="card-loja-nome">ASOS · DPD</div>
+          <div class="card-spacer"></div>
+          <div class="card-local">Ponto DPD — Rua Augusta 112</div>
+          <div class="card-actions">
+            <button class="btn-maps">maps ↗</button>
+            <button class="btn-edit">editar ✏</button>
+          </div>
+        </div>
+        <div style="font-size:12px;color:#555;margin-top:8px;line-height:1.5;padding:0 4px">Enviada pela loja, em trânsito. Quando chegar ao ponto passa automaticamente a vermelho.</div>
+      </div>
+
+      <div>
+        <div style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#FF5500;margin-bottom:6px">— confirmada</div>
+        <div class="card c-amber">
+          <div class="card-top"><div class="card-estado-label">Confirmada! A Preparar</div><div class="card-deadline">até 30 jun</div></div>
+          <div class="card-produto">Cenas Iolanda</div>
+          <div class="card-loja-nome">SHEIN</div>
+          <div class="card-spacer"></div>
+          <div class="card-local">Casa</div>
+          <div class="card-actions">
+            <button class="btn-maps">maps ↗</button>
+            <button class="btn-edit">editar ✏</button>
+            <button class="btn-entregue">entregue ✓</button>
+          </div>
+        </div>
+        <div style="font-size:12px;color:#555;margin-top:8px;line-height:1.5;padding:0 4px">Compra confirmada, a loja está a preparar. Ainda não saiu. Cola o email da transportadora quando chegares.</div>
+      </div>
+
+    </div>
+  </div>`;
+  document.body.appendChild(modal);
+}
+
+function abrirDrawer() {
+  document.getElementById('drawer').classList.add('on');
+  document.getElementById('drawer-bg').classList.add('on');
+}
+
+function fecharDrawer() {
+  document.getElementById('drawer').classList.remove('on');
+  document.getElementById('drawer-bg').classList.remove('on');
 }
 
 // ── CALENDÁRIO ────────────────────────────────────────
@@ -898,8 +955,8 @@ function tipoChange() {
   const pf = document.getElementById('field-pin'); if(pf) pf.style.display = tipo==='casa'?'none':'block';
   const se = document.getElementById('f-estado'); if(!se) return;
   se.innerHTML = tipo==='casa'
-    ? '<option value="preparacao">🟡 em preparação</option><option value="enviado">🟠 enviada</option>'
-    : '<option value="preparacao">🟡 em preparação</option><option value="enviado">🟠 enviada</option><option value="vermelho">🔴 levantar</option>';
+    ? '<option value="preparacao">em preparação</option><option value="enviado">enviada</option>'
+    : '<option value="preparacao">em preparação</option><option value="enviado">enviada</option><option value="vermelho">levantar</option>';
   const lbl = document.getElementById('label-datalimite');
   if (lbl) lbl.textContent = tipo === 'casa' ? 'data prevista de entrega' : 'data limite de levantamento';
 }
@@ -912,11 +969,11 @@ function mostrarAssociar(dados) {
   modal.className = 'modal-bg'; modal.id = 'modal-assoc';
   const itens = ativas.map(o => {
     const idx = orders.indexOf(o);
-    return '<div style="background:#fff;border-radius:14px;padding:14px 16px;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between">' +
+    return '<div style="background:#EAF4F4;border-radius:14px;padding:14px 16px;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between">' +
       '<div><div style="font-size:15px;font-weight:800">' + (o.loja||'Loja') + '</div>' +
       '<div style="font-size:12px;color:#888">' + (o.produto||'—') + '</div>' +
       (o.rastreio?'<div style="font-size:11px;color:#bbb;font-family:monospace">'+o.rastreio+'</div>':'') + '</div>' +
-      '<button onclick="associar(' + idx + ')" style="font-size:13px;font-weight:700;color:#E8604A;background:#FFF0EE;border:none;cursor:pointer;padding:6px 12px;border-radius:8px;font-family:inherit">associar</button>' +
+      '<button onclick="associar(' + idx + ')" style="font-size:13px;font-weight:700;color:#FF0000;background:#FFF0EE;border:none;cursor:pointer;padding:6px 12px;border-radius:8px;font-family:inherit">associar</button>' +
     '</div>';
   }).join('') || '<div style="color:#888;text-align:center;padding:1rem">não tens encomendas ativas.</div>';
 
@@ -948,20 +1005,22 @@ function abrirEditar(idx) {
   modal.className = 'modal-bg'; modal.id = 'modal-edit';
   const sP = o.estado==='preparacao'?'selected':'', sE = o.estado==='enviado'?'selected':'', sV = o.estado==='vermelho'?'selected':'';
   const tR = (o.tipo||'recolha')==='recolha'?'selected':'', tC = o.tipo==='casa'?'selected':'';
+  const isCasa = o.tipo === 'casa';
   modal.innerHTML = '<div class="modal-box">' +
     '<button class="modal-close" onclick="fecharModal(\'modal-edit\')">✕</button>' +
-    '<h2>editar encomenda</h2>' +
+    '<h2>editar</h2>' +
+    '<div class="modal-sub">' + (o.loja||'') + '</div>' +
     '<div class="field"><label>loja</label><input type="text" id="e-loja" /></div>' +
     '<div class="field"><label>produto</label><input type="text" id="e-produto" /></div>' +
-    '<div class="field"><label>tipo</label><select id="e-tipo"><option value="recolha" ' + tR + '>📍 levantamento</option><option value="casa" ' + tC + '>🏠 em casa</option></select></div>' +
-    '<div class="field"><label>estado</label><select id="e-estado"><option value="preparacao" ' + sP + '>🟡 em preparação</option><option value="enviado" ' + sE + '>🟠 enviada</option><option value="vermelho" ' + sV + '>🔴 levantar</option></select></div>' +
-    '<div class="field"><label>local</label><input type="text" id="e-local" /></div>' +
-    '<div class="field"><label>pin / código de levantamento</label><input type="text" id="e-pin" /></div>' +
-    '<div class="field"><label>código da encomenda</label><input type="text" id="e-codigo" placeholder="ex: #ZR-20481, PT123456789..." /></div>' +
-    '<div class="field"><label>' + (o.tipo==='casa' ? 'data prevista de entrega' : 'data limite de levantamento') + '</label><input type="text" id="e-datalimite" placeholder="dd/mm/aaaa" /></div>' +
-    '<div class="field"><label>data encomenda</label><input type="text" id="e-data" placeholder="dd/mm/aaaa" /></div>' +
-    '<button class="btn p" onclick="guardarEditar()" style="margin-top:8px">guardar</button>' +
-    '<button class="btn d" onclick="apagarEncomenda()" style="margin-top:8px">apagar encomenda</button>' +
+    '<div class="field"><label>tipo de entrega</label><select id="e-tipo" onchange="editTipoChange()"><option value="recolha" ' + tR + '>levantamento num ponto</option><option value="casa" ' + tC + '>entrega em casa</option></select></div>' +
+    '<div class="field"><label>estado</label><select id="e-estado"><option value="preparacao" ' + sP + '>em preparação</option><option value="enviado" ' + sE + '>enviada</option><option value="vermelho" ' + sV + '>levantar</option></select></div>' +
+    '<div class="field" id="e-field-local" style="' + (isCasa?'display:none':'') + '"><label>local de levantamento</label><input type="text" id="e-local" /></div>' +
+    '<div class="field" id="e-field-pin" style="' + (isCasa?'display:none':'') + '"><label>pin / código de levantamento</label><input type="text" id="e-pin" /></div>' +
+    '<div class="field"><label>código da encomenda</label><input type="text" id="e-codigo" /></div>' +
+    '<div class="field"><label id="e-label-dl">' + (isCasa?'data prevista de entrega':'data limite de levantamento') + '</label><input type="text" id="e-datalimite" placeholder="dd/mm/aaaa" /></div>' +
+    '<div class="field"><label>data da encomenda</label><input type="text" id="e-data" placeholder="dd/mm/aaaa" /></div>' +
+    '<button class="btn p" onclick="guardarEditar()" style="margin-top:8px">guardar alterações</button>' +
+    '<button class="btn d" onclick="apagarEncomenda()" style="margin-top:6px">apagar encomenda</button>' +
     '</div>';
   document.body.appendChild(modal);
   document.getElementById('e-loja').value = o.loja||'';
@@ -971,6 +1030,18 @@ function abrirEditar(idx) {
   document.getElementById('e-codigo').value = o.codigo||'';
   document.getElementById('e-datalimite').value = o.dataLimite||'';
   document.getElementById('e-data').value = o.data||'';
+}
+
+function editTipoChange() {
+  const tipo = document.getElementById('e-tipo')?.value || 'recolha';
+  const isCasa = tipo === 'casa';
+  const fl = document.getElementById('e-field-local'); if(fl) fl.style.display = isCasa?'none':'block';
+  const fp = document.getElementById('e-field-pin'); if(fp) fp.style.display = isCasa?'none':'block';
+  const lbl = document.getElementById('e-label-dl'); if(lbl) lbl.textContent = isCasa?'data prevista de entrega':'data limite de levantamento';
+  const se = document.getElementById('e-estado'); if(!se) return;
+  se.innerHTML = isCasa
+    ? '<option value="preparacao">em preparação</option><option value="enviado">enviada</option>'
+    : '<option value="preparacao">em preparação</option><option value="enviado">enviada</option><option value="vermelho">levantar</option>';
 }
 
 function guardarEditar() {
@@ -1042,12 +1113,12 @@ function verificarNotifs() {
     const d = parseData(ds); if (!d) return; d.setHours(0,0,0,0);
     const diff = Math.round((d - hoje) / 86400000);
     if (isCasa) {
-      if (diff===0) alertas.push('🏠 ' + o.loja + ' — entrega hoje! fica em casa!');
-      else if (diff===1) alertas.push('🏠 ' + o.loja + ' — entrega amanhã! confirma que estás em casa');
+      if (diff===0) alertas.push('Casa — ' + o.loja + ' — entrega hoje! fica em casa!');
+      else if (diff===1) alertas.push('Casa — ' + o.loja + ' — entrega amanhã! confirma que estás em casa');
     } else {
       if (diff<0) alertas.push('🚨 ' + o.loja + ' — data limite passou há ' + Math.abs(diff) + ' dia(s)!' + (o.pin?' · pin: '+o.pin:''));
       else if (diff===0) alertas.push('⚠️ ' + o.loja + ' — último dia para levantar!' + (o.pin?' · pin: '+o.pin:''));
-      else if (diff===1) alertas.push('📍 ' + o.loja + ' — amanhã é o último dia!' + (o.pin?' · pin: '+o.pin:''));
+      else if (diff===1) alertas.push('' + o.loja + ' — amanhã é o último dia!' + (o.pin?' · pin: '+o.pin:''));
     }
   });
   const wrap = document.getElementById('notif-wrap');
@@ -1111,11 +1182,8 @@ const savedMorada = localStorage.getItem('chegou_morada');
 if (savedMorada) document.getElementById('minha-morada').value = savedMorada;
 
 if (localStorage.getItem('chegou_entrou') || orders.length > 0) {
-  // utilizador já registado — vai direto para a app
   document.getElementById('app').classList.add('on');
-  document.getElementById('nav').classList.add('on');
 } else {
-  // utilizador novo — mostra a homepage
   document.getElementById('home').classList.add('on');
 }
 
