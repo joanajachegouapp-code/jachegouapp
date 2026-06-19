@@ -29,7 +29,8 @@ body { font-family: 'Inter', -apple-system, sans-serif; background: #f5f5f0; col
 
 /* ── APP ── */
 #app { display: none; }
-#app.on { display: block; padding-bottom: 80px; }
+#app.on { display: block; padding-bottom: 100px; }
+#app.on .cards { padding-bottom: 20px; }
 
 /* ── HEADER ── */
 .top-bar { background: #f5f5f0; padding: 52px 20px 10px; position: sticky; top: 0; z-index: 10; }
@@ -136,8 +137,8 @@ body { font-family: 'Inter', -apple-system, sans-serif; background: #f5f5f0; col
 .modal-close { float: right; background: #e5e5e0; border: none; border-radius: 50%; width: 30px; height: 30px; font-size: 16px; cursor: pointer; }
 
 /* ── NAV ── */
-.nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(245,245,240,0.95); backdrop-filter: blur(12px); border-top: 1px solid #e5e5e0; display: none; padding: 10px 0 24px; z-index: 20; }
-.nav.on { display: flex; }
+.nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(245,245,240,0.95); backdrop-filter: blur(12px); border-top: 1px solid #e5e5e0; display: flex; padding: 10px 0 24px; z-index: 20; visibility: hidden; }
+.nav.on { visibility: visible; }
 .nav-btn { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; font-size: 9px; color: #aaa; cursor: pointer; padding: 4px 0; border: none; background: none; font-family: inherit; font-weight: 600; }
 .nav-btn.on { color: #111; }
 .nav-dot { width: 4px; height: 4px; border-radius: 50%; background: #111; }
