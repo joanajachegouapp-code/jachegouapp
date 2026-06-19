@@ -1067,7 +1067,8 @@ function apagarTudo() { if(confirm('apagar tudo?')){orders=[];guardar();toast('a
 const savedKey = localStorage.getItem('anthropic_key');
 if (savedKey) document.getElementById('api-key').value = savedKey;
 
-if (localStorage.getItem('chegou_entrou') || orders.length > 0) {
+const forceHome = new URLSearchParams(location.search).has('home');
+if (!forceHome && (localStorage.getItem('chegou_entrou') || orders.length > 0)) {
   document.getElementById('home').classList.add('off');
   document.getElementById('app').classList.add('on');
   document.getElementById('nav').classList.add('on');
