@@ -912,17 +912,31 @@ async function processarEmail() {
 
     if (p.tipo === 'atualizacao') {
       const rastreio = (p.rastreio||'').toLowerCase().trim();
+      const loja = (p.loja||'').toLowerCase().trim();
+      const ativas = orders.filter(o => o.estado !== 'entregue');
       let idx = -1;
+
+      // 1. match por rastreio exato
       if (rastreio) {
         idx = orders.findIndex(o => o.estado !== 'entregue' && o.rastreio && o.rastreio.toLowerCase().trim() === rastreio);
+        // 2. match por rastreio parcial
         if (idx === -1) idx = orders.findIndex(o => o.estado !== 'entregue' && o.rastreio && (o.rastreio.toLowerCase().includes(rastreio) || rastreio.includes(o.rastreio.toLowerCase().trim())));
       }
+      // 3. match por loja (se só há uma encomenda ativa dessa loja)
+      if (idx === -1 && loja) {
+        const porLoja = ativas.filter(o => (o.loja||'').toLowerCase().includes(loja) || loja.includes((o.loja||'').toLowerCase()));
+        if (porLoja.length === 1) idx = orders.indexOf(porLoja[0]);
+      }
+      // 4. se só há uma encomenda ativa no total → associa automaticamente
+      if (idx === -1 && ativas.length === 1) idx = orders.indexOf(ativas[0]);
+
       document.getElementById('loading').style.display = 'none';
       if (idx !== -1) {
         if (p.local) orders[idx].local = p.local;
         if (p.pin) orders[idx].pin = p.pin;
         if (p.dataLimite) orders[idx].dataLimite = p.dataLimite;
         if (p.estado && p.estado !== 'manter') orders[idx].estado = p.estado;
+        if (p.rastreio && !orders[idx].rastreio) orders[idx].rastreio = p.rastreio;
         guardar(); document.getElementById('email-txt').value = '';
         goTab('ativas'); toast(p.pin ? '✓ ' + orders[idx].loja + ' · pin: ' + p.pin : '✓ encomenda atualizada');
       } else {
