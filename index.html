@@ -197,7 +197,8 @@ body { font-family: 'Inter', -apple-system, sans-serif; background: #D9ECEC; col
 .app-sub { font-size: 13px; color: #888; margin-top: 4px; font-weight: 500; }
 
 /* ── NAV BOTTOM ── */
-.nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(217,236,236,0.97); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-top: 1px solid rgba(0,0,0,0.07); display: none; padding: 8px 0 env(safe-area-inset-bottom, 20px); z-index: 100; }
+.nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(217,236,236,0.98); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-top: 1px solid rgba(0,0,0,0.08); display: none; padding: 8px 0 env(safe-area-inset-bottom, 16px); z-index: 9990; }
+.nav.on { display: flex; }
 .nav.on { display: flex; }
 .nav-btn { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; font-size: 9px; color: #999; cursor: pointer; padding: 4px 0; border: none; background: none; font-family: inherit; font-weight: 700; letter-spacing: 0.3px; }
 .nav-btn.on { color: #111; }
@@ -600,18 +601,30 @@ function deadlineStr(o) {
 // ── RENDER ATIVAS ─────────────────────────────────────
 function ordemPrioridade(o) {
   if (o.estado === 'vermelho') return 0;
-  // enviado com prazo amanhã ou hoje → sobe para quase vermelho
   if (o.estado === 'enviado') {
     const d = parseData(o.dataLimite || o.data);
     if (d) {
       const hoje = new Date(); hoje.setHours(0,0,0,0); d.setHours(0,0,0,0);
       const diff = Math.round((d - hoje) / 86400000);
-      if (diff <= 1) return 1;
+      if (diff <= 0) return 0; // hoje ou passou → mesmo nível que vermelho
+      if (diff === 1) return 1; // amanhã → quase prioritário
     }
     return 2;
   }
   if (o.estado === 'preparacao') return 3;
   return 4;
+}
+
+function estadoEfetivo(o) {
+  // encomenda enviada que chega hoje → mostrar como vermelho
+  if (o.estado === 'enviado') {
+    const d = parseData(o.dataLimite || o.data);
+    if (d) {
+      const hoje = new Date(); hoje.setHours(0,0,0,0); d.setHours(0,0,0,0);
+      if (Math.round((d - hoje) / 86400000) <= 0) return 'vermelho';
+    }
+  }
+  return o.estado;
 }
 
 function renderAtivas() {
@@ -626,7 +639,7 @@ function renderAtivas() {
 
   el.innerHTML = ativas.map(o => {
     const idx = orders.indexOf(o);
-    const cfg = ESTADO_CFG[o.estado] || ESTADO_CFG['preparacao'];
+    const cfg = ESTADO_CFG[estadoEfetivo(o)] || ESTADO_CFG['preparacao'];
     const dl = deadlineStr(o);
     const info = LOJAS[(o.loja||'').toLowerCase().trim()];
     const local = o.tipo === 'casa' ? 'Casa' : (o.local || '');
@@ -642,7 +655,7 @@ function renderAtivas() {
     const mapsH = localMaps
       ? '<button class="btn-maps" data-url="https://maps.google.com/?q=' + encodeURIComponent(localMaps) + '" onclick="window.open(this.dataset.url,\'_blank\')">maps ↗</button>'
       : '';
-    const entH = (o.estado === 'vermelho' || o.tipo === 'casa')
+    const entH = (estadoEfetivo(o) === 'vermelho' || o.tipo === 'casa')
       ? '<button class="btn-entregue" onclick="marcarEntregue(' + idx + ')">entregue ✓</button>'
       : '';
 
@@ -840,7 +853,7 @@ function calMostrar(d) {
   title.style.display='block';
   title.textContent = d + ' de ' + MESES[calM] + ' — ' + es.length + ' encomenda' + (es.length>1?'s':'');
   det.innerHTML = es.map(o => {
-    const cfg = ESTADO_CFG[o.estado] || ESTADO_CFG['preparacao'];
+    const cfg = ESTADO_CFG[estadoEfetivo(o)] || ESTADO_CFG['preparacao'];
     return '<div class="card ' + cfg.cls + '" style="margin-bottom:10px">' +
       '<div class="card-top"><div class="card-estado-label">' + cfg.label + '</div></div>' +
       '<div class="card-produto">' + (o.produto||'—') + '</div>' +
