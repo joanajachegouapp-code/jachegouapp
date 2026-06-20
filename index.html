@@ -524,19 +524,20 @@ const MESES = ['janeiro','fevereiro','março','abril','maio','junho','julho','ag
 const MESES_S = ['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
 
 function carregarDados() {
-  const chaves = ['chegou_orders','encomendas_v4','encomendas_v3','encomendas_v2','encomendas'];
+  // tenta chave principal primeiro
+  try {
+    const d = JSON.parse(localStorage.getItem('chegou_orders'));
+    if (Array.isArray(d)) return d;
+  } catch(e) {}
+  // migração de chaves antigas
+  const chaves = ['encomendas_v4','encomendas_v3','encomendas_v2','encomendas'];
   for (const k of chaves) {
     try {
       const d = JSON.parse(localStorage.getItem(k));
-      if (Array.isArray(d) && d.length > 0) { localStorage.setItem('chegou_orders', JSON.stringify(d)); return d; }
-    } catch(e) {}
-  }
-  for (let i = 0; i < localStorage.length; i++) {
-    const k = localStorage.key(i);
-    if (!k || k === 'anthropic_key') continue;
-    try {
-      const d = JSON.parse(localStorage.getItem(k));
-      if (Array.isArray(d) && d.length > 0 && d[0].loja) { localStorage.setItem('chegou_orders', JSON.stringify(d)); return d; }
+      if (Array.isArray(d) && d.length > 0) {
+        localStorage.setItem('chegou_orders', JSON.stringify(d));
+        return d;
+      }
     } catch(e) {}
   }
   return [];
@@ -545,7 +546,9 @@ function carregarDados() {
 let orders = carregarDados();
 
 function guardar() {
-  localStorage.setItem('chegou_orders', JSON.stringify(orders));
+  try {
+    localStorage.setItem('chegou_orders', JSON.stringify(orders));
+  } catch(e) { console.error('erro ao guardar:', e); }
   renderAtivas(); renderHistorico(); atualizarSub();
   const cal = document.getElementById('tab-calendario');
   if (cal && cal.classList.contains('on')) renderCal();
