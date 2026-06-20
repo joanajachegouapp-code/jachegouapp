@@ -107,7 +107,6 @@ body { font-family: 'Inter', -apple-system, sans-serif; background: #D9ECEC; col
 .card-loja-nome { font-size: 11px; font-weight: 600; opacity: 0.5; margin-bottom: 6px; }
 .card-pin { font-size: 80px; font-weight: 900; line-height: 0.85; letter-spacing: -5px; margin-bottom: 0px; text-align: right; }
 .card-pin-label { font-size: 8px; font-weight: 700; letter-spacing: 5px; opacity: 0.3; text-align: right; margin-bottom: 8px; }
-.card-spacer { height: 24px; }
 .card-local { font-size: 13px; font-weight: 800; letter-spacing: -0.2px; margin-bottom: 10px; opacity: 0.9; }
 .card-codigo { font-size: 11px; font-weight: 800; margin-bottom: 10px; font-family: monospace; letter-spacing: 0.5px; background: rgba(0,0,0,0.1); border-radius: 6px; padding: 4px 8px; display: inline-flex; flex-direction: column; gap: 1px; }
 .card-codigo-label { font-size: 8px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; opacity: 0.55; font-family: 'Inter', sans-serif; }
@@ -324,7 +323,7 @@ body { font-family: 'Inter', -apple-system, sans-serif; background: #D9ECEC; col
 <!-- APP -->
 <div id="app">
   <div class="top-bar">
-    <div class="app-title">a minha encomenda<br><span style="color:#FF0000">já chegou</span><span style="color:#FF0000">?</span></div>
+    <div class="app-title">a minha encomenda<br>já chegou<span style="color:#FF0000">?</span></div>
     <div class="app-sub" id="subtitle">0 ativas</div>
   </div>
 
@@ -758,8 +757,7 @@ function abrirCardsPreview() {
           <div class="card-top"><div class="card-estado-label">Em Trânsito! Quase Aí</div><div class="card-deadline">até 24 jun</div></div>
           <div class="card-produto">Camisola de linho bege</div>
           <div class="card-loja-nome">ASOS · DPD</div>
-          <div class="card-spacer"></div>
-          <div class="card-local">Ponto DPD — Rua Augusta 112</div>
+                    <div class="card-local">Ponto DPD — Rua Augusta 112</div>
           <div class="card-actions">
             <button class="btn-maps">maps ↗</button>
             <button class="btn-edit">editar ✏</button>
@@ -774,8 +772,7 @@ function abrirCardsPreview() {
           <div class="card-top"><div class="card-estado-label">Confirmada! A Preparar</div><div class="card-deadline">até 30 jun</div></div>
           <div class="card-produto">Cenas Iolanda</div>
           <div class="card-loja-nome">SHEIN</div>
-          <div class="card-spacer"></div>
-          <div class="card-local">Casa</div>
+                    <div class="card-local">Casa</div>
           <div class="card-actions">
             <button class="btn-maps">maps ↗</button>
             <button class="btn-edit">editar ✏</button>
