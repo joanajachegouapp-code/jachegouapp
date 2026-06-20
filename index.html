@@ -86,7 +86,7 @@ body { font-family: 'Inter', -apple-system, sans-serif; background: #D9ECEC; col
 
 /* ── APP ── */
 #app { display: none; }
-#app.on { display: block; padding-bottom: 40px; }
+#app.on { display: block; padding-bottom: calc(70px + env(safe-area-inset-bottom, 0px)); }
 
 /* ── HEADER ── */
 
@@ -191,31 +191,31 @@ body { font-family: 'Inter', -apple-system, sans-serif; background: #D9ECEC; col
 .modal-close { float: right; background: #e5e5e0; border: none; border-radius: 50%; width: 30px; height: 30px; font-size: 16px; cursor: pointer; }
 
 /* ── NAV / HAMBURGER ── */
-.nav { display: none; } /* escondida — substituída pelo drawer */
-.nav-dot { display: none; }
-
-/* HEADER COM HAMBURGER */
-.top-bar { background: #D9ECEC; padding: 52px 20px 10px; position: sticky; top: 0; z-index: 10; display: flex; align-items: flex-start; justify-content: space-between; }
-.top-bar-left { display: flex; flex-direction: column; }
+/* ── HEADER ── */
+.top-bar { background: #D9ECEC; padding: 52px 20px 10px; position: sticky; top: 0; z-index: 10; }
 .app-title { font-size: 22px; font-weight: 900; letter-spacing: -0.5px; line-height: 1.15; }
 .app-sub { font-size: 13px; color: #888; margin-top: 4px; font-weight: 500; }
-.hamburger { background: #C8E6E6; border: none; border-radius: 14px; width: 42px; height: 42px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px; cursor: pointer; flex-shrink: 0; margin-top: 46px; }
-.hamburger span { display: block; width: 18px; height: 2px; background: #111; border-radius: 2px; transition: all 0.2s; }
 
-/* DRAWER */
+/* ── NAV BOTTOM ── */
+.nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(217,236,236,0.97); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-top: 1px solid rgba(0,0,0,0.07); display: none; padding: 8px 0 env(safe-area-inset-bottom, 20px); z-index: 100; }
+.nav.on { display: flex; }
+.nav-btn { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; font-size: 9px; color: #999; cursor: pointer; padding: 4px 0; border: none; background: none; font-family: inherit; font-weight: 700; letter-spacing: 0.3px; }
+.nav-btn.on { color: #111; }
+.nav-btn svg { width: 22px; height: 22px; }
+.nav-dot { width: 4px; height: 4px; border-radius: 50%; background: #FF0000; margin-top: -1px; }
+
+/* DRAWER (apenas para ajuda/config) */
 .drawer-bg { position: fixed; inset: 0; background: rgba(0,0,0,0); z-index: 500; pointer-events: none; transition: background 0.25s; }
 .drawer-bg.on { background: rgba(0,0,0,0.3); pointer-events: all; }
-.drawer { position: fixed; top: 0; right: -280px; width: 260px; height: 100%; background: #D9ECEC; z-index: 501; transition: right 0.28s cubic-bezier(.4,0,.2,1); padding: 0; display: flex; flex-direction: column; border-radius: 24px 0 0 24px; }
+.drawer { position: fixed; top: 0; right: -280px; width: 260px; height: 100%; background: #D9ECEC; z-index: 501; transition: right 0.28s cubic-bezier(.4,0,.2,1); display: flex; flex-direction: column; border-radius: 24px 0 0 24px; }
 .drawer.on { right: 0; }
 .drawer-header { padding: 56px 24px 16px; border-bottom: 1px solid rgba(0,0,0,0.06); }
 .drawer-logo { font-size: 20px; font-weight: 900; letter-spacing: -1px; color: #111; }
 .drawer-logo span { color: #FF0000; }
 .drawer-menu { flex: 1; padding: 12px 0; overflow-y: auto; }
-.drawer-item { display: flex; align-items: center; gap: 14px; padding: 14px 24px; cursor: pointer; border: none; background: none; width: 100%; font-family: inherit; text-align: left; font-size: 15px; font-weight: 700; color: #555; transition: all 0.15s; }
+.drawer-item { display: flex; align-items: center; gap: 14px; padding: 14px 24px; cursor: pointer; border: none; background: none; width: 100%; font-family: inherit; text-align: left; font-size: 15px; font-weight: 700; color: #555; }
 .drawer-item:active { background: rgba(0,0,0,0.05); }
-.drawer-item.on { color: #111; background: rgba(0,0,0,0.07); }
 .drawer-item svg { flex-shrink: 0; }
-.drawer-item-dot { width: 8px; height: 8px; border-radius: 50%; background: #FF0000; flex-shrink: 0; }
 .drawer-section-label { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #999; padding: 16px 24px 4px; }
 .drawer-close { margin: 0 16px 32px; padding: 14px; border: none; border-radius: 14px; background: rgba(0,0,0,0.08); font-size: 14px; font-weight: 700; color: #666; cursor: pointer; font-family: inherit; }
 
@@ -323,13 +323,8 @@ body { font-family: 'Inter', -apple-system, sans-serif; background: #D9ECEC; col
 <!-- APP -->
 <div id="app">
   <div class="top-bar">
-    <div class="top-bar-left">
-      <div class="app-title">a minha encomenda<br><span style="color:#FF0000">já chegou</span><span style="color:#FF0000">?</span></div>
-      <div class="app-sub" id="subtitle">0 ativas</div>
-    </div>
-    <button class="hamburger" onclick="abrirDrawer()" aria-label="menu">
-      <span></span><span></span><span></span>
-    </button>
+    <div class="app-title">a minha encomenda<br><span style="color:#FF0000">já chegou</span><span style="color:#FF0000">?</span></div>
+    <div class="app-sub" id="subtitle">0 ativas</div>
   </div>
 
   <div id="notif-wrap"></div>
@@ -450,26 +445,7 @@ body { font-family: 'Inter', -apple-system, sans-serif; background: #D9ECEC; col
     <div class="drawer-logo">Já Chegou<span>?</span></div>
   </div>
   <div class="drawer-menu">
-    <button class="drawer-item on" id="nb-ativas" onclick="goTab('ativas')">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="18" rx="2"/><path d="M8 3v18M2 9h6M2 15h6"/></svg>
-      ativas
-      <div class="drawer-item-dot" id="dot-ativas"></div>
-    </button>
-    <button class="drawer-item" id="nb-adicionar" onclick="goTab('adicionar')">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
-      adicionar encomenda
-    </button>
-    <button class="drawer-item" id="nb-historico" onclick="goTab('historico')">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-      histórico
-    </button>
-    <button class="drawer-item" id="nb-calendario" onclick="goTab('calendario')">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-      calendário
-    </button>
-
     <div class="drawer-section-label">ajuda & configurações</div>
-
     <button class="drawer-item" id="nb-conta" onclick="goTab('conta')">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
       conta & definições
@@ -486,7 +462,29 @@ body { font-family: 'Inter', -apple-system, sans-serif; background: #D9ECEC; col
   <button class="drawer-close" onclick="fecharDrawer()">fechar ✕</button>
 </div>
 
-<nav class="nav" id="nav"></nav>
+<!-- NAV BOTTOM -->
+<nav class="nav" id="nav">
+  <button class="nav-btn on" id="nb-ativas" onclick="goTab('ativas')">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="18" rx="2"/><path d="M8 3v18M2 9h6M2 15h6"/></svg>
+    ativas
+  </button>
+  <button class="nav-btn" id="nb-adicionar" onclick="goTab('adicionar')">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+    adicionar
+  </button>
+  <button class="nav-btn" id="nb-historico" onclick="goTab('historico')">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+    histórico
+  </button>
+  <button class="nav-btn" id="nb-calendario" onclick="goTab('calendario')">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+    calendário
+  </button>
+  <button class="nav-btn" onclick="abrirDrawer()">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+    conta
+  </button>
+</nav>
 
 <div class="toast" id="toast"></div>
 
@@ -567,6 +565,7 @@ function entrar() {
   document.getElementById('home').classList.remove('on');
   document.getElementById('home').classList.add('off');
   document.getElementById('app').classList.add('on');
+  document.getElementById('nav').classList.add('on');
 }
 
 // ── TOAST ─────────────────────────────────────────────
@@ -599,10 +598,26 @@ function deadlineStr(o) {
 }
 
 // ── RENDER ATIVAS ─────────────────────────────────────
+function ordemPrioridade(o) {
+  if (o.estado === 'vermelho') return 0;
+  // enviado com prazo amanhã ou hoje → sobe para quase vermelho
+  if (o.estado === 'enviado') {
+    const d = parseData(o.dataLimite || o.data);
+    if (d) {
+      const hoje = new Date(); hoje.setHours(0,0,0,0); d.setHours(0,0,0,0);
+      const diff = Math.round((d - hoje) / 86400000);
+      if (diff <= 1) return 1;
+    }
+    return 2;
+  }
+  if (o.estado === 'preparacao') return 3;
+  return 4;
+}
+
 function renderAtivas() {
   const el = document.getElementById('cards-list');
   const ativas = orders.filter(o => o.estado !== 'entregue')
-    .sort((a,b) => ORDEM.indexOf(a.estado) - ORDEM.indexOf(b.estado));
+    .sort((a, b) => ordemPrioridade(a) - ordemPrioridade(b));
 
   if (!ativas.length) {
     el.innerHTML = '<div class="empty"><div class="empty-icon">—</div><p>nenhuma encomenda ativa.<br>adiciona a tua primeira encomenda.</p></div>';
@@ -619,7 +634,7 @@ function renderAtivas() {
 
     const pinH = o.pin
       ? '<div class="card-pin">' + o.pin + '</div><div class="card-pin-label">P I N</div>'
-      : (o.tipo === 'casa' ? '' : '<div class="card-spacer"></div>');
+      : '';
     const codigoH = o.codigo
       ? '<div class="card-codigo"><span class="card-codigo-label">código da encomenda</span><span>' + o.codigo + '</span></div>'
       : '';
@@ -687,13 +702,10 @@ function reativar(i) {
 // ── TABS ──────────────────────────────────────────────
 function goTab(tab) {
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('on'));
-  document.querySelectorAll('.drawer-item').forEach(b => b.classList.remove('on'));
-  document.querySelectorAll('.drawer-item-dot').forEach(d => d.style.display = 'none');
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('on'));
   document.getElementById('tab-' + tab).classList.add('on');
   const btn = document.getElementById('nb-' + tab);
   if (btn) btn.classList.add('on');
-  const dot = document.getElementById('dot-' + tab);
-  if (dot) dot.style.display = 'block';
   if (tab === 'calendario') renderCal();
   fecharDrawer();
 }
@@ -1183,6 +1195,7 @@ if (savedMorada) document.getElementById('minha-morada').value = savedMorada;
 
 if (localStorage.getItem('chegou_entrou') || orders.length > 0) {
   document.getElementById('app').classList.add('on');
+  document.getElementById('nav').classList.add('on');
 } else {
   document.getElementById('home').classList.add('on');
 }
