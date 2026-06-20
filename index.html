@@ -940,7 +940,28 @@ async function processarEmail() {
         guardar(); document.getElementById('email-txt').value = '';
         goTab('ativas'); toast(p.pin ? '✓ ' + orders[idx].loja + ' · pin: ' + p.pin : '✓ encomenda atualizada');
       } else {
-        mostrarAssociar(p);
+        // sem correspondência — cria card novo com os dados do email
+        document.getElementById('email-txt').value = '';
+        if (p.loja || p.produto || p.local || p.pin) {
+          orders.unshift({
+            loja: p.loja || '',
+            produto: p.produto || '',
+            data: p.data || '',
+            dataLimite: p.dataLimite || '',
+            local: p.local || '',
+            pin: p.pin || '',
+            codigo: p.codigo || '',
+            rastreio: p.rastreio || '',
+            estado: p.estado && p.estado !== 'manter' ? p.estado : 'enviado',
+            tipo: p.tipo_entrega || 'recolha',
+            criado: new Date().toISOString()
+          });
+          guardar();
+          goTab('ativas');
+          toast('nova encomenda criada ✓');
+        } else {
+          mostrarAssociar(p);
+        }
       }
     } else {
       document.getElementById('f-loja').value = p.loja||'';
