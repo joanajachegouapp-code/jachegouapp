@@ -154,16 +154,15 @@ body { font-family: 'Inter', -apple-system, sans-serif; background: #D9ECEC; col
 .cal-wrap { padding: 16px; }
 .cal-nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
 .cal-title { font-size: 20px; font-weight: 900; letter-spacing: -0.5px; }
-.cal-arrow { background: #EAF4F4; border: none; border-radius: 10px; width: 36px; height: 36px; font-size: 18px; cursor: pointer; font-family: inherit; font-weight: 700; }
+.cal-arrow { background: #EAF4F4; border: none; border-radius: 10px; width: 36px; height: 36px; font-size: 18px; cursor: pointer; font-family: inherit; font-weight: 700; color: #111; }
 .cal-grid { background: #EAF4F4; border-radius: 20px; padding: 14px; margin-bottom: 14px; }
-.cal-weekdays { display: grid; grid-template-columns: repeat(7,1fr); margin-bottom: 8px; }
-.cal-wd { text-align: center; font-size: 11px; font-weight: 700; color: #888; }
-.cal-days { display: grid; grid-template-columns: repeat(7,1fr); gap: 3px; }
-.cal-day { aspect-ratio: 1; display: flex; align-items: center; justify-content: center; border-radius: 50%; font-size: 13px; font-weight: 600; cursor: pointer; }
-.cal-day.empty { pointer-events: none; }
-.cal-day.today { font-weight: 900; }
-.cal-day.today::after { content: ''; position: absolute; bottom: 2px; left: 50%; transform: translateX(-50%); width: 4px; height: 4px; border-radius: 50%; background: #111; }
-.cal-day.today { position: relative; }
+.cal-weekdays { display: grid; grid-template-columns: repeat(7,1fr); margin-bottom: 6px; }
+.cal-wd { text-align: center; font-size: 11px; font-weight: 700; color: #888; padding: 4px 0; }
+.cal-days { display: grid; grid-template-columns: repeat(7,1fr); gap: 4px; }
+.cal-day { width: 100%; aspect-ratio: 1; display: flex; align-items: center; justify-content: center; border-radius: 50%; font-size: 13px; font-weight: 600; cursor: pointer; min-width: 0; box-sizing: border-box; }
+.cal-day.empty { pointer-events: none; visibility: hidden; }
+.cal-day.today { font-weight: 900; position: relative; }
+.cal-day.today::after { content: ''; position: absolute; bottom: 3px; left: 50%; transform: translateX(-50%); width: 4px; height: 4px; border-radius: 50%; background: #111; }
 .cal-day.has-red { background: #FF0000; color: #fff; font-weight: 900; }
 .cal-day.has-orange { background: #F472B6; color: #fff; font-weight: 900; }
 .cal-day.has-amber { background: #FF5500; color: #fff; font-weight: 900; }
@@ -828,12 +827,16 @@ function renderCal() {
   for (let d = 1; d <= dias; d++) {
     const isHoje = d === hoje.getDate() && calM === hoje.getMonth() && calY === hoje.getFullYear();
     let cls = 'cal-day' + (isHoje ? ' today' : '') + (d === calSel ? ' selected' : '');
-    const es = (mapa[d]||[]).map(e => e.estado);
+    const es = (mapa[d]||[]).map(e => estadoEfetivo({estado: e.estado, dataLimite: e.dataLimite, data: e.data}));
     if (es.includes('vermelho')) cls += ' has-red';
     else if (es.includes('enviado')) cls += ' has-orange';
     else if (es.length) cls += ' has-amber';
     html += '<div class="' + cls + '" onclick="calClick(' + d + ')">' + d + '</div>';
   }
+  // preencher até 42 células para grelha sempre estável
+  const total = off + dias;
+  const resto = total % 7 === 0 ? 0 : 7 - (total % 7);
+  for (let i = 0; i < resto; i++) html += '<div class="cal-day empty"></div>';
   cont.innerHTML = html;
   if (calSel) calMostrar(calSel);
 }
