@@ -873,13 +873,23 @@ function buildPromptGeral() {
   const morada = localStorage.getItem('chegou_morada') || '';
   const moradaInstr = morada
     ? `A morada de casa do utilizador é: "${morada}". Se a morada de entrega do email for a mesma (ou muito semelhante), usa tipo_entrega="casa". Caso contrário usa "recolha".`
-    : 'Se o email indicar entrega numa morada (não num ponto de recolha/loja), usa tipo_entrega="casa".';
+    : 'Se o email indicar entrega numa morada pessoal (não num ponto de recolha/loja/balcão), usa tipo_entrega="casa".';
   return `Analisa este email de encomenda. Hoje é ${HOJE.getDate()}/${HOJE.getMonth()+1}/${HOJE.getFullYear()} (${['domingo','segunda','terça','quarta','quinta','sexta','sábado'][HOJE.getDay()]}). Responde APENAS com JSON sem markdown:
-{"tipo":"novo|atualizacao","loja":"ou vazio","produto":"ou vazio","data":"DD/MM/AAAA ou vazio","dataLimite":"data prevista entrega ou data limite levantamento SEMPRE em DD/MM/AAAA — converte dias da semana (ex: quinta-feira, amanhã, this friday) para a data concreta usando a data de hoje como referência","rastreio":"número rastreamento ou vazio","codigo":"número ou código da encomenda (ex: #ZR-20481, PT123456789) ou vazio","local":"local levantamento ou entrega ou vazio","pin":"código pin de levantamento ou vazio","estado":"preparacao","tipo_entrega":"recolha|casa"}
-tipo: "novo"=email confirmação compra, "atualizacao"=email transportadora sobre encomenda já existente
-estado: "preparacao"=confirmada, "enviado"=em trânsito, "vermelho"=chegou ao ponto levantamento
-tipo_entrega: ${moradaInstr}
-IMPORTANTE: dataLimite deve ser SEMPRE uma data no formato DD/MM/AAAA. Se o email diz "quinta-feira" ou "amanhã" ou "Friday June 20", converte para a data real.
+{"tipo":"novo|atualizacao","loja":"ou vazio","produto":"ou vazio","data":"DD/MM/AAAA ou vazio","dataLimite":"DD/MM/AAAA ou vazio","rastreio":"ou vazio","codigo":"ou vazio","local":"ou vazio","pin":"ou vazio","estado":"preparacao|enviado|vermelho","tipo_entrega":"recolha|casa"}
+
+REGRAS TIPO — muito importante:
+- tipo="novo": email de CONFIRMAÇÃO DE COMPRA de uma loja (Zara, ASOS, Shein, Amazon, Vinted, etc). Tem número de encomenda, produto comprado, valor pago. CRIA card novo.
+- tipo="atualizacao": email de TRANSPORTADORA (CTT, DPD, GLS, Chronopost, MRW, SEUR, Correos) sobre uma encomenda já enviada. Não tem produto nem loja de origem clara. ATUALIZA card existente.
+- Em caso de dúvida, usa tipo="novo".
+
+REGRAS ESTADO:
+- estado="preparacao": compra confirmada, ainda não enviada
+- estado="enviado": encomenda em trânsito
+- estado="vermelho": chegou ao ponto de levantamento, pronta a levantar
+
+REGRAS DATALIMITE: converte sempre para DD/MM/AAAA. Se diz "quinta-feira", "amanhã", "Friday June 20", calcula a data real a partir de hoje.
+
+${moradaInstr}
 Email:`;
 }
 
@@ -927,8 +937,6 @@ async function processarEmail() {
         const porLoja = ativas.filter(o => (o.loja||'').toLowerCase().includes(loja) || loja.includes((o.loja||'').toLowerCase()));
         if (porLoja.length === 1) idx = orders.indexOf(porLoja[0]);
       }
-      // 4. se só há uma encomenda ativa no total → associa automaticamente
-      if (idx === -1 && ativas.length === 1) idx = orders.indexOf(ativas[0]);
 
       document.getElementById('loading').style.display = 'none';
       if (idx !== -1) {
