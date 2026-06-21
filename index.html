@@ -160,7 +160,8 @@ body { font-family: 'Inter', -apple-system, sans-serif; background: #D9ECEC; col
 .cal-wd { text-align: center; font-size: 11px; font-weight: 700; color: #888; padding: 4px 0; }
 .cal-days { display: grid; grid-template-columns: repeat(7,1fr); gap: 4px; }
 .cal-day { width: 100%; aspect-ratio: 1; display: flex; align-items: center; justify-content: center; border-radius: 50%; font-size: 13px; font-weight: 600; cursor: pointer; min-width: 0; box-sizing: border-box; }
-.cal-day.empty { pointer-events: none; visibility: hidden; }
+.cal-day.empty { pointer-events: none; opacity: 0; }
+.cal-day-other { color: #bbb; pointer-events: none; font-weight: 400; }
 .cal-day.today { font-weight: 900; position: relative; }
 .cal-day.today::after { content: ''; position: absolute; bottom: 3px; left: 50%; transform: translateX(-50%); width: 4px; height: 4px; border-radius: 50%; background: #111; }
 .cal-day.has-red { background: #FF0000; color: #fff; font-weight: 900; }
@@ -823,7 +824,12 @@ function renderCal() {
   });
 
   let html = '';
-  for (let i = 0; i < off; i++) html += '<div class="cal-day empty"></div>';
+  // dias do mês anterior em cinzento
+  const diasMesAnt = new Date(calY, calM, 0).getDate();
+  for (let i = 0; i < off; i++) {
+    const dia = diasMesAnt - off + 1 + i;
+    html += '<div class="cal-day cal-day-other">' + dia + '</div>';
+  }
   for (let d = 1; d <= dias; d++) {
     const isHoje = d === hoje.getDate() && calM === hoje.getMonth() && calY === hoje.getFullYear();
     let cls = 'cal-day' + (isHoje ? ' today' : '') + (d === calSel ? ' selected' : '');
@@ -833,10 +839,12 @@ function renderCal() {
     else if (es.length) cls += ' has-amber';
     html += '<div class="' + cls + '" onclick="calClick(' + d + ')">' + d + '</div>';
   }
-  // preencher até 42 células para grelha sempre estável
+  // dias do mês seguinte em cinzento
   const total = off + dias;
   const resto = total % 7 === 0 ? 0 : 7 - (total % 7);
-  for (let i = 0; i < resto; i++) html += '<div class="cal-day empty"></div>';
+  for (let i = 1; i <= resto; i++) {
+    html += '<div class="cal-day cal-day-other">' + i + '</div>';
+  }
   cont.innerHTML = html;
   if (calSel) calMostrar(calSel);
 }
