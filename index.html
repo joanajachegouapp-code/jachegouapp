@@ -721,16 +721,17 @@ function renderAtivas() {
     const cfg = ESTADO_CFG[estadoEfetivo(o)] || ESTADO_CFG['preparacao'];
     const dl = deadlineStr(o);
     const info = LOJAS[(o.loja||'').toLowerCase().trim()];
-    const local = o.tipo === 'casa' ? 'Casa' : (o.local || '');
-    const localMaps = o.local && o.tipo !== 'casa' ? o.local : '';
+    const pinVal = limpar(o.pin);
+    const localVal2 = o.tipo === 'casa' ? 'Casa' : limpar(o.local);
+    const localMaps = limpar(o.local) && o.tipo !== 'casa' ? limpar(o.local) : '';
 
-    const pinH = o.pin
-      ? '<div class="card-pin">' + o.pin + '</div><div class="card-pin-label">P I N</div>'
+    const pinH = pinVal
+      ? '<div class="card-pin">' + pinVal + '</div><div class="card-pin-label">P I N</div>'
       : '';
-    const codigoH = o.codigo
-      ? '<div class="card-codigo"><span class="card-codigo-label">código da encomenda</span><span>' + o.codigo + '</span></div>'
+    const codigoH = limpar(o.codigo)
+      ? '<div class="card-codigo"><span class="card-codigo-label">código da encomenda</span><span>' + limpar(o.codigo) + '</span></div>'
       : '';
-    const localH = local ? '<div class="card-local">' + local + '</div>' : '';
+    const localH = localVal2 ? '<div class="card-local">' + localVal2 + '</div>' : '';
     const mapsH = localMaps
       ? '<button class="btn-maps" data-url="https://maps.google.com/?q=' + encodeURIComponent(localMaps) + '" onclick="window.open(this.dataset.url,\'_blank\')">maps ↗</button>'
       : '';
