@@ -264,22 +264,7 @@ body { font-family: 'Inter', -apple-system, sans-serif; background: #ffffff; col
 <!-- BROWSER LANDING (só aparece no browser, não na PWA) -->
 <div id="browser-landing">
   <div class="bl-logo">Já<br>Chegou<span>?</span></div>
-  <div class="bl-sub">as tuas encomendas, sempre prontas</div>
-
-  <div class="bl-features">
-    <div class="bl-feat">
-      <div class="bl-feat-icon">📦</div>
-      <div class="bl-feat-label">PIN<br>sempre visível</div>
-    </div>
-    <div class="bl-feat">
-      <div class="bl-feat-icon">✦</div>
-      <div class="bl-feat-label">IA extrai<br>o email</div>
-    </div>
-    <div class="bl-feat">
-      <div class="bl-feat-icon">⏰</div>
-      <div class="bl-feat-label">alertas<br>de prazo</div>
-    </div>
-  </div>
+  <div class="bl-sub">Cola o email de qualquer encomenda.<br>A IA trata do resto.</div>
 
   <!-- mockup telemóvel -->
   <div class="bl-phone">
@@ -287,13 +272,38 @@ body { font-family: 'Inter', -apple-system, sans-serif; background: #ffffff; col
     <div class="bl-phone-screen">
       <div class="bl-mini-header">a minha encomenda já chegou?</div>
       <div class="bl-mini-card bl-mini-card-r">
-        <div class="bl-mini-label">Está no Ponto! Vai Já</div>
+        <div class="bl-mini-label">Vai Buscar!</div>
         <div class="bl-mini-produto">Sapatilhas Nike Air Max · Zara</div>
         <div class="bl-mini-pin">7842</div>
       </div>
       <div class="bl-mini-card bl-mini-card-p">
-        <div class="bl-mini-label">Em Trânsito! Quase Aí</div>
+        <div class="bl-mini-label">Enviada!</div>
         <div class="bl-mini-produto">Camisola de linho · ASOS</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3 linhas de explicação -->
+  <div style="display:flex;flex-direction:column;gap:1px;background:#f0f0ec;border-radius:18px;overflow:hidden;width:100%;max-width:340px;margin-bottom:24px">
+    <div style="background:#fff;padding:14px 16px;display:flex;align-items:center;gap:12px">
+      <span style="font-size:18px;flex-shrink:0">📧</span>
+      <div>
+        <div style="font-size:13px;font-weight:800;margin-bottom:1px">Cola o email</div>
+        <div style="font-size:12px;color:#666">Confirmação de compra ou da transportadora</div>
+      </div>
+    </div>
+    <div style="background:#fff;padding:14px 16px;display:flex;align-items:center;gap:12px">
+      <span style="font-size:18px;flex-shrink:0">✦</span>
+      <div>
+        <div style="font-size:13px;font-weight:800;margin-bottom:1px">A IA extrai tudo</div>
+        <div style="font-size:12px;color:#666">Loja, produto, PIN, local e data</div>
+      </div>
+    </div>
+    <div style="background:#fff;padding:14px 16px;display:flex;align-items:center;gap:12px">
+      <span style="font-size:18px;flex-shrink:0">📦</span>
+      <div>
+        <div style="font-size:13px;font-weight:800;margin-bottom:1px">PIN sempre à mão</div>
+        <div style="font-size:12px;color:#666">Mesmo sem internet</div>
       </div>
     </div>
   </div>
@@ -314,7 +324,6 @@ body { font-family: 'Inter', -apple-system, sans-serif; background: #ffffff; col
 <!-- HOMEPAGE -->
 <div id="home">
 
-  <!-- HERO -->
   <div class="hero">
     <div style="display:flex;justify-content:flex-end;margin-bottom:8px">
       <button id="home-close" onclick="entrar()" style="display:none;background:#f0f0ec;border:none;border-radius:50%;width:32px;height:32px;font-size:16px;cursor:pointer;font-family:inherit">✕</button>
@@ -325,14 +334,13 @@ body { font-family: 'Inter', -apple-system, sans-serif; background: #ffffff; col
     </div>
     <div class="hero-logo">Já<br>Chegou<span>?</span></div>
     <div class="hero-tagline">
-      Nunca mais vais perder<br>um PIN nem uma encomenda.
+      Cola o email de qualquer encomenda.<br>A IA trata do resto.
     </div>
 
     <!-- MOCKUP -->
     <div class="mockup-wrap">
       <div class="mockup-label">as tuas encomendas</div>
       <div class="mockup-cards">
-        <!-- Cartão por baixo (peek) -->
         <div class="card-peek">
           <div class="m-card-head">
             <div class="m-card-estado">Enviada</div>
@@ -341,7 +349,6 @@ body { font-family: 'Inter', -apple-system, sans-serif; background: #ffffff; col
           <div class="m-card-produto">Camisola de linho bege</div>
           <div class="m-card-loja">ASOS</div>
         </div>
-        <!-- Cartão principal -->
         <div class="m-card m-card-red" style="position:relative;z-index:1">
           <div class="m-card-head">
             <div class="m-card-estado">Para Levantar</div>
@@ -362,29 +369,34 @@ body { font-family: 'Inter', -apple-system, sans-serif; background: #ffffff; col
     </div>
   </div>
 
-  <!-- FEATURES -->
-  <div class="features">
-    <div class="feature-list">
-      <div class="feature-item">
-        <div class="feature-icon fi-red"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="2,4 12,13 22,4"/></svg></div>
-        <div class="feature-text-title">Cola o email — a IA extrai tudo</div>
+  <!-- COMO USAR — simples -->
+  <div style="padding: 0 24px 32px;">
+    <div style="display:flex;flex-direction:column;gap:1px;background:#f0f0ec;border-radius:18px;overflow:hidden">
+      <div style="background:#fff;padding:16px 18px;display:flex;align-items:center;gap:14px">
+        <div style="font-size:20px;flex-shrink:0">📧</div>
+        <div>
+          <div style="font-size:14px;font-weight:800;margin-bottom:2px">Cola o email</div>
+          <div style="font-size:13px;color:#666">Confirmação de compra ou email da transportadora — de qualquer loja</div>
+        </div>
       </div>
-      <div class="feature-item">
-        <div class="feature-icon fi-red"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="9" y1="7" x2="15" y2="7"/><line x1="9" y1="11" x2="15" y2="11"/><line x1="9" y1="15" x2="12" y2="15"/></svg></div>
-        <div class="feature-text-title">PIN sempre visível, mesmo sem net</div>
+      <div style="background:#fff;padding:16px 18px;display:flex;align-items:center;gap:14px">
+        <div style="font-size:20px;flex-shrink:0">✦</div>
+        <div>
+          <div style="font-size:14px;font-weight:800;margin-bottom:2px">A IA extrai tudo</div>
+          <div style="font-size:13px;color:#666">Loja, produto, PIN, local e data — automático</div>
+        </div>
       </div>
-      <div class="feature-item">
-        <div class="feature-icon fi-dark"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
-        <div class="feature-text-title">Alerta antes do prazo acabar</div>
-      </div>
-      <div class="feature-item">
-        <div class="feature-icon fi-orange"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg></div>
-        <div class="feature-text-title">Entrega em casa reconhecida automaticamente</div>
+      <div style="background:#fff;padding:16px 18px;display:flex;align-items:center;gap:14px">
+        <div style="font-size:20px;flex-shrink:0">📦</div>
+        <div>
+          <div style="font-size:14px;font-weight:800;margin-bottom:2px">PIN sempre à mão</div>
+          <div style="font-size:13px;color:#666">Mesmo sem internet, mesmo com a app fechada</div>
+        </div>
       </div>
     </div>
   </div>
 
-  <div style="padding: 8px 24px 48px;">
+  <div style="padding: 0 24px 52px;">
     <button onclick="entrar()" style="width:100%;padding:18px;border:none;border-radius:18px;background:#111;color:#fff;font-size:16px;font-weight:800;cursor:pointer;font-family:inherit;">começar →</button>
   </div>
 
@@ -796,17 +808,70 @@ function abrirCardsPreview() {
   fecharDrawer();
   const modal = document.createElement('div');
   modal.className = 'modal-bg'; modal.id = 'modal-cards';
-  modal.innerHTML = `<div class="modal-box" style="background:#ffffff;padding:20px 16px 40px">
+  modal.innerHTML = `<div class="modal-box" style="background:#ffffff;padding:20px 16px 44px">
     <button class="modal-close" onclick="fecharModal('modal-cards')" style="background:rgba(0,0,0,0.1)">✕</button>
-    <div style="font-size:20px;font-weight:900;letter-spacing:-0.5px;margin-bottom:4px">Como ler os cards</div>
-    <div style="font-size:13px;color:#666;margin-bottom:20px;font-weight:500">cada cor é um estado da tua encomenda</div>
+    <div style="font-size:20px;font-weight:900;letter-spacing:-0.5px;margin-bottom:4px">Como funciona</div>
+    <div style="font-size:13px;color:#888;margin-bottom:24px;font-weight:500">tudo o que precisas de saber</div>
+
+    <!-- SECÇÃO: ADICIONAR -->
+    <div style="margin-bottom:28px">
+      <div style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#FF0000;margin-bottom:10px">— como adicionar uma encomenda</div>
+
+      <div style="background:#f5f5f5;border-radius:16px;padding:16px;margin-bottom:10px">
+        <div style="font-size:13px;font-weight:800;margin-bottom:6px">✦ cola qualquer email de encomenda</div>
+        <div style="font-size:12px;color:#555;line-height:1.6">A IA analisa automaticamente e extrai loja, produto, datas, PIN e local. Funciona com <b>qualquer</b> email:</div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:10px">
+          ${['Zara', 'ASOS', 'Shein', 'Temu', 'Amazon', 'Vinted', 'FNAC', 'Worten', 'Decathlon', 'AliExpress', 'La Redoute', 'Continente', 'IKEA', 'e muito mais…'].map(l =>
+            `<span style="background:#fff;border:1.5px solid #e5e5e0;border-radius:20px;padding:4px 10px;font-size:11px;font-weight:700;color:#444">${l}</span>`
+          ).join('')}
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div style="display:flex;align-items:flex-start;gap:12px;background:#f5f5f5;border-radius:14px;padding:12px 14px">
+          <div style="width:26px;height:26px;border-radius:50%;background:#FF0000;color:#fff;font-size:12px;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px">1</div>
+          <div>
+            <div style="font-size:13px;font-weight:800">Vai ao teu email</div>
+            <div style="font-size:12px;color:#666;margin-top:2px;line-height:1.5">Abre o email de confirmação que recebeste da loja — pode ser o email "a tua encomenda foi confirmada", "o teu pedido foi enviado" ou mesmo o da transportadora.</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:flex-start;gap:12px;background:#f5f5f5;border-radius:14px;padding:12px 14px">
+          <div style="width:26px;height:26px;border-radius:50%;background:#FF0000;color:#fff;font-size:12px;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px">2</div>
+          <div>
+            <div style="font-size:13px;font-weight:800">Copia o texto todo</div>
+            <div style="font-size:12px;color:#666;margin-top:2px;line-height:1.5">Seleciona e copia o conteúdo do email — quanto mais texto, melhor. A IA percebe o que é relevante.</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:flex-start;gap:12px;background:#f5f5f5;border-radius:14px;padding:12px 14px">
+          <div style="width:26px;height:26px;border-radius:50%;background:#FF0000;color:#fff;font-size:12px;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px">3</div>
+          <div>
+            <div style="font-size:13px;font-weight:800">Cola em "Adicionar"</div>
+            <div style="font-size:12px;color:#666;margin-top:2px;line-height:1.5">Vai ao separador <b>+</b> da app, cola o texto e toca em <b>analisar com IA ✦</b>. A app cria o card automaticamente.</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:flex-start;gap:12px;background:#f5f5f5;border-radius:14px;padding:12px 14px">
+          <div style="width:26px;height:26px;border-radius:50%;background:#FF0000;color:#fff;font-size:12px;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px">4</div>
+          <div>
+            <div style="font-size:13px;font-weight:800">Adiciona emails seguintes</div>
+            <div style="font-size:12px;color:#666;margin-top:2px;line-height:1.5">Quando receberes o email da transportadora (CTT, DPD, GLS…), cola-o também — a app reconhece que pertence à mesma encomenda e atualiza o PIN e local.</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="background:#FFF3CD;border-radius:12px;padding:12px 14px;margin-top:10px">
+        <div style="font-size:12px;color:#856404;line-height:1.6;font-weight:500">
+          <b>💡 Dica:</b> Algumas lojas (Zara, Pull&Bear, etc.) enviam o PIN e local num email separado — o da transportadora. Basta colá-lo quando chegar e a app atualiza o card existente.
+        </div>
+      </div>
+    </div>
+
+    <!-- SECÇÃO: CARDS -->
+    <div style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#FF0000;margin-bottom:10px">— o que significa cada cor</div>
 
     <div style="display:flex;flex-direction:column;gap:16px">
-
       <div>
-        <div style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#FF0000;margin-bottom:6px">— prioridade máxima</div>
         <div class="card c-red">
-          <div class="card-top"><div class="card-estado-label">Está no Ponto! Vai Já</div><div class="card-deadline">hoje!</div></div>
+          <div class="card-top"><div class="card-estado-label">Vai Buscar!</div><div class="card-deadline">hoje!</div></div>
           <div class="card-produto">Sapatilhas Nike Air Max</div>
           <div class="card-loja-nome">Zara · CTT Expresso</div>
           <div class="card-pin">7842</div>
@@ -818,40 +883,36 @@ function abrirCardsPreview() {
             <button class="btn-entregue">entregue ✓</button>
           </div>
         </div>
-        <div style="font-size:12px;color:#555;margin-top:8px;line-height:1.5;padding:0 4px">A encomenda chegou ao ponto de recolha. O PIN está aqui — mostra ao balcão. Toca em <b>maps</b> para navegar.</div>
+        <div style="font-size:12px;color:#555;margin-top:8px;line-height:1.5;padding:0 4px">🔴 <b>Vermelho:</b> chegou ao ponto de recolha. O PIN está aqui — mostra ao balcão. Toca em <b>maps</b> para navegar.</div>
       </div>
 
       <div>
-        <div style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#F472B6;margin-bottom:6px">— a caminho</div>
         <div class="card c-orange">
-          <div class="card-top"><div class="card-estado-label">Em Trânsito! Quase Aí</div><div class="card-deadline">até 24 jun</div></div>
+          <div class="card-top"><div class="card-estado-label">Enviada!</div><div class="card-deadline">até 24 jun</div></div>
           <div class="card-produto">Camisola de linho bege</div>
           <div class="card-loja-nome">ASOS · DPD</div>
-                    <div class="card-local">Ponto DPD — Rua Augusta 112</div>
+          <div class="card-local">Ponto DPD — Rua Augusta 112</div>
           <div class="card-actions">
             <button class="btn-maps">maps ↗</button>
             <button class="btn-edit">editar ✏</button>
           </div>
         </div>
-        <div style="font-size:12px;color:#555;margin-top:8px;line-height:1.5;padding:0 4px">Enviada pela loja, em trânsito. Quando chegar ao ponto passa automaticamente a vermelho.</div>
+        <div style="font-size:12px;color:#555;margin-top:8px;line-height:1.5;padding:0 4px">🩷 <b>Rosa:</b> enviada pela loja, em trânsito. Quando chegar ao ponto passa automaticamente a vermelho.</div>
       </div>
 
       <div>
-        <div style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#FF5500;margin-bottom:6px">— confirmada</div>
         <div class="card c-amber">
-          <div class="card-top"><div class="card-estado-label">Confirmada! A Preparar</div><div class="card-deadline">até 30 jun</div></div>
-          <div class="card-produto">Cenas Iolanda</div>
+          <div class="card-top"><div class="card-estado-label">A Preparar!</div><div class="card-deadline">até 30 jun</div></div>
+          <div class="card-produto">Ténis brancos</div>
           <div class="card-loja-nome">SHEIN</div>
-                    <div class="card-local">Casa</div>
+          <div class="card-local">Casa</div>
           <div class="card-actions">
-            <button class="btn-maps">maps ↗</button>
             <button class="btn-edit">editar ✏</button>
             <button class="btn-entregue">entregue ✓</button>
           </div>
         </div>
-        <div style="font-size:12px;color:#555;margin-top:8px;line-height:1.5;padding:0 4px">Compra confirmada, a loja está a preparar. Ainda não saiu. Cola o email da transportadora quando chegares.</div>
+        <div style="font-size:12px;color:#555;margin-top:8px;line-height:1.5;padding:0 4px">🟠 <b>Laranja:</b> compra confirmada, a loja está a preparar. Ainda não saiu. Cola o email da transportadora quando chegares.</div>
       </div>
-
     </div>
   </div>`;
   document.body.appendChild(modal);
