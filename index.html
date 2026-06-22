@@ -476,6 +476,13 @@ body { font-family: 'Inter', -apple-system, sans-serif; background: #ffffff; col
   <div id="tab-conta" class="tab">
     <div class="cfg-wrap">
       <div class="cfg-card">
+        <h3>notificações</h3>
+        <p>avisa-te quando uma encomenda está prestes a expirar ou chega o dia de entrega — mesmo com a app fechada.</p>
+        <button class="api-save" id="btn-notif-perm" onclick="pedirPermissaoNotifs().then(atualizarBtnNotif)">ativar notificações</button>
+        <div class="api-ok" id="notif-ok" style="display:none">✓ notificações ativas</div>
+        <div style="font-size:12px;color:#FF0000;margin-top:6px;display:none" id="notif-bloq">notificações bloqueadas. ativa nas definições do browser.</div>
+      </div>
+      <div class="cfg-card">
         <h3>a minha morada</h3>
         <p>a IA compara esta morada com a do email — se coincide, o card mostra "Casa" automaticamente.</p>
         <input class="api-input" type="text" id="minha-morada" placeholder="ex: Rua das Flores 12, 2.º Dto, Lisboa" style="font-family:inherit" />
@@ -1270,7 +1277,39 @@ async function processarUpdate() {
 function fecharModal(id) { const m = document.getElementById(id); if (m) m.remove(); }
 
 // ── NOTIFICAÇÕES ──────────────────────────────────────
+async function pedirPermissaoNotifs() {
+  if (!('Notification' in window)) return;
+  if (Notification.permission === 'default') {
+    const perm = await Notification.requestPermission();
+    if (perm === 'granted') toast('notificações ativadas ✓');
+  }
+  atualizarBtnNotif();
+}
+
+function atualizarBtnNotif() {
+  const btn = document.getElementById('btn-notif-perm');
+  const ok = document.getElementById('notif-ok');
+  const bloq = document.getElementById('notif-bloq');
+  if (!btn) return;
+  if (!('Notification' in window)) { btn.style.display='none'; return; }
+  if (Notification.permission === 'granted') {
+    btn.style.display = 'none';
+    if (ok) ok.style.display = 'block';
+  } else if (Notification.permission === 'denied') {
+    btn.style.display = 'none';
+    if (bloq) bloq.style.display = 'block';
+  }
+}
+
+function enviarNotifsViaSW() {
+  if (!('serviceWorker' in navigator)) return;
+  navigator.serviceWorker.ready.then(reg => {
+    reg.active && reg.active.postMessage({ type: 'CHECK_NOTIFS', orders });
+  });
+}
+
 function verificarNotifs() {
+  // Barra dentro da app (sempre)
   const hoje = new Date(); hoje.setHours(0,0,0,0);
   const alertas = [];
   orders.filter(o => o.estado !== 'entregue').forEach(o => {
@@ -1280,20 +1319,24 @@ function verificarNotifs() {
     const d = parseData(ds); if (!d) return; d.setHours(0,0,0,0);
     const diff = Math.round((d - hoje) / 86400000);
     if (isCasa) {
-      if (diff===0) alertas.push('Casa — ' + o.loja + ' — entrega hoje! fica em casa!');
-      else if (diff===1) alertas.push('Casa — ' + o.loja + ' — entrega amanhã! confirma que estás em casa');
+      if (diff===0) alertas.push('📦 ' + o.loja + ' — entrega hoje! fica em casa!');
+      else if (diff===1) alertas.push('📦 ' + o.loja + ' — entrega amanhã!');
     } else {
-      if (diff<0) alertas.push('🚨 ' + o.loja + ' — data limite passou há ' + Math.abs(diff) + ' dia(s)!' + (o.pin?' · pin: '+o.pin:''));
+      if (diff<0) alertas.push('🚨 ' + o.loja + ' — prazo passou há ' + Math.abs(diff) + ' dia(s)!' + (o.pin?' · pin: '+o.pin:''));
       else if (diff===0) alertas.push('⚠️ ' + o.loja + ' — último dia para levantar!' + (o.pin?' · pin: '+o.pin:''));
-      else if (diff===1) alertas.push('' + o.loja + ' — amanhã é o último dia!' + (o.pin?' · pin: '+o.pin:''));
+      else if (diff===1) alertas.push('📬 ' + o.loja + ' — amanhã é o último dia!' + (o.pin?' · pin: '+o.pin:''));
     }
   });
   const wrap = document.getElementById('notif-wrap');
-  if (!wrap) return;
-  if (alertas.length) {
-    wrap.innerHTML = '<div class="notif-bar" onclick="goTab(\'ativas\')">' + alertas[0] + '<span>›</span></div>';
-    setTimeout(() => { if(wrap) wrap.innerHTML=''; }, 8000);
-  } else { wrap.innerHTML = ''; }
+  if (wrap) {
+    if (alertas.length) {
+      wrap.innerHTML = '<div class="notif-bar" onclick="goTab(\'ativas\')">' + alertas[0] + '<span>›</span></div>';
+      setTimeout(() => { if(wrap) wrap.innerHTML=''; }, 8000);
+    } else { wrap.innerHTML = ''; }
+  }
+
+  // Push via service worker (app fechada)
+  if (Notification.permission === 'granted') enviarNotifsViaSW();
 }
 
 // ── CONFIG ────────────────────────────────────────────
@@ -1427,6 +1470,9 @@ renderHistorico();
 atualizarSub();
 verificarNotifs();
 setInterval(verificarNotifs, 30*60*1000);
+
+// Pedir permissão de notificações após 3 segundos (não logo ao abrir)
+setTimeout(() => { pedirPermissaoNotifs(); atualizarBtnNotif(); }, 3000);
 </script>
 <script>if('serviceWorker' in navigator){navigator.serviceWorker.register('service-worker.js');}</script>
 </body>
