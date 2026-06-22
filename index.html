@@ -5,16 +5,43 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Já Chegou?">
-<meta name="theme-color" content="#D9ECEC">
+<meta name="theme-color" content="#ffffff">
 <link rel="manifest" href="manifest.json">
 <title>Já Chegou?</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-body { font-family: 'Inter', -apple-system, sans-serif; background: #D9ECEC; color: #111; min-height: 100vh; }
+body { font-family: 'Inter', -apple-system, sans-serif; background: #ffffff; color: #111; min-height: 100vh; }
+
+/* ── BROWSER LANDING ── */
+#browser-landing { display: none; min-height: 100vh; background: #ffffff; color: #111; flex-direction: column; align-items: center; justify-content: center; padding: 40px 28px 60px; }
+#browser-landing.on { display: flex; }
+.bl-logo { font-size: 52px; font-weight: 900; letter-spacing: -3px; line-height: 0.9; margin-bottom: 8px; text-align: center; }
+.bl-logo span { color: #FF0000; }
+.bl-logo { color: #111; }
+.bl-sub { font-size: 15px; color: #666; font-weight: 500; margin-bottom: 48px; text-align: center; }
+.bl-phone { width: 220px; height: 380px; background: #f0f0f0; border-radius: 36px; border: 6px solid #ddd; display: flex; flex-direction: column; overflow: hidden; margin-bottom: 48px; box-shadow: 0 40px 80px rgba(0,0,0,0.5); position: relative; }
+.bl-phone-notch { width: 80px; height: 20px; background: #ddd; border-radius: 0 0 14px 14px; margin: 0 auto; position: absolute; top: 0; left: 50%; transform: translateX(-50%); z-index: 2; }
+.bl-phone-screen { flex: 1; background: #f5f5f5; padding: 28px 10px 10px; display: flex; flex-direction: column; gap: 6px; }
+.bl-mini-header { font-size: 9px; font-weight: 900; color: #111; letter-spacing: -0.3px; margin-bottom: 4px; }
+.bl-mini-card { border-radius: 12px; padding: 10px 12px; }
+.bl-mini-card-r { background: #FF0000; color: #fff; }
+.bl-mini-card-p { background: #F472B6; color: #fff; }
+.bl-mini-label { font-size: 8px; font-weight: 900; }
+.bl-mini-produto { font-size: 7px; opacity: 0.8; }
+.bl-mini-pin { font-size: 22px; font-weight: 900; letter-spacing: -1px; text-align: right; line-height: 1; }
+.bl-install-btn { background: #FF0000; color: #fff; border: none; border-radius: 18px; padding: 18px 40px; font-size: 17px; font-weight: 800; cursor: pointer; font-family: inherit; display: flex; align-items: center; gap: 12px; margin-bottom: 16px; width: 100%; max-width: 340px; justify-content: center; }
+.bl-install-btn:active { opacity: 0.85; }
+.bl-open-btn { background: transparent; color: #555; border: 1.5px solid #ddd; border-radius: 18px; padding: 16px 40px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: inherit; width: 100%; max-width: 340px; }
+.bl-open-btn:active { background: #f5f5f5; }
+.bl-hint { font-size: 12px; color: #999; margin-top: 20px; text-align: center; line-height: 1.6; max-width: 280px; }
+.bl-features { display: flex; gap: 24px; margin-bottom: 48px; }
+.bl-feat { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.bl-feat-icon { width: 44px; height: 44px; background: #f5f5f5; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
+.bl-feat-label { font-size: 11px; color: #888; font-weight: 600; text-align: center; }
 
 /* ── HOMEPAGE ── */
-#home { position: fixed; inset: 0; background: #D9ECEC; z-index: 9999; overflow-y: auto; display: none; flex-direction: column; }
+#home { position: fixed; inset: 0; background: #ffffff; z-index: 9999; overflow-y: auto; display: none; flex-direction: column; }
 #home.on { display: flex; }
 #home.off { display: none; }
 
@@ -45,7 +72,7 @@ body { font-family: 'Inter', -apple-system, sans-serif; background: #D9ECEC; col
 .m-btn-maps { flex: 1; padding: 10px 8px; border-radius: 12px; border: none; background: #fff; font-size: 12px; font-weight: 800; color: #FF0000; font-family: inherit; }
 .m-btn-ok { flex: 1; padding: 10px 8px; border-radius: 12px; border: none; background: rgba(0,0,0,0.2); color: #fff; font-size: 12px; font-weight: 800; font-family: inherit; }
 .card-peek { border-radius: 22px; padding: 14px 20px; background: #F472B6; color: #fff; margin-bottom: -60px; position: relative; z-index: 0; }
-.mockup-fade { height: 80px; background: linear-gradient(to bottom, transparent, #D9ECEC); position: relative; z-index: 2; margin-top: -10px; }
+.mockup-fade { height: 80px; background: linear-gradient(to bottom, transparent, #ffffff); position: relative; z-index: 2; margin-top: -10px; }
 
 /* FEATURES — sem caixas, só lista limpa */
 .features { padding: 4px 28px 28px; flex-shrink: 0; }
@@ -96,18 +123,18 @@ body { font-family: 'Inter', -apple-system, sans-serif; background: #D9ECEC; col
 
 /* ── CARDS ── */
 .cards { padding: 10px 16px; display: flex; flex-direction: column; gap: 10px; }
-.card { border-radius: 22px; padding: 16px 18px 12px; display: flex; flex-direction: column; }
+.card { border-radius: 18px; padding: 12px 14px 10px; display: flex; flex-direction: column; }
 .c-red    { background: #FF0000; color: #fff; }
 .c-orange { background: #F472B6; color: #fff; }
 .c-amber  { background: #FF5500; color: #fff; }
-.card-top { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 2px; }
-.card-estado-label { font-size: 19px; font-weight: 900; letter-spacing: -0.5px; line-height: 1.1; }
-.card-deadline { font-size: 11px; font-weight: 700; opacity: 0.55; text-transform: uppercase; letter-spacing: 1px; flex-shrink: 0; margin-left: 8px; }
-.card-produto { font-size: 13px; font-weight: 700; margin-bottom: 0px; opacity: 0.9; }
-.card-loja-nome { font-size: 11px; font-weight: 600; opacity: 0.5; margin-bottom: 6px; }
-.card-pin { font-size: 80px; font-weight: 900; line-height: 0.85; letter-spacing: -5px; margin-bottom: 0px; text-align: right; }
-.card-pin-label { font-size: 8px; font-weight: 700; letter-spacing: 5px; opacity: 0.3; text-align: right; margin-bottom: 8px; }
-.card-local { font-size: 13px; font-weight: 800; letter-spacing: -0.2px; margin-bottom: 10px; opacity: 0.9; }
+.card-top { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 1px; }
+.card-estado-label { font-size: 15px; font-weight: 900; letter-spacing: -0.5px; line-height: 1.1; }
+.card-deadline { font-size: 10px; font-weight: 700; opacity: 0.55; text-transform: uppercase; letter-spacing: 1px; flex-shrink: 0; margin-left: 8px; }
+.card-produto { font-size: 12px; font-weight: 700; margin-bottom: 0px; opacity: 0.9; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.card-loja-nome { font-size: 10px; font-weight: 600; opacity: 0.5; margin-bottom: 4px; }
+.card-pin { font-size: 60px; font-weight: 900; line-height: 0.85; letter-spacing: -4px; margin-bottom: 0px; text-align: right; }
+.card-pin-label { font-size: 7px; font-weight: 700; letter-spacing: 5px; opacity: 0.3; text-align: right; margin-bottom: 6px; }
+.card-local { font-size: 12px; font-weight: 800; letter-spacing: -0.2px; margin-bottom: 8px; opacity: 0.9; }
 .card-codigo { font-size: 11px; font-weight: 800; margin-bottom: 10px; font-family: monospace; letter-spacing: 0.5px; background: rgba(0,0,0,0.1); border-radius: 6px; padding: 4px 8px; display: inline-flex; flex-direction: column; gap: 1px; }
 .card-codigo-label { font-size: 8px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; opacity: 0.55; font-family: 'Inter', sans-serif; }
 .card-actions { display: flex; gap: 6px; }
@@ -123,7 +150,7 @@ body { font-family: 'Inter', -apple-system, sans-serif; background: #D9ECEC; col
 /* ── HISTÓRICO ── */
 .hist-wrap { padding: 0 16px; }
 .hist-month { font-size: 11px; font-weight: 700; color: #888; letter-spacing: 1px; text-transform: uppercase; padding: 16px 0 8px; }
-.hist-item { background: #EAF4F4; border-radius: 16px; padding: 14px 16px; display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+.hist-item { background: #f5f5f5; border-radius: 16px; padding: 14px 16px; display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
 .hist-icon { width: 40px; height: 40px; border-radius: 12px; background: #FF0000; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 900; color: #fff; flex-shrink: 0; }
 .hist-info { flex: 1; min-width: 0; }
 .hist-loja { font-size: 15px; font-weight: 800; }
@@ -134,15 +161,15 @@ body { font-family: 'Inter', -apple-system, sans-serif; background: #D9ECEC; col
 
 /* ── ADICIONAR ── */
 .add-wrap { padding: 16px; }
-.add-hint { font-size: 14px; color: #444; background: #EAF4F4; border-radius: 16px; padding: 14px 16px; margin-bottom: 14px; line-height: 1.5; }
-.add-wrap textarea { width: 100%; min-height: 120px; border: 1.5px solid #e5e5e0; border-radius: 16px; padding: 13px; font-size: 15px; font-family: inherit; color: #111; background: #EAF4F4; resize: vertical; }
+.add-hint { font-size: 14px; color: #444; background: #f5f5f5; border-radius: 16px; padding: 14px 16px; margin-bottom: 14px; line-height: 1.5; }
+.add-wrap textarea { width: 100%; min-height: 120px; border: 1.5px solid #e5e5e0; border-radius: 16px; padding: 13px; font-size: 15px; font-family: inherit; color: #111; background: #f5f5f5; resize: vertical; }
 .add-wrap textarea::placeholder { color: #bbb; }
 .form-title { font-size: 11px; color: #888; margin: 16px 0 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
 .field { margin-bottom: 10px; }
 .field label { font-size: 12px; color: #666; display: block; margin-bottom: 4px; font-weight: 600; }
-.field input, .field select { width: 100%; padding: 12px 14px; border: 1.5px solid #c8dede; border-radius: 12px; font-size: 15px; background: #EAF4F4; color: #111; font-family: inherit; }
+.field input, .field select { width: 100%; padding: 12px 14px; border: 1.5px solid #e5e5e0; border-radius: 12px; font-size: 15px; background: #f5f5f5; color: #111; font-family: inherit; }
 .field-nota { font-size: 12px; color: #856404; background: #fff3cd; border-radius: 10px; padding: 8px 12px; margin-top: 4px; line-height: 1.5; display: none; }
-.btn { width: 100%; margin-top: 10px; padding: 15px; border: none; border-radius: 14px; background: #EAF4F4; color: #111; font-size: 15px; cursor: pointer; font-family: inherit; font-weight: 700; }
+.btn { width: 100%; margin-top: 10px; padding: 15px; border: none; border-radius: 14px; background: #f5f5f5; color: #111; font-size: 15px; cursor: pointer; font-family: inherit; font-weight: 700; }
 .btn.p { background: #111; color: #fff; }
 .btn.d { color: #FF0000; }
 .loading { text-align: center; padding: 1.5rem; color: #666; font-size: 14px; display: none; }
@@ -154,8 +181,8 @@ body { font-family: 'Inter', -apple-system, sans-serif; background: #D9ECEC; col
 .cal-wrap { padding: 16px; }
 .cal-nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
 .cal-title { font-size: 20px; font-weight: 900; letter-spacing: -0.5px; }
-.cal-arrow { background: #EAF4F4; border: none; border-radius: 10px; width: 36px; height: 36px; font-size: 18px; cursor: pointer; font-family: inherit; font-weight: 700; color: #111; }
-.cal-grid { background: #EAF4F4; border-radius: 20px; padding: 14px; margin-bottom: 14px; }
+.cal-arrow { background: #f5f5f5; border: none; border-radius: 10px; width: 36px; height: 36px; font-size: 18px; cursor: pointer; font-family: inherit; font-weight: 700; color: #111; }
+.cal-grid { background: #f5f5f5; border-radius: 20px; padding: 14px; margin-bottom: 14px; }
 .cal-weekdays { display: grid; grid-template-columns: repeat(7,1fr); margin-bottom: 6px; }
 .cal-wd { text-align: center; font-size: 11px; font-weight: 700; color: #888; padding: 4px 0; }
 .cal-days { display: grid; grid-template-columns: repeat(7,1fr); gap: 4px; }
@@ -175,28 +202,28 @@ body { font-family: 'Inter', -apple-system, sans-serif; background: #D9ECEC; col
 
 /* ── CONFIG ── */
 .cfg-wrap { padding: 16px; }
-.cfg-card { background: #EAF4F4; border-radius: 18px; padding: 18px; margin-bottom: 12px; }
+.cfg-card { background: #f5f5f5; border-radius: 18px; padding: 18px; margin-bottom: 12px; }
 .cfg-card h3 { font-size: 16px; font-weight: 800; margin-bottom: 6px; }
 .cfg-card p { font-size: 13px; color: #666; margin-bottom: 12px; line-height: 1.5; }
-.api-input { width: 100%; padding: 12px 14px; border: 1.5px solid #e5e5e0; border-radius: 12px; font-size: 14px; font-family: monospace; color: #111; background: #EAF4F4; }
+.api-input { width: 100%; padding: 12px 14px; border: 1.5px solid #e5e5e0; border-radius: 12px; font-size: 14px; font-family: monospace; color: #111; background: #f5f5f5; }
 .api-save { margin-top: 8px; padding: 12px; border: none; border-radius: 12px; background: #111; color: #fff; font-size: 14px; font-weight: 700; width: 100%; cursor: pointer; font-family: inherit; }
 .api-ok { font-size: 13px; color: #2a7a2a; margin-top: 6px; display: none; font-weight: 600; }
 
 /* ── MODAIS ── */
 .modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 1000; display: flex; align-items: flex-end; }
-.modal-box { background: #D9ECEC; border-radius: 24px 24px 0 0; padding: 20px 20px 40px; width: 100%; max-height: 88vh; overflow-y: auto; }
+.modal-box { background: #ffffff; border-radius: 24px 24px 0 0; padding: 20px 20px 40px; width: 100%; max-height: 88vh; overflow-y: auto; }
 .modal-box h2 { font-size: 20px; font-weight: 900; margin-bottom: 4px; letter-spacing: -0.5px; }
 .modal-sub { font-size: 13px; color: #888; margin-bottom: 16px; }
 .modal-close { float: right; background: #e5e5e0; border: none; border-radius: 50%; width: 30px; height: 30px; font-size: 16px; cursor: pointer; }
 
 /* ── NAV / HAMBURGER ── */
 /* ── HEADER ── */
-.top-bar { background: #D9ECEC; padding: 52px 20px 10px; position: sticky; top: 0; z-index: 10; }
+.top-bar { background: #ffffff; padding: 52px 20px 10px; position: sticky; top: 0; z-index: 10; }
 .app-title { font-size: 22px; font-weight: 900; letter-spacing: -0.5px; line-height: 1.15; }
 .app-sub { font-size: 13px; color: #888; margin-top: 4px; font-weight: 500; }
 
 /* ── NAV BOTTOM ── */
-.nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(217,236,236,0.98); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-top: 1px solid rgba(0,0,0,0.08); display: none; padding: 8px 0 env(safe-area-inset-bottom, 16px); z-index: 9990; }
+.nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(255,255,255,0.98); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-top: 1px solid rgba(0,0,0,0.08); display: none; padding: 8px 0 env(safe-area-inset-bottom, 16px); z-index: 9990; }
 .nav.on { display: flex; }
 .nav.on { display: flex; }
 .nav-btn { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; font-size: 9px; color: #999; cursor: pointer; padding: 4px 0; border: none; background: none; font-family: inherit; font-weight: 700; letter-spacing: 0.3px; }
@@ -207,7 +234,7 @@ body { font-family: 'Inter', -apple-system, sans-serif; background: #D9ECEC; col
 /* DRAWER (apenas para ajuda/config) */
 .drawer-bg { position: fixed; inset: 0; background: rgba(0,0,0,0); z-index: 500; pointer-events: none; transition: background 0.25s; }
 .drawer-bg.on { background: rgba(0,0,0,0.3); pointer-events: all; }
-.drawer { position: fixed; top: 0; right: -280px; width: 260px; height: 100%; background: #D9ECEC; z-index: 501; transition: right 0.28s cubic-bezier(.4,0,.2,1); display: flex; flex-direction: column; border-radius: 24px 0 0 24px; }
+.drawer { position: fixed; top: 0; right: -280px; width: 260px; height: 100%; background: #ffffff; z-index: 501; transition: right 0.28s cubic-bezier(.4,0,.2,1); display: flex; flex-direction: column; border-radius: 24px 0 0 24px; }
 .drawer.on { right: 0; }
 .drawer-header { padding: 56px 24px 16px; border-bottom: 1px solid rgba(0,0,0,0.06); }
 .drawer-logo { font-size: 20px; font-weight: 900; letter-spacing: -1px; color: #111; }
@@ -216,7 +243,7 @@ body { font-family: 'Inter', -apple-system, sans-serif; background: #D9ECEC; col
 .drawer-item { display: flex; align-items: center; gap: 14px; padding: 14px 24px; cursor: pointer; border: none; background: none; width: 100%; font-family: inherit; text-align: left; font-size: 15px; font-weight: 700; color: #555; }
 .drawer-item:active { background: rgba(0,0,0,0.05); }
 .drawer-item svg { flex-shrink: 0; }
-.drawer-section-label { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #999; padding: 16px 24px 4px; }
+.drawer-section-label { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #aaa; padding: 16px 24px 4px; }
 .drawer-close { margin: 0 16px 32px; padding: 14px; border: none; border-radius: 14px; background: rgba(0,0,0,0.08); font-size: 14px; font-weight: 700; color: #666; cursor: pointer; font-family: inherit; }
 
 /* ── TOAST ── */
@@ -233,6 +260,56 @@ body { font-family: 'Inter', -apple-system, sans-serif; background: #D9ECEC; col
 </style>
 </head>
 <body>
+
+<!-- BROWSER LANDING (só aparece no browser, não na PWA) -->
+<div id="browser-landing">
+  <div class="bl-logo">Já<br>Chegou<span>?</span></div>
+  <div class="bl-sub">as tuas encomendas, sempre prontas</div>
+
+  <div class="bl-features">
+    <div class="bl-feat">
+      <div class="bl-feat-icon">📦</div>
+      <div class="bl-feat-label">PIN<br>sempre visível</div>
+    </div>
+    <div class="bl-feat">
+      <div class="bl-feat-icon">✦</div>
+      <div class="bl-feat-label">IA extrai<br>o email</div>
+    </div>
+    <div class="bl-feat">
+      <div class="bl-feat-icon">⏰</div>
+      <div class="bl-feat-label">alertas<br>de prazo</div>
+    </div>
+  </div>
+
+  <!-- mockup telemóvel -->
+  <div class="bl-phone">
+    <div class="bl-phone-notch"></div>
+    <div class="bl-phone-screen">
+      <div class="bl-mini-header">a minha encomenda já chegou?</div>
+      <div class="bl-mini-card bl-mini-card-r">
+        <div class="bl-mini-label">Está no Ponto! Vai Já</div>
+        <div class="bl-mini-produto">Sapatilhas Nike Air Max · Zara</div>
+        <div class="bl-mini-pin">7842</div>
+      </div>
+      <div class="bl-mini-card bl-mini-card-p">
+        <div class="bl-mini-label">Em Trânsito! Quase Aí</div>
+        <div class="bl-mini-produto">Camisola de linho · ASOS</div>
+      </div>
+    </div>
+  </div>
+
+  <button class="bl-install-btn" id="btn-instalar" onclick="instalarPWA()">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2v13M7 11l5 5 5-5"/><path d="M3 17v2a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-2"/></svg>
+    instalar app
+  </button>
+  <button class="bl-open-btn" onclick="abrirSemInstalar()">continuar no browser</button>
+  <div class="bl-hint" id="bl-hint-ios" style="display:none">
+    no iPhone: toca em <strong style="color:#aaa">Partilhar</strong> → <strong style="color:#aaa">Adicionar ao Ecrã de Início</strong>
+  </div>
+  <div class="bl-hint" id="bl-hint-instalado" style="display:none; color:#4CAF50">
+    ✓ app instalada! podes abri-la pelo ecrã principal.
+  </div>
+</div>
 
 <!-- HOMEPAGE -->
 <div id="home">
@@ -515,9 +592,9 @@ const LOJAS = {
 };
 
 const ESTADO_CFG = {
-  vermelho:   { label: 'Está no Ponto! Vai Já',   cls: 'c-red' },
-  enviado:    { label: 'Em Trânsito! Quase Aí',   cls: 'c-orange' },
-  preparacao: { label: 'Confirmada! A Preparar',  cls: 'c-amber' },
+  vermelho:   { label: 'Vai Buscar!',  cls: 'c-red' },
+  enviado:    { label: 'Enviada!',     cls: 'c-orange' },
+  preparacao: { label: 'A Preparar!', cls: 'c-amber' },
 };
 const ORDEM = ['vermelho','enviado','preparacao'];
 const MESES = ['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
@@ -729,7 +806,7 @@ function abrirCardsPreview() {
   fecharDrawer();
   const modal = document.createElement('div');
   modal.className = 'modal-bg'; modal.id = 'modal-cards';
-  modal.innerHTML = `<div class="modal-box" style="background:#D9ECEC;padding:20px 16px 40px">
+  modal.innerHTML = `<div class="modal-box" style="background:#ffffff;padding:20px 16px 40px">
     <button class="modal-close" onclick="fecharModal('modal-cards')" style="background:rgba(0,0,0,0.1)">✕</button>
     <div style="font-size:20px;font-weight:900;letter-spacing:-0.5px;margin-bottom:4px">Como ler os cards</div>
     <div style="font-size:13px;color:#666;margin-bottom:20px;font-weight:500">cada cor é um estado da tua encomenda</div>
@@ -886,7 +963,7 @@ function buildPromptGeral() {
     ? `A morada de casa do utilizador é: "${morada}". Se a morada de entrega do email for a mesma (ou muito semelhante), usa tipo_entrega="casa". Caso contrário usa "recolha".`
     : 'Se o email indicar entrega numa morada pessoal (não num ponto de recolha/loja/balcão), usa tipo_entrega="casa".';
   return `Analisa este email de encomenda. Hoje é ${HOJE.getDate()}/${HOJE.getMonth()+1}/${HOJE.getFullYear()} (${['domingo','segunda','terça','quarta','quinta','sexta','sábado'][HOJE.getDay()]}). Responde APENAS com JSON sem markdown:
-{"tipo":"novo|atualizacao","loja":"ou vazio","produto":"ou vazio","data":"DD/MM/AAAA ou vazio","dataLimite":"DD/MM/AAAA ou vazio","rastreio":"ou vazio","codigo":"ou vazio","local":"ou vazio","pin":"ou vazio","estado":"preparacao|enviado|vermelho","tipo_entrega":"recolha|casa"}
+{"tipo":"novo|atualizacao","loja":"ou vazio","produto":"máx 4 palavras, ex: Sapatilhas Nike Air Max","data":"DD/MM/AAAA ou vazio","dataLimite":"DD/MM/AAAA ou vazio","rastreio":"ou vazio","codigo":"ou vazio","local":"ou vazio","pin":"ou vazio","estado":"preparacao|enviado|vermelho","tipo_entrega":"recolha|casa"}
 
 REGRAS TIPO — muito importante:
 - tipo="novo": email de CONFIRMAÇÃO DE COMPRA de uma loja (Zara, ASOS, Shein, Amazon, Vinted, etc). Tem número de encomenda, produto comprado, valor pago. CRIA card novo.
@@ -900,6 +977,8 @@ REGRAS ESTADO:
 
 REGRAS DATALIMITE: converte sempre para DD/MM/AAAA. Se diz "quinta-feira", "amanhã", "Friday June 20", calcula a data real a partir de hoje.
 
+REGRAS PRODUTO: resume o nome do produto em máximo 4 palavras, em português. Ex: "Sapatilhas Nike Air Max 90 edição limitada brancas tamanho 42" → "Sapatilhas Nike Air Max". Nunca uses o nome completo longo.
+
 ${moradaInstr}
 Email:`;
 }
@@ -908,6 +987,14 @@ const PROMPT_UPDATE = `Analisa este email de transportadora. Responde APENAS com
 {"rastreio":"ou vazio","dataLimite":"DD/MM/AAAA ou vazio","local":"ou vazio","pin":"código pin ou vazio","estado":"manter"}
 estado: "vermelho"=chegou ao ponto, "enviado"=em trânsito, "manter"=sem info nova
 Email:`;
+
+// Limpa valores placeholder que a IA às vezes devolve literalmente
+function limpar(v) {
+  if (!v) return "";
+  const pl = ["ou vazio","vazio","n/a","na","null","undefined","none","-","—"];
+  if (pl.includes(v.toString().toLowerCase().trim())) return "";
+  return v.toString().trim();
+}
 
 async function chamarAI(prompt, texto) {
   const key = localStorage.getItem('anthropic_key') || '';
@@ -951,28 +1038,28 @@ async function processarEmail() {
 
       document.getElementById('loading').style.display = 'none';
       if (idx !== -1) {
-        if (p.local) orders[idx].local = p.local;
-        if (p.pin) orders[idx].pin = p.pin;
-        if (p.dataLimite) orders[idx].dataLimite = p.dataLimite;
+        const loc = limpar(p.local); if (loc) orders[idx].local = loc;
+        const pin = limpar(p.pin); if (pin) orders[idx].pin = pin;
+        const dl = limpar(p.dataLimite); if (dl) orders[idx].dataLimite = dl;
         if (p.estado && p.estado !== 'manter') orders[idx].estado = p.estado;
-        if (p.rastreio && !orders[idx].rastreio) orders[idx].rastreio = p.rastreio;
+        const rastr = limpar(p.rastreio); if (rastr && !orders[idx].rastreio) orders[idx].rastreio = rastr;
         guardar(); document.getElementById('email-txt').value = '';
-        goTab('ativas'); toast(p.pin ? '✓ ' + orders[idx].loja + ' · pin: ' + p.pin : '✓ encomenda atualizada');
+        goTab('ativas'); toast(pin ? '✓ ' + orders[idx].loja + ' · pin: ' + pin : '✓ encomenda atualizada');
       } else {
         // sem correspondência — cria card novo com os dados do email
         document.getElementById('email-txt').value = '';
         if (p.loja || p.produto || p.local || p.pin) {
           orders.unshift({
-            loja: p.loja || '',
-            produto: p.produto || '',
-            data: p.data || '',
-            dataLimite: p.dataLimite || '',
-            local: p.local || '',
-            pin: p.pin || '',
-            codigo: p.codigo || '',
-            rastreio: p.rastreio || '',
+            loja: limpar(p.loja),
+            produto: limpar(p.produto),
+            data: limpar(p.data),
+            dataLimite: limpar(p.dataLimite),
+            local: limpar(p.local),
+            pin: limpar(p.pin),
+            codigo: limpar(p.codigo),
+            rastreio: limpar(p.rastreio),
             estado: p.estado && p.estado !== 'manter' ? p.estado : 'enviado',
-            tipo: p.tipo_entrega || 'recolha',
+            tipo: limpar(p.tipo_entrega) || 'recolha',
             criado: new Date().toISOString()
           });
           guardar();
@@ -983,15 +1070,15 @@ async function processarEmail() {
         }
       }
     } else {
-      document.getElementById('f-loja').value = p.loja||'';
-      document.getElementById('f-produto').value = p.produto||'';
-      document.getElementById('f-data').value = p.data||'';
-      document.getElementById('f-datalimite').value = p.dataLimite||'';
-      document.getElementById('f-local').value = p.local||'';
-      document.getElementById('f-pin').value = p.pin||'';
-      document.getElementById('f-codigo').value = p.codigo||'';
-      document.getElementById('f-estado').value = p.estado||'preparacao';
-      document.getElementById('f-tipo').value = p.tipo_entrega||'recolha';
+      document.getElementById('f-loja').value = limpar(p.loja);
+      document.getElementById('f-produto').value = limpar(p.produto);
+      document.getElementById('f-data').value = limpar(p.data);
+      document.getElementById('f-datalimite').value = limpar(p.dataLimite);
+      document.getElementById('f-local').value = limpar(p.local);
+      document.getElementById('f-pin').value = limpar(p.pin);
+      document.getElementById('f-codigo').value = limpar(p.codigo);
+      document.getElementById('f-estado').value = limpar(p.estado)||'preparacao';
+      document.getElementById('f-tipo').value = limpar(p.tipo_entrega)||'recolha';
       notaLoja(); tipoChange();
       document.getElementById('form').style.display = 'block';
       document.getElementById('loading').style.display = 'none';
@@ -1048,7 +1135,7 @@ function mostrarAssociar(dados) {
   modal.className = 'modal-bg'; modal.id = 'modal-assoc';
   const itens = ativas.map(o => {
     const idx = orders.indexOf(o);
-    return '<div style="background:#EAF4F4;border-radius:14px;padding:14px 16px;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between">' +
+    return '<div style="background:#f5f5f5;border-radius:14px;padding:14px 16px;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between">' +
       '<div><div style="font-size:15px;font-weight:800">' + (o.loja||'Loja') + '</div>' +
       '<div style="font-size:12px;color:#888">' + (o.produto||'—') + '</div>' +
       (o.rastreio?'<div style="font-size:11px;color:#bbb;font-family:monospace">'+o.rastreio+'</div>':'') + '</div>' +
@@ -1253,6 +1340,55 @@ function verHomepage() {
   document.getElementById('home-close').style.display = 'block';
 }
 
+// ── PWA INSTALL ───────────────────────────────────────
+let deferredPrompt = null;
+
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  deferredPrompt = e;
+  // Mostrar botão de instalar se estiver na landing
+  const btn = document.getElementById('btn-instalar');
+  if (btn) btn.style.display = 'flex';
+});
+
+window.addEventListener('appinstalled', () => {
+  deferredPrompt = null;
+  const hint = document.getElementById('bl-hint-instalado');
+  if (hint) { hint.style.display = 'block'; }
+  setTimeout(() => abrirSemInstalar(), 2500);
+});
+
+async function instalarPWA() {
+  if (deferredPrompt) {
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+    deferredPrompt = null;
+    if (outcome === 'accepted') {
+      const hint = document.getElementById('bl-hint-instalado');
+      if (hint) hint.style.display = 'block';
+    }
+  } else {
+    // iOS ou browser que não suporta
+    const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+    if (isIOS) {
+      document.getElementById('bl-hint-ios').style.display = 'block';
+    } else {
+      abrirSemInstalar();
+    }
+  }
+}
+
+function abrirSemInstalar() {
+  localStorage.setItem('chegou_entrou', '1');
+  document.getElementById('browser-landing').classList.remove('on');
+  if (localStorage.getItem('chegou_entrou') || orders.length > 0) {
+    document.getElementById('app').classList.add('on');
+    document.getElementById('nav').classList.add('on');
+  } else {
+    document.getElementById('home').classList.add('on');
+  }
+}
+
 // ── INIT ──────────────────────────────────────────────
 const savedKey = localStorage.getItem('anthropic_key');
 if (savedKey) document.getElementById('api-key').value = savedKey;
@@ -1260,11 +1396,29 @@ if (savedKey) document.getElementById('api-key').value = savedKey;
 const savedMorada = localStorage.getItem('chegou_morada');
 if (savedMorada) document.getElementById('minha-morada').value = savedMorada;
 
-if (localStorage.getItem('chegou_entrou') || orders.length > 0) {
-  document.getElementById('app').classList.add('on');
-  document.getElementById('nav').classList.add('on');
+// Detectar se está a correr como PWA instalada
+const isPWA = window.matchMedia('(display-mode: standalone)').matches
+  || window.navigator.standalone === true;
+
+if (isPWA) {
+  // Já está instalada — vai direto para a app ou homepage
+  if (localStorage.getItem('chegou_entrou') || orders.length > 0) {
+    document.getElementById('app').classList.add('on');
+    document.getElementById('nav').classList.add('on');
+  } else {
+    document.getElementById('home').classList.add('on');
+  }
 } else {
-  document.getElementById('home').classList.add('on');
+  // Está no browser — mostrar landing page de instalação
+  document.getElementById('browser-landing').classList.add('on');
+  // Esconder botão instalar por defeito (aparece quando beforeinstallprompt disparar)
+  const btn = document.getElementById('btn-instalar');
+  if (btn) btn.style.display = 'none';
+  // iOS não tem beforeinstallprompt — mostrar botão sempre
+  const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  if (isIOS) {
+    if (btn) btn.style.display = 'flex';
+  }
 }
 
 renderAtivas();
