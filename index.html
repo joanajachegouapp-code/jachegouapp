@@ -500,11 +500,13 @@ body { font-family: 'Inter', -apple-system, sans-serif; background: #ffffff; col
         <div style="font-size:12px;color:#FF0000;margin-top:6px;display:none" id="notif-bloq">notificações bloqueadas. ativa nas definições do browser.</div>
       </div>
       <div class="cfg-card">
-        <h3>a minha morada</h3>
-        <p>a IA compara esta morada com a do email — se coincide, o card mostra "Casa" automaticamente.</p>
-        <input class="api-input" type="text" id="minha-morada" placeholder="ex: Rua das Flores 12, 2.º Dto, Lisboa" style="font-family:inherit" />
-        <button class="api-save" onclick="guardarMorada()">guardar</button>
-        <div class="api-ok" id="morada-ok">✓ guardado</div>
+        <h3>as minhas moradas</h3>
+        <p>a IA compara a morada do email com estas — se coincidir, associa automaticamente.</p>
+        <div id="moradas-list" style="display:flex;flex-direction:column;gap:8px;margin-bottom:12px"></div>
+        <button class="api-save" onclick="abrirModalMorada(null)" style="display:flex;align-items:center;justify-content:center;gap:8px">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          adicionar morada
+        </button>
       </div>
 
       <div class="cfg-card">
@@ -748,10 +750,6 @@ function renderAtivas() {
     const mapsH = localMaps
       ? '<button class="btn-maps" data-url="https://maps.google.com/?q=' + encodeURIComponent(localMaps) + '" onclick="window.open(this.dataset.url,\'_blank\')">maps ↗</button>'
       : '';
-    const entH = (estadoEfetivo(o) === 'vermelho' || o.tipo === 'casa')
-      ? '<button class="btn-entregue" onclick="marcarEntregue(' + idx + ')">entregue ✓</button>'
-      : '';
-
     return '<div class="card ' + cfg.cls + '">' +
       '<div class="card-top"><div class="card-estado-label">' + cfg.label + '</div>' + (dl ? '<div class="card-deadline">' + dl + '</div>' : '') + '</div>' +
       '<div class="card-produto">' + (o.produto || '—') + '</div>' +
@@ -759,7 +757,7 @@ function renderAtivas() {
       pinH + localH + codigoH +
       '<div class="card-actions">' + mapsH +
         '<button class="btn-edit" onclick="abrirEditar(' + idx + ')">editar ✏</button>' +
-        entH +
+        '<button class="btn-entregue" onclick="marcarEntregue(' + idx + ')">entregue ✓</button>' +
       '</div>' +
       '<button class="btn-update" onclick="abrirAtualizar(' + idx + ')">+ atualizar com novo email</button>' +
     '</div>';
@@ -905,9 +903,15 @@ function renderCal() {
   const hoje_d = new Date(); hoje_d.setHours(0,0,0,0);
 
   const mapa = {};
-  orders.filter(o => o.estado !== 'entregue').forEach(o => {
-    let d = parseData(o.dataLimite || o.data);
-    if (!d && o.estado === 'vermelho') d = hoje_d;
+  orders.filter(o => o.estado !== 'entregue' && o.estado !== 'preparacao').forEach(o => {
+    let d = null;
+    if (o.estado === 'vermelho') {
+      // prazo de levantamento, ou hoje se não tiver data
+      d = parseData(o.dataLimite) || hoje_d;
+    } else if (o.estado === 'enviado') {
+      // só aparece se tiver data limite definida (data prevista de chegada)
+      d = parseData(o.dataLimite);
+    }
     if (!d) return;
     if (d.getMonth() === calM && d.getFullYear() === calY) {
       const day = d.getDate(); if (!mapa[day]) mapa[day] = []; mapa[day].push(o);
@@ -943,9 +947,13 @@ function renderCal() {
 function calClick(d) { calSel = d; renderCal(); }
 function calMostrar(d) {
   const es = orders.filter(o => {
-    if (o.estado === 'entregue') return false;
-    let dt = parseData(o.dataLimite || o.data);
-    if (!dt && o.estado === 'vermelho') { const hj = new Date(); dt = new Date(hj.getFullYear(), hj.getMonth(), hj.getDate()); }
+    if (o.estado === 'entregue' || o.estado === 'preparacao') return false;
+    let dt = null;
+    if (o.estado === 'vermelho') {
+      dt = parseData(o.dataLimite) || new Date(calY, calM, d);
+    } else if (o.estado === 'enviado') {
+      dt = parseData(o.dataLimite);
+    }
     if (!dt) return false;
     return dt.getDate() === d && dt.getMonth() === calM && dt.getFullYear() === calY;
   });
@@ -972,29 +980,26 @@ function calNext() { calM++; if (calM>11){calM=0;calY++;} calSel=null; renderCal
 const HOJE = new Date();
 
 function buildPromptGeral() {
-  const morada = localStorage.getItem('chegou_morada') || '';
-  const moradaInstr = morada
-    ? `A morada de casa do utilizador é: "${morada}". Se a morada de entrega do email for a mesma (ou muito semelhante), usa tipo_entrega="casa". Caso contrário usa "recolha".`
-    : 'Se o email indicar entrega numa morada pessoal (não num ponto de recolha/loja/balcão), usa tipo_entrega="casa".';
-  return `Analisa este email de encomenda. Hoje é ${HOJE.getDate()}/${HOJE.getMonth()+1}/${HOJE.getFullYear()} (${['domingo','segunda','terça','quarta','quinta','sexta','sábado'][HOJE.getDay()]}). Responde APENAS com JSON sem markdown:
-{"tipo":"novo|atualizacao","loja":"ou vazio","produto":"máx 4 palavras, ex: Sapatilhas Nike Air Max","data":"DD/MM/AAAA ou vazio","dataLimite":"DD/MM/AAAA ou vazio","rastreio":"ou vazio","codigo":"ou vazio","local":"ou vazio","pin":"ou vazio","estado":"preparacao|enviado|vermelho","tipo_entrega":"recolha|casa"}
-
-REGRAS TIPO — muito importante:
-- tipo="novo": email de CONFIRMAÇÃO DE COMPRA de uma loja (Zara, ASOS, Shein, Amazon, Vinted, etc). Tem número de encomenda, produto comprado, valor pago. CRIA card novo.
-- tipo="atualizacao": email de TRANSPORTADORA (CTT, DPD, GLS, Chronopost, MRW, SEUR, Correos) sobre uma encomenda já enviada. Não tem produto nem loja de origem clara. ATUALIZA card existente.
-- Em caso de dúvida, usa tipo="novo".
-
-REGRAS ESTADO:
-- estado="preparacao": compra confirmada, ainda não enviada
-- estado="enviado": encomenda em trânsito
-- estado="vermelho": chegou ao ponto de levantamento, pronta a levantar
-
-REGRAS DATALIMITE: converte sempre para DD/MM/AAAA. Se diz "quinta-feira", "amanhã", "Friday June 20", calcula a data real a partir de hoje.
-
-REGRAS PRODUTO: resume o nome do produto em máximo 4 palavras, em português. Ex: "Sapatilhas Nike Air Max 90 edição limitada brancas tamanho 42" → "Sapatilhas Nike Air Max". Nunca uses o nome completo longo.
-
-${moradaInstr}
-Email:`;
+  const moradas = carregarMoradas();
+  let moradaInstr = 'Se o email indicar entrega numa morada pessoal (não num ponto de recolha/loja/balcão), usa tipo_entrega="casa" e coloca o nome do local no campo "local".';
+  if (moradas.length > 0) {
+    const lista = moradas.map(function(m) { return '"' + m.nome + '": ' + m.morada; }).join('; ');
+    moradaInstr = 'O utilizador tem estas moradas guardadas: ' + lista + '. Se a morada de entrega do email coincidir com uma delas (ou for muito semelhante), usa tipo_entrega="casa" e coloca o nome (ex: "Casa", "Trabalho") no campo "local". Se não coincidir com nenhuma, usa "recolha".';
+  }
+  const hoje = new Date();
+  return 'Analisa este email de encomenda. Hoje é ' + hoje.getDate() + '/' + (hoje.getMonth()+1) + '/' + hoje.getFullYear() + ' (' + ['domingo','segunda','terça','quarta','quinta','sexta','sábado'][hoje.getDay()] + '). Responde APENAS com JSON sem markdown:\n' +
+    '{"tipo":"novo|atualizacao","loja":"ou vazio","produto":"máx 4 palavras, ex: Sapatilhas Nike Air Max","data":"DD/MM/AAAA ou vazio","dataLimite":"DD/MM/AAAA ou vazio","rastreio":"ou vazio","codigo":"ou vazio","local":"ou vazio","pin":"ou vazio","estado":"preparacao|enviado|vermelho","tipo_entrega":"recolha|casa"}\n\n' +
+    'REGRAS TIPO — muito importante:\n' +
+    '- tipo="novo": email de CONFIRMAÇÃO DE COMPRA de uma loja (Zara, ASOS, Shein, Amazon, Vinted, etc). Tem número de encomenda, produto comprado, valor pago. CRIA card novo.\n' +
+    '- tipo="atualizacao": email de TRANSPORTADORA (CTT, DPD, GLS, Chronopost, MRW, SEUR, Correos) sobre uma encomenda já enviada. Não tem produto nem loja de origem clara. ATUALIZA card existente.\n' +
+    '- Em caso de dúvida, usa tipo="novo".\n\n' +
+    'REGRAS ESTADO:\n' +
+    '- estado="preparacao": compra confirmada, ainda não enviada\n' +
+    '- estado="enviado": encomenda em trânsito\n' +
+    '- estado="vermelho": chegou ao ponto de levantamento, pronta a levantar\n\n' +
+    'REGRAS DATALIMITE: converte sempre para DD/MM/AAAA. Se diz "quinta-feira", "amanhã", "Friday June 20", calcula a data real a partir de hoje.\n\n' +
+    'REGRAS PRODUTO: resume o nome do produto em máximo 4 palavras, em português. Ex: "Sapatilhas Nike Air Max 90 edição limitada brancas tamanho 42" → "Sapatilhas Nike Air Max". Nunca uses o nome completo longo.\n\n' +
+    moradaInstr + '\nEmail:';
 }
 
 const PROMPT_UPDATE = `Analisa este email de transportadora. Responde APENAS com JSON sem markdown:
@@ -1316,9 +1321,9 @@ function verificarNotifs() {
   // Barra dentro da app (sempre)
   const hoje = new Date(); hoje.setHours(0,0,0,0);
   const alertas = [];
-  orders.filter(o => o.estado !== 'entregue').forEach(o => {
+  orders.filter(o => o.estado !== 'entregue' && o.estado !== 'preparacao').forEach(o => {
     const isCasa = o.tipo === 'casa';
-    const ds = isCasa ? (o.data||o.dataLimite) : o.dataLimite;
+    const ds = o.dataLimite;
     if (!ds) return;
     const d = parseData(ds); if (!d) return; d.setHours(0,0,0,0);
     const diff = Math.round((d - hoje) / 86400000);
@@ -1344,11 +1349,77 @@ function verificarNotifs() {
 }
 
 // ── CONFIG ────────────────────────────────────────────
-function guardarMorada() {
-  const m = document.getElementById('minha-morada').value.trim(); if (!m) return;
-  localStorage.setItem('chegou_morada', m);
-  document.getElementById('morada-ok').style.display = 'block';
-  setTimeout(() => document.getElementById('morada-ok').style.display='none', 2000);
+// ── MORADAS ───────────────────────────────────────────
+function carregarMoradas() {
+  try { return JSON.parse(localStorage.getItem('chegou_moradas')) || []; } catch(e) { return []; }
+}
+
+function guardarMoradas(lista) {
+  localStorage.setItem('chegou_moradas', JSON.stringify(lista));
+  renderMoradas();
+}
+
+function renderMoradas() {
+  const el = document.getElementById('moradas-list'); if (!el) return;
+  const moradas = carregarMoradas();
+  if (!moradas.length) {
+    el.innerHTML = '<div style="font-size:13px;color:#aaa;text-align:center;padding:8px 0">nenhuma morada guardada</div>';
+    return;
+  }
+  el.innerHTML = moradas.map((m, i) =>
+    '<div style="background:#fff;border:1.5px solid #e5e5e0;border-radius:12px;padding:12px 14px;display:flex;align-items:center;gap:10px">' +
+      '<div style="flex:1;min-width:0">' +
+        '<div style="font-size:14px;font-weight:800;color:#111">' + m.nome + '</div>' +
+        '<div style="font-size:12px;color:#888;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + m.morada + '</div>' +
+      '</div>' +
+      '<button onclick="abrirModalMorada(' + i + ')" style="background:none;border:none;cursor:pointer;padding:4px;color:#888;font-size:18px;flex-shrink:0">✏</button>' +
+    '</div>'
+  ).join('');
+}
+
+function abrirModalMorada(idx) {
+  const moradas = carregarMoradas();
+  const m = idx !== null ? moradas[idx] : null;
+  const modal = document.createElement('div');
+  modal.className = 'modal-bg'; modal.id = 'modal-morada';
+  modal.innerHTML = '<div class="modal-box">' +
+    '<button class="modal-close" onclick="fecharModal(\'modal-morada\')">✕</button>' +
+    '<h2>' + (m ? 'editar morada' : 'nova morada') + '</h2>' +
+    '<div class="modal-sub">dá um nome e o endereço completo</div>' +
+    '<div class="field"><label>nome</label><input type="text" id="m-nome" placeholder="ex: Casa, Trabalho, Casa Mãe" /></div>' +
+    '<div class="field"><label>endereço</label><input type="text" id="m-end" placeholder="ex: Rua das Flores 12, 2.º Dto, Lisboa" /></div>' +
+    '<button class="btn p" onclick="salvarModalMorada(' + idx + ')" style="margin-top:8px">guardar</button>' +
+    (m ? '<button class="btn d" onclick="apagarMorada(' + idx + ')" style="margin-top:6px">apagar morada</button>' : '') +
+    '</div>';
+  document.body.appendChild(modal);
+  if (m) {
+    document.getElementById('m-nome').value = m.nome;
+    document.getElementById('m-end').value = m.morada;
+  }
+}
+
+function salvarModalMorada(idx) {
+  const nome = document.getElementById('m-nome').value.trim();
+  const morada = document.getElementById('m-end').value.trim();
+  if (!nome || !morada) { alert('preenche o nome e o endereço.'); return; }
+  const moradas = carregarMoradas();
+  if (idx !== null && idx >= 0) {
+    moradas[idx] = { nome, morada };
+  } else {
+    moradas.push({ nome, morada });
+  }
+  guardarMoradas(moradas);
+  fecharModal('modal-morada');
+  toast('morada guardada ✓');
+}
+
+function apagarMorada(idx) {
+  if (!confirm('apagar esta morada?')) return;
+  const moradas = carregarMoradas();
+  moradas.splice(idx, 1);
+  guardarMoradas(moradas);
+  fecharModal('modal-morada');
+  toast('morada apagada');
 }
 
 function exportar() {
@@ -1416,8 +1487,13 @@ function abrirSemInstalar() {
 }
 
 // ── INIT ──────────────────────────────────────────────
-const savedMorada = localStorage.getItem('chegou_morada');
-if (savedMorada) document.getElementById('minha-morada').value = savedMorada;
+// migrar morada antiga para nova lista
+(function() {
+  const antiga = localStorage.getItem('chegou_morada');
+  if (antiga && !localStorage.getItem('chegou_moradas')) {
+    localStorage.setItem('chegou_moradas', JSON.stringify([{ nome: 'Casa', morada: antiga }]));
+  }
+})();
 
 const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent) && !window.MSStream;
 const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
@@ -1453,6 +1529,7 @@ if (isPWA) {
 
 renderAtivas();
 renderHistorico();
+renderMoradas();
 atualizarSub();
 verificarNotifs();
 setInterval(verificarNotifs, 30*60*1000);
