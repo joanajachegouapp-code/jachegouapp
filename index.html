@@ -1005,11 +1005,9 @@ function limpar(v) {
 }
 
 async function chamarAI(prompt, texto) {
-  const key = localStorage.getItem('anthropic_key') || '';
-  if (!key) { alert('vai a conta e adiciona a tua chave api anthropic.'); return null; }
-  const r = await fetch('https://api.anthropic.com/v1/messages', {
+  const r = await fetch('https://chegouproxy.joana-jachegouapp.workers.dev', {
     method: 'POST',
-    headers: { 'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true' },
+    headers: { 'Content-Type':'application/json' },
     body: JSON.stringify({ model:'claude-sonnet-4-6', max_tokens:500, messages:[{role:'user',content:prompt+'\n'+texto}] })
   });
   const d = await r.json();
