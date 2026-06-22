@@ -384,15 +384,8 @@ body { font-family: 'Inter', -apple-system, sans-serif; background: #ffffff; col
     </div>
   </div>
 
-  <!-- CTA / LOGIN -->
-  <div class="cta-wrap">
-    <div class="cta-kicker">começa agora · é grátis</div>
-    <button class="hbtn hbtn-g" onclick="entrar()">
-      <div class="gdot">G</div>
-      entrar com Google
-    </button>
-    <button class="hbtn hbtn-e" onclick="entrar()">entrar com email</button>
-    <div class="cta-terms">ao entrar aceitas os termos e privacidade</div>
+  <div style="padding: 8px 24px 48px;">
+    <button onclick="entrar()" style="width:100%;padding:18px;border:none;border-radius:18px;background:#111;color:#fff;font-size:16px;font-weight:800;cursor:pointer;font-family:inherit;">começar →</button>
   </div>
 
 </div>
@@ -489,29 +482,18 @@ body { font-family: 'Inter', -apple-system, sans-serif; background: #ffffff; col
         <button class="api-save" onclick="guardarMorada()">guardar</button>
         <div class="api-ok" id="morada-ok">✓ guardado</div>
       </div>
-      <div class="cfg-card">
-        <h3>chave api anthropic</h3>
-        <p>necessária para analisar emails automaticamente. obtém em console.anthropic.com</p>
-        <input class="api-input" type="password" id="api-key" placeholder="sk-ant-..." />
-        <button class="api-save" onclick="guardarKey()">guardar</button>
-        <div class="api-ok" id="api-ok">✓ guardado</div>
-      </div>
-      <div class="cfg-card">
-        <h3>backup</h3>
-        <p>exporta as tuas encomendas antes de atualizar a app.</p>
-        <button class="btn p" onclick="exportar()" style="margin-top:0">exportar backup</button>
-        <button class="btn" onclick="document.getElementById('import-file').click()" style="margin-top:8px;border:1.5px solid #e5e5e0">importar backup</button>
-        <input type="file" id="import-file" accept=".json" style="display:none" onchange="importar(event)" />
-      </div>
-      <div class="cfg-card">
-        <h3>diagnóstico</h3>
-        <p>ver o que está guardado.</p>
-        <button class="btn" onclick="diag()" style="margin-top:0;border:1.5px solid #e5e5e0">ver dados</button>
-      </div>
+
       <div class="cfg-card">
         <h3>apagar tudo</h3>
         <p>remove todas as encomendas guardadas.</p>
         <button class="btn d" onclick="apagarTudo()" style="margin-top:0">apagar tudo</button>
+      </div>
+      <div class="cfg-card">
+        <h3>backup</h3>
+        <p>exporta as tuas encomendas antes de mudar de dispositivo ou browser.</p>
+        <button class="btn p" onclick="exportar()" style="margin-top:0">exportar backup</button>
+        <button class="btn" onclick="document.getElementById('import-file').click()" style="margin-top:8px;border:1.5px solid #e5e5e0">importar backup</button>
+        <input type="file" id="import-file" accept=".json" style="display:none" onchange="importar(event)" />
       </div>
       <div class="cfg-card">
         <h3>apresentação</h3>
@@ -1338,13 +1320,6 @@ function verificarNotifs() {
 }
 
 // ── CONFIG ────────────────────────────────────────────
-function guardarKey() {
-  const k = document.getElementById('api-key').value.trim(); if (!k) return;
-  localStorage.setItem('anthropic_key', k);
-  document.getElementById('api-ok').style.display = 'block';
-  setTimeout(() => document.getElementById('api-ok').style.display='none', 2000);
-}
-
 function guardarMorada() {
   const m = document.getElementById('minha-morada').value.trim(); if (!m) return;
   localStorage.setItem('chegou_morada', m);
@@ -1364,14 +1339,6 @@ function importar(e) {
   const r = new FileReader();
   r.onload = ev => { try { const d = JSON.parse(ev.target.result); if(Array.isArray(d)){orders=d;guardar();toast(d.length+' encomendas importadas ✓');}else alert('ficheiro inválido.'); } catch(e){alert('erro ao importar.');} };
   r.readAsText(f);
-}
-
-function diag() {
-  let s = 'localStorage:\n';
-  for (let i=0;i<localStorage.length;i++) { const k=localStorage.key(i); if(k==='anthropic_key'){s+=k+': [chave api]\n';continue;} try{const v=JSON.parse(localStorage.getItem(k));s+=k+':'+(Array.isArray(v)?v.length+' items':typeof v)+'\n';}catch(e){s+=k+': texto\n';} }
-  s += '\nencomendas em memória: '+orders.length;
-  if(orders.length>0) s+='\n\nprimeira:\n'+JSON.stringify(orders[0],null,2);
-  alert(s);
 }
 
 function apagarTudo() { if(confirm('apagar tudo?')){orders=[];guardar();toast('apagado');} }
@@ -1432,9 +1399,6 @@ function abrirSemInstalar() {
 }
 
 // ── INIT ──────────────────────────────────────────────
-const savedKey = localStorage.getItem('anthropic_key');
-if (savedKey) document.getElementById('api-key').value = savedKey;
-
 const savedMorada = localStorage.getItem('chegou_morada');
 if (savedMorada) document.getElementById('minha-morada').value = savedMorada;
 
