@@ -42,10 +42,12 @@ function verificarENotificar(orders) {
 
   const hoje = new Date();
   hoje.setHours(0, 0, 0, 0);
+  const hojeStr = hoje.toISOString().split('T')[0];
 
   orders.filter(o => o.estado !== 'entregue').forEach(o => {
     const isCasa = o.tipo === 'casa';
-    const ds = isCasa ? (o.data || o.dataLimite) : o.dataLimite;
+    // Usar sempre dataLimite — nunca usar o.data (data de criação da encomenda)
+    const ds = o.dataLimite;
     if (!ds) return;
 
     const d = parseData(ds);
@@ -77,13 +79,19 @@ function verificarENotificar(orders) {
     }
 
     if (titulo) {
-      self.registration.showNotification(titulo, {
-        body: corpo,
-        icon: './icon-192.png',
-        badge: './icon-192.png',
-        tag: 'enc-' + (o.codigo || o.loja || Math.random()),
-        renotify: false,
-        vibrate: [200, 100, 200],
+      // Tag única por encomenda + dia para evitar notificações repetidas no mesmo dia
+      const tag = 'enc-' + (o.codigo || o.loja || 'x') + '-' + hojeStr;
+      self.registration.getNotifications({ tag }).then(existing => {
+        if (existing.length === 0) {
+          self.registration.showNotification(titulo, {
+            body: corpo,
+            icon: './icon-192.png',
+            badge: './icon-192.png',
+            tag,
+            renotify: false,
+            vibrate: [200, 100, 200],
+          });
+        }
       });
     }
   });

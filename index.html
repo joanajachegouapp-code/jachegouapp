@@ -607,10 +607,9 @@ const LOJAS = {
 };
 
 const ESTADO_CFG = {
-  vermelho:   { label: 'Vai Buscar!',      cls: 'c-red' },
-  casa_hoje:  { label: 'Entrega Hoje! 🏠', cls: 'c-red' },
-  enviado:    { label: 'Enviada!',         cls: 'c-orange' },
-  preparacao: { label: 'A Preparar!',      cls: 'c-amber' },
+  vermelho:   { label: 'Vai Buscar!',  cls: 'c-red' },
+  enviado:    { label: 'Enviada!',     cls: 'c-orange' },
+  preparacao: { label: 'A Preparar!', cls: 'c-amber' },
 };
 const ORDEM = ['vermelho','enviado','preparacao'];
 const MESES = ['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
@@ -720,14 +719,13 @@ function ordemPrioridade(o) {
 }
 
 function estadoEfetivo(o) {
-  const d = parseData(o.dataLimite || o.data);
-  if (d) {
-    const hoje = new Date(); hoje.setHours(0,0,0,0); d.setHours(0,0,0,0);
-    const diff = Math.round((d - hoje) / 86400000);
-    // entrega em casa hoje ou data passada → vermelho especial
-    if (o.tipo === 'casa' && o.estado !== 'entregue' && diff <= 0) return 'casa_hoje';
-    // encomenda enviada que chega hoje → vermelho
-    if (o.estado === 'enviado' && diff <= 0) return 'vermelho';
+  // encomenda enviada que chega hoje → mostrar como vermelho
+  if (o.estado === 'enviado') {
+    const d = parseData(o.dataLimite || o.data);
+    if (d) {
+      const hoje = new Date(); hoje.setHours(0,0,0,0); d.setHours(0,0,0,0);
+      if (Math.round((d - hoje) / 86400000) <= 0) return 'vermelho';
+    }
   }
   return o.estado;
 }
@@ -1545,8 +1543,14 @@ renderAtivas();
 renderHistorico();
 renderMoradas();
 atualizarSub();
-verificarNotifs();
-setInterval(verificarNotifs, 30*60*1000);
+
+// Só verificar notificações uma vez por dia
+const _ultimaVerif = localStorage.getItem('chegou_ultima_verif');
+const _hoje = new Date().toISOString().split('T')[0];
+if (_ultimaVerif !== _hoje) {
+  verificarNotifs();
+  localStorage.setItem('chegou_ultima_verif', _hoje);
+}
 
 // Pedir permissão de notificações após 3 segundos (não logo ao abrir)
 setTimeout(() => { pedirPermissaoNotifs(); atualizarBtnNotif(); }, 3000);
