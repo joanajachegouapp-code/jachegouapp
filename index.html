@@ -607,9 +607,10 @@ const LOJAS = {
 };
 
 const ESTADO_CFG = {
-  vermelho:   { label: 'Vai Buscar!',  cls: 'c-red' },
-  enviado:    { label: 'Enviada!',     cls: 'c-orange' },
-  preparacao: { label: 'A Preparar!', cls: 'c-amber' },
+  vermelho:   { label: 'Vai Buscar!',      cls: 'c-red' },
+  casa_hoje:  { label: 'Entrega Hoje! 🏠', cls: 'c-red' },
+  enviado:    { label: 'Enviada!',         cls: 'c-orange' },
+  preparacao: { label: 'A Preparar!',      cls: 'c-amber' },
 };
 const ORDEM = ['vermelho','enviado','preparacao'];
 const MESES = ['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
@@ -719,13 +720,14 @@ function ordemPrioridade(o) {
 }
 
 function estadoEfetivo(o) {
-  // encomenda enviada que chega hoje → mostrar como vermelho
-  if (o.estado === 'enviado') {
-    const d = parseData(o.dataLimite || o.data);
-    if (d) {
-      const hoje = new Date(); hoje.setHours(0,0,0,0); d.setHours(0,0,0,0);
-      if (Math.round((d - hoje) / 86400000) <= 0) return 'vermelho';
-    }
+  const d = parseData(o.dataLimite || o.data);
+  if (d) {
+    const hoje = new Date(); hoje.setHours(0,0,0,0); d.setHours(0,0,0,0);
+    const diff = Math.round((d - hoje) / 86400000);
+    // entrega em casa hoje ou data passada → vermelho especial
+    if (o.tipo === 'casa' && o.estado !== 'entregue' && diff <= 0) return 'casa_hoje';
+    // encomenda enviada que chega hoje → vermelho
+    if (o.estado === 'enviado' && diff <= 0) return 'vermelho';
   }
   return o.estado;
 }
