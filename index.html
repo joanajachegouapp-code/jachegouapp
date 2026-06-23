@@ -482,8 +482,8 @@ body { font-family: 'Inter', -apple-system, sans-serif; background: #ffffff; col
       </div>
       <div class="cal-legend">
         <div class="cal-legend-item"><div class="cal-dot" style="background:#FF0000"></div>levantar</div>
-        <div class="cal-legend-item"><div class="cal-dot" style="background:#F472B6"></div>enviada</div>
-        <div class="cal-legend-item"><div class="cal-dot" style="background:#FF5500"></div>em preparação</div>
+        <div class="cal-legend-item"><div class="cal-dot" style="background:#F472B6"></div>data prevista de entrega</div>
+        <div class="cal-legend-item"><div class="cal-dot" style="background:#FF5500"></div>data prevista de entrega</div>
       </div>
       <div class="cal-detail-title" id="cal-dtitle" style="display:none"></div>
       <div id="cal-detail"></div>
@@ -694,18 +694,27 @@ function deadlineStr(o) {
 
 // ── RENDER ATIVAS ─────────────────────────────────────
 function ordemPrioridade(o) {
-  if (o.estado === 'vermelho') return 0;
-  if (o.estado === 'enviado') {
-    const d = parseData(o.dataLimite || o.data);
-    if (d) {
-      const hoje = new Date(); hoje.setHours(0,0,0,0); d.setHours(0,0,0,0);
-      const diff = Math.round((d - hoje) / 86400000);
-      if (diff <= 0) return 0; // hoje ou passou → mesmo nível que vermelho
-      if (diff === 1) return 1; // amanhã → quase prioritário
-    }
-    return 2;
+  // retorna [grupo, diasAteData] para ordenação: primeiro por grupo, depois por data
+  const FAR = 99999;
+  function diasAte(ds) {
+    const d = parseData(ds); if (!d) return FAR;
+    const hoje = new Date(); hoje.setHours(0,0,0,0); d.setHours(0,0,0,0);
+    return Math.round((d - hoje) / 86400000);
   }
-  if (o.estado === 'preparacao') return 3;
+  if (o.estado === 'vermelho') {
+    const diff = diasAte(o.dataLimite);
+    return diff * 0.0001; // grupo 0, ordenado por data
+  }
+  if (o.estado === 'enviado') {
+    const diff = diasAte(o.dataLimite || o.data);
+    if (diff <= 0) return diff * 0.0001; // chegou hoje/passou → topo
+    if (diff === 1) return 1 + diff * 0.0001;
+    return 2 + diff * 0.0001;
+  }
+  if (o.estado === 'preparacao') {
+    const diff = diasAte(o.dataLimite || o.data);
+    return 3 + diff * 0.0001; // grupo 3, ordenado por data estimada
+  }
   return 4;
 }
 
@@ -903,14 +912,15 @@ function renderCal() {
   const hoje_d = new Date(); hoje_d.setHours(0,0,0,0);
 
   const mapa = {};
-  orders.filter(o => o.estado !== 'entregue' && o.estado !== 'preparacao').forEach(o => {
+  orders.filter(o => o.estado !== 'entregue').forEach(o => {
     let d = null;
     if (o.estado === 'vermelho') {
-      // prazo de levantamento, ou hoje se não tiver data
       d = parseData(o.dataLimite) || hoje_d;
     } else if (o.estado === 'enviado') {
-      // só aparece se tiver data limite definida (data prevista de chegada)
       d = parseData(o.dataLimite);
+    } else if (o.estado === 'preparacao') {
+      // data provável de entrega: dataLimite ou data da encomenda
+      d = parseData(o.dataLimite || o.data);
     }
     if (!d) return;
     if (d.getMonth() === calM && d.getFullYear() === calY) {
@@ -947,12 +957,14 @@ function renderCal() {
 function calClick(d) { calSel = d; renderCal(); }
 function calMostrar(d) {
   const es = orders.filter(o => {
-    if (o.estado === 'entregue' || o.estado === 'preparacao') return false;
+    if (o.estado === 'entregue') return false;
     let dt = null;
     if (o.estado === 'vermelho') {
       dt = parseData(o.dataLimite) || new Date(calY, calM, d);
     } else if (o.estado === 'enviado') {
       dt = parseData(o.dataLimite);
+    } else if (o.estado === 'preparacao') {
+      dt = parseData(o.dataLimite || o.data);
     }
     if (!dt) return false;
     return dt.getDate() === d && dt.getMonth() === calM && dt.getFullYear() === calY;
