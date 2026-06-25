@@ -7,6 +7,15 @@
   "background_color": "#f5f5f7",
   "theme_color": "#f5f5f7",
   "orientation": "portrait",
+  "screenshots": [
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Já Chegou? — as tuas encomendas"
+    }
+  ],
   "icons": [
     {
       "src": "icon-192.png",
