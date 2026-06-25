@@ -303,11 +303,25 @@ body { font-family: 'Inter', -apple-system, sans-serif; background: #ffffff; col
     </div>
   </div>
 
-  <!-- Botão Android/Chrome (aparece só quando disponível) -->
-  <button class="bl-install-btn" id="btn-instalar" onclick="instalarPWA()" style="display:none">
+  <!-- Botão Android/Chrome -->
+  <button class="bl-install-btn" id="btn-instalar" onclick="instalarPWA()">
     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2v13M7 11l5 5 5-5"/><path d="M3 17v2a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-2"/></svg>
     instalar app
   </button>
+  <!-- Instruções Android manual (aparece se o prompt automático não estiver disponível) -->
+  <div id="android-manual-box" style="display:none; background:#f5f5f5; border-radius:20px; padding:20px 18px; max-width:340px; width:100%; margin-bottom:16px">
+    <div style="font-size:13px; font-weight:800; color:#111; margin-bottom:12px; text-align:center">como instalar no Android</div>
+    <div style="display:flex; flex-direction:column; gap:10px">
+      <div style="display:flex; align-items:center; gap:12px">
+        <div style="width:32px; height:32px; background:#111; border-radius:10px; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:16px">⋮</div>
+        <div style="font-size:13px; color:#333; font-weight:600; line-height:1.4">toca nos <strong>três pontos</strong> no canto superior direito</div>
+      </div>
+      <div style="display:flex; align-items:center; gap:12px">
+        <div style="width:32px; height:32px; background:#FF0000; border-radius:10px; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:16px">➕</div>
+        <div style="font-size:13px; color:#333; font-weight:600; line-height:1.4">escolhe <strong>Adicionar ao ecrã principal</strong></div>
+      </div>
+    </div>
+  </div>
 
   <!-- Instruções iOS (sempre visível no iPhone/iPad) -->
   <div id="ios-install-box" style="display:none; background:#f5f5f5; border-radius:20px; padding:20px 18px; max-width:340px; width:100%; margin-bottom:16px">
@@ -607,10 +621,15 @@ const LOJAS = {
 };
 
 const ESTADO_CFG = {
-  vermelho:   { label: 'Vai Buscar!',  cls: 'c-red' },
-  enviado:    { label: 'Enviada!',     cls: 'c-orange' },
-  preparacao: { label: 'A Preparar!', cls: 'c-amber' },
+  vermelho:   { label: 'Vai Buscar!',  labelCasa: 'Chega Hoje!', cls: 'c-red' },
+  enviado:    { label: 'Enviada!',     labelCasa: 'A Caminho!',  cls: 'c-orange' },
+  preparacao: { label: 'A Preparar!', labelCasa: 'A Preparar!', cls: 'c-amber' },
 };
+
+function cfgLabel(o) {
+  const cfg = ESTADO_CFG[estadoEfetivo(o)] || ESTADO_CFG['preparacao'];
+  return o.tipo === 'casa' ? (cfg.labelCasa || cfg.label) : cfg.label;
+}
 const ORDEM = ['vermelho','enviado','preparacao'];
 const MESES = ['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
 const MESES_S = ['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
@@ -760,7 +779,7 @@ function renderAtivas() {
       ? '<button class="btn-maps" data-url="https://maps.google.com/?q=' + encodeURIComponent(localMaps) + '" onclick="window.open(this.dataset.url,\'_blank\')">maps ↗</button>'
       : '';
     return '<div class="card ' + cfg.cls + '">' +
-      '<div class="card-top"><div class="card-estado-label">' + cfg.label + '</div>' + (dl ? '<div class="card-deadline">' + dl + '</div>' : '') + '</div>' +
+      '<div class="card-top"><div class="card-estado-label">' + cfgLabel(o) + '</div>' + (dl ? '<div class="card-deadline">' + dl + '</div>' : '') + '</div>' +
       '<div class="card-produto">' + (o.produto || '—') + '</div>' +
       '<div class="card-loja-nome">' + (o.loja || '') + '</div>' +
       pinH + localH + codigoH +
@@ -977,7 +996,7 @@ function calMostrar(d) {
   det.innerHTML = es.map(o => {
     const cfg = ESTADO_CFG[estadoEfetivo(o)] || ESTADO_CFG['preparacao'];
     return '<div class="card ' + cfg.cls + '" style="margin-bottom:10px">' +
-      '<div class="card-top"><div class="card-estado-label">' + cfg.label + '</div></div>' +
+      '<div class="card-top"><div class="card-estado-label">' + cfgLabel(o) + '</div></div>' +
       '<div class="card-produto">' + (o.produto||'—') + '</div>' +
       '<div class="card-loja-nome">' + (o.loja||'') + '</div>' +
       (o.pin ? '<div class="card-pin" style="font-size:40px">' + o.pin + '</div><div class="card-pin-label">P I N</div>' : '') +
@@ -1005,10 +1024,10 @@ function buildPromptGeral() {
     '- tipo="novo": email de CONFIRMAÇÃO DE COMPRA de uma loja (Zara, ASOS, Shein, Amazon, Vinted, etc). Tem número de encomenda, produto comprado, valor pago. CRIA card novo.\n' +
     '- tipo="atualizacao": email de TRANSPORTADORA (CTT, DPD, GLS, Chronopost, MRW, SEUR, Correos) sobre uma encomenda já enviada. Não tem produto nem loja de origem clara. ATUALIZA card existente.\n' +
     '- Em caso de dúvida, usa tipo="novo".\n\n' +
-    'REGRAS ESTADO:\n' +
-    '- estado="preparacao": compra confirmada, ainda não enviada\n' +
-    '- estado="enviado": encomenda em trânsito\n' +
-    '- estado="vermelho": chegou ao ponto de levantamento, pronta a levantar\n\n' +
+    'REGRAS ESTADO — muito importante:\n' +
+    '- estado="preparacao": compra confirmada, ainda não saiu do armazém. Frases como "estamos a preparar", "pedido recebido", "a processar".\n' +
+    '- estado="enviado": encomenda já saiu e está em trânsito. Frases como "foi enviada", "embalagem enviada", "a caminho", "saiu para entrega", "shipped", "on its way", "dispatched". Se o email diz que foi enviada → SEMPRE estado="enviado".\n' +
+    '- estado="vermelho": chegou ao ponto de levantamento, pronta a levantar. Frases como "disponível para levantamento", "aguarda recolha", "pronta a levantar".\n\n' +
     'REGRAS DATALIMITE: converte sempre para DD/MM/AAAA. Se diz "quinta-feira", "amanhã", "Friday June 20", calcula a data real a partir de hoje.\n\n' +
     'REGRAS PRODUTO: resume o nome do produto em máximo 4 palavras, em português. Ex: "Sapatilhas Nike Air Max 90 edição limitada brancas tamanho 42" → "Sapatilhas Nike Air Max". Nunca uses o nome completo longo.\n\n' +
     moradaInstr + '\nEmail:';
@@ -1462,8 +1481,9 @@ let deferredPrompt = null;
 window.addEventListener('beforeinstallprompt', e => {
   e.preventDefault();
   deferredPrompt = e;
-  const btn = document.getElementById('btn-instalar');
-  if (btn) btn.style.display = 'flex';
+  // prompt automático disponível — esconder instruções manuais
+  const manual = document.getElementById('android-manual-box');
+  if (manual) manual.style.display = 'none';
 });
 
 window.addEventListener('appinstalled', () => {
@@ -1475,6 +1495,7 @@ window.addEventListener('appinstalled', () => {
 
 async function instalarPWA() {
   if (deferredPrompt) {
+    // Chrome tem o prompt disponível — usar direto
     deferredPrompt.prompt();
     const { outcome } = await deferredPrompt.userChoice;
     deferredPrompt = null;
@@ -1483,8 +1504,40 @@ async function instalarPWA() {
       if (hint) hint.style.display = 'block';
     }
   } else {
-    abrirSemInstalar();
+    // Prompt não disponível — mostrar instruções manuais
+    const btn = document.getElementById('btn-instalar');
+    const manual = document.getElementById('android-manual-box');
+    if (btn) btn.style.display = 'none';
+    if (manual) manual.style.display = 'block';
   }
+}
+
+// ── BACKUP AUTOMÁTICO SEMANAL ─────────────────────────
+function backupAutomatico() {
+  if (!orders || orders.length === 0) return;
+  const ultimoBackup = localStorage.getItem('chegou_ultimo_backup');
+  const hoje = new Date().toISOString().split('T')[0];
+  if (ultimoBackup === hoje) return;
+  // verifica se passou 1 semana desde o último backup
+  if (ultimoBackup) {
+    const diff = Math.round((new Date(hoje) - new Date(ultimoBackup)) / 86400000);
+    if (diff < 7) return;
+  }
+  localStorage.setItem('chegou_ultimo_backup', hoje);
+  // guardar backup no localStorage como fallback
+  try {
+    localStorage.setItem('chegou_backup_auto', JSON.stringify({ data: hoje, orders }));
+  } catch(e) {}
+  // oferecer download ao utilizador
+  setTimeout(() => {
+    if (orders.length > 0) {
+      const aviso = document.createElement('div');
+      aviso.style.cssText = 'position:fixed;bottom:80px;left:16px;right:16px;background:#111;color:#fff;border-radius:16px;padding:14px 16px;z-index:9999;display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:13px;font-weight:600';
+      aviso.innerHTML = '<span>💾 backup semanal disponível</span><button onclick="exportar();this.parentElement.remove()" style="background:#FF0000;color:#fff;border:none;border-radius:10px;padding:8px 14px;font-size:12px;font-weight:800;cursor:pointer;font-family:inherit;flex-shrink:0">guardar</button><button onclick="this.parentElement.remove()" style="background:rgba(255,255,255,0.15);color:#fff;border:none;border-radius:10px;padding:8px 10px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;flex-shrink:0">✕</button>';
+      document.body.appendChild(aviso);
+      setTimeout(() => { if (aviso.parentElement) aviso.remove(); }, 10000);
+    }
+  }, 2000);
 }
 
 function abrirSemInstalar() {
@@ -1525,24 +1578,27 @@ if (isPWA) {
   document.getElementById('browser-landing').classList.add('on');
 
   if (isIOS) {
-    // iOS: mostrar instruções passo a passo
+    // iOS: esconder botão instalar, mostrar instruções Safari
+    const btn = document.getElementById('btn-instalar');
+    if (btn) btn.style.display = 'none';
     const iosBox = document.getElementById('ios-install-box');
     if (iosBox) iosBox.style.display = 'block';
     if (!isSafari) {
-      // Não está no Safari — aviso extra
       const hint = document.getElementById('ios-install-box');
       if (hint) {
         hint.innerHTML += '<div style="margin-top:10px;background:#fff3cd;border-radius:12px;padding:10px 14px;font-size:12px;color:#856404;font-weight:600">⚠️ Estás a usar um browser diferente do Safari. Para instalar, abre este link no <strong>Safari</strong>.</div>';
       }
     }
   }
-  // Android/Chrome: botão aparece via beforeinstallprompt
+  // Android/Chrome: botão sempre visível, prompt automático via beforeinstallprompt
+  // Se o prompt não estiver disponível, ao clicar mostram-se instruções manuais
 }
 
 renderAtivas();
 renderHistorico();
 renderMoradas();
 atualizarSub();
+backupAutomatico();
 
 // Só verificar notificações uma vez por dia
 const _ultimaVerif = localStorage.getItem('chegou_ultima_verif');
