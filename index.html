@@ -304,7 +304,7 @@ body { font-family: 'Inter', -apple-system, sans-serif; background: #ffffff; col
   </div>
 
   <!-- Botão Android/Chrome -->
-  <button class="bl-install-btn" id="btn-instalar" onclick="instalarPWA()">
+  <button class="bl-install-btn" id="btn-instalar" onclick="instalarPWA()" style="display:none">
     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2v13M7 11l5 5 5-5"/><path d="M3 17v2a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-2"/></svg>
     instalar app
   </button>
@@ -1481,10 +1481,22 @@ let deferredPrompt = null;
 window.addEventListener('beforeinstallprompt', e => {
   e.preventDefault();
   deferredPrompt = e;
-  // prompt automático disponível — esconder instruções manuais
+  // prompt disponível — mostrar botão, esconder instruções manuais
+  const btn = document.getElementById('btn-instalar');
+  if (btn) btn.style.display = 'flex';
   const manual = document.getElementById('android-manual-box');
   if (manual) manual.style.display = 'none';
 });
+
+// Se ao fim de 3 segundos o prompt não chegou, mostrar instruções manuais
+setTimeout(() => {
+  if (!deferredPrompt && !isIOS && !isPWA) {
+    const btn = document.getElementById('btn-instalar');
+    if (btn) btn.style.display = 'none';
+    const manual = document.getElementById('android-manual-box');
+    if (manual) manual.style.display = 'block';
+  }
+}, 3000);
 
 window.addEventListener('appinstalled', () => {
   deferredPrompt = null;
@@ -1495,7 +1507,6 @@ window.addEventListener('appinstalled', () => {
 
 async function instalarPWA() {
   if (deferredPrompt) {
-    // Chrome tem o prompt disponível — usar direto
     deferredPrompt.prompt();
     const { outcome } = await deferredPrompt.userChoice;
     deferredPrompt = null;
@@ -1503,12 +1514,6 @@ async function instalarPWA() {
       const hint = document.getElementById('bl-hint-instalado');
       if (hint) hint.style.display = 'block';
     }
-  } else {
-    // Prompt não disponível — mostrar instruções manuais
-    const btn = document.getElementById('btn-instalar');
-    const manual = document.getElementById('android-manual-box');
-    if (btn) btn.style.display = 'none';
-    if (manual) manual.style.display = 'block';
   }
 }
 
