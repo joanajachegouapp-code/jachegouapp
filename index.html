@@ -9,9 +9,9 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#ffffff">
 <link rel="manifest" href="manifest.json">
-<link rel="apple-touch-icon" href="icon192.png">
-<link rel="apple-touch-icon" sizes="192x192" href="icon192.png">
-<link rel="apple-touch-icon" sizes="512x512" href="icon512.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="apple-touch-icon" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" sizes="512x512" href="icon-512.png">
 <title>Já Chegou?</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
@@ -303,25 +303,11 @@ body { font-family: 'Inter', -apple-system, sans-serif; background: #ffffff; col
     </div>
   </div>
 
-  <!-- Botão Android/Chrome -->
+  <!-- Botão Android/Chrome (aparece só quando disponível) -->
   <button class="bl-install-btn" id="btn-instalar" onclick="instalarPWA()" style="display:none">
     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2v13M7 11l5 5 5-5"/><path d="M3 17v2a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-2"/></svg>
     instalar app
   </button>
-  <!-- Instruções Android manual (aparece se o prompt automático não estiver disponível) -->
-  <div id="android-manual-box" style="display:none; background:#f5f5f5; border-radius:20px; padding:20px 18px; max-width:340px; width:100%; margin-bottom:16px">
-    <div style="font-size:13px; font-weight:800; color:#111; margin-bottom:12px; text-align:center">como instalar no Android</div>
-    <div style="display:flex; flex-direction:column; gap:10px">
-      <div style="display:flex; align-items:center; gap:12px">
-        <div style="width:32px; height:32px; background:#111; border-radius:10px; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:16px">⋮</div>
-        <div style="font-size:13px; color:#333; font-weight:600; line-height:1.4">toca nos <strong>três pontos</strong> no canto superior direito</div>
-      </div>
-      <div style="display:flex; align-items:center; gap:12px">
-        <div style="width:32px; height:32px; background:#FF0000; border-radius:10px; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:16px">➕</div>
-        <div style="font-size:13px; color:#333; font-weight:600; line-height:1.4">escolhe <strong>Adicionar ao ecrã principal</strong></div>
-      </div>
-    </div>
-  </div>
 
   <!-- Instruções iOS (sempre visível no iPhone/iPad) -->
   <div id="ios-install-box" style="display:none; background:#f5f5f5; border-radius:20px; padding:20px 18px; max-width:340px; width:100%; margin-bottom:16px">
@@ -1481,22 +1467,9 @@ let deferredPrompt = null;
 window.addEventListener('beforeinstallprompt', e => {
   e.preventDefault();
   deferredPrompt = e;
-  // prompt disponível — mostrar botão, esconder instruções manuais
   const btn = document.getElementById('btn-instalar');
   if (btn) btn.style.display = 'flex';
-  const manual = document.getElementById('android-manual-box');
-  if (manual) manual.style.display = 'none';
 });
-
-// Se ao fim de 3 segundos o prompt não chegou, mostrar instruções manuais
-setTimeout(() => {
-  if (!deferredPrompt && !isIOS && !isPWA) {
-    const btn = document.getElementById('btn-instalar');
-    if (btn) btn.style.display = 'none';
-    const manual = document.getElementById('android-manual-box');
-    if (manual) manual.style.display = 'block';
-  }
-}, 3000);
 
 window.addEventListener('appinstalled', () => {
   deferredPrompt = null;
@@ -1514,6 +1487,8 @@ async function instalarPWA() {
       const hint = document.getElementById('bl-hint-instalado');
       if (hint) hint.style.display = 'block';
     }
+  } else {
+    abrirSemInstalar();
   }
 }
 
@@ -1583,9 +1558,7 @@ if (isPWA) {
   document.getElementById('browser-landing').classList.add('on');
 
   if (isIOS) {
-    // iOS: esconder botão instalar, mostrar instruções Safari
-    const btn = document.getElementById('btn-instalar');
-    if (btn) btn.style.display = 'none';
+    // iOS: mostrar instruções passo a passo
     const iosBox = document.getElementById('ios-install-box');
     if (iosBox) iosBox.style.display = 'block';
     if (!isSafari) {
@@ -1595,8 +1568,7 @@ if (isPWA) {
       }
     }
   }
-  // Android/Chrome: botão sempre visível, prompt automático via beforeinstallprompt
-  // Se o prompt não estiver disponível, ao clicar mostram-se instruções manuais
+  // Android/Chrome: botão aparece via beforeinstallprompt
 }
 
 renderAtivas();
