@@ -607,7 +607,7 @@ const LOJAS = {
 };
 
 const ESTADO_CFG = {
-  vermelho:   { label: 'Vai Buscar!',  labelCasa: 'Chega Hoje!', cls: 'c-red' },
+  vermelho:   { label: 'Vai Buscar!',  labelCasa: 'Entrega Hoje!', cls: 'c-red' },
   enviado:    { label: 'Enviada!',     labelCasa: 'A Caminho!',  cls: 'c-orange' },
   preparacao: { label: 'A Preparar!', labelCasa: 'A Preparar!', cls: 'c-amber' },
 };
@@ -754,8 +754,13 @@ function renderAtivas() {
     const localVal2 = o.tipo === 'casa' ? 'Casa' : limpar(o.local);
     const localMaps = limpar(o.local) && o.tipo !== 'casa' ? limpar(o.local) : '';
 
+    const isCasaVermelho = o.tipo === 'casa' && estadoEfetivo(o) === 'vermelho';
     const pinH = pinVal
       ? '<div class="card-pin">' + pinVal + '</div><div class="card-pin-label">P I N</div>'
+      : '';
+    // ícone de casa só aparece quando é entrega em casa+vermelho E não há PIN
+    const casaIconH = isCasaVermelho && !pinVal
+      ? '<div style="text-align:right;font-size:64px;line-height:0.9;margin-bottom:2px;opacity:0.9">🏠</div><div style="font-size:9px;font-weight:700;letter-spacing:5px;opacity:0.35;text-align:right;margin-bottom:10px">E N T R E G A</div>'
       : '';
     const codigoH = limpar(o.codigo)
       ? '<div class="card-codigo"><span class="card-codigo-label">código da encomenda</span><span>' + limpar(o.codigo) + '</span></div>'
@@ -768,7 +773,7 @@ function renderAtivas() {
       '<div class="card-top"><div class="card-estado-label">' + cfgLabel(o) + '</div>' + (dl ? '<div class="card-deadline">' + dl + '</div>' : '') + '</div>' +
       '<div class="card-produto">' + (o.produto || '—') + '</div>' +
       '<div class="card-loja-nome">' + (o.loja || '') + '</div>' +
-      pinH + localH + codigoH +
+      pinH + casaIconH + localH + codigoH +
       '<div class="card-actions">' + mapsH +
         '<button class="btn-edit" onclick="abrirEditar(' + idx + ')">editar ✏</button>' +
         '<button class="btn-entregue" onclick="marcarEntregue(' + idx + ')">entregue ✓</button>' +
