@@ -1160,7 +1160,7 @@ function tipoChange() {
   const pf = document.getElementById('field-pin'); if(pf) pf.style.display = tipo==='casa'?'none':'block';
   const se = document.getElementById('f-estado'); if(!se) return;
   se.innerHTML = tipo==='casa'
-    ? '<option value="preparacao">em preparação</option><option value="enviado">enviada</option>'
+    ? '<option value="preparacao">em preparação</option><option value="enviado">enviada</option><option value="vermelho">a entregar hoje</option>'
     : '<option value="preparacao">em preparação</option><option value="enviado">enviada</option><option value="vermelho">levantar</option>';
   const lbl = document.getElementById('label-datalimite');
   if (lbl) lbl.textContent = tipo === 'casa' ? 'data prevista de entrega' : 'data limite de levantamento';
@@ -1218,7 +1218,7 @@ function abrirEditar(idx) {
     '<div class="field"><label>loja</label><input type="text" id="e-loja" /></div>' +
     '<div class="field"><label>produto</label><input type="text" id="e-produto" /></div>' +
     '<div class="field"><label>tipo de entrega</label><select id="e-tipo" onchange="editTipoChange()"><option value="recolha" ' + tR + '>levantamento num ponto</option><option value="casa" ' + tC + '>entrega em casa</option></select></div>' +
-    '<div class="field"><label>estado</label><select id="e-estado"><option value="preparacao" ' + sP + '>em preparação</option><option value="enviado" ' + sE + '>enviada</option><option value="vermelho" ' + sV + '>levantar</option></select></div>' +
+    '<div class="field"><label>estado</label><select id="e-estado"><option value="preparacao" ' + sP + '>em preparação</option><option value="enviado" ' + sE + '>enviada</option><option value="vermelho" ' + sV + '>' + (o.tipo==='casa' ? 'a entregar hoje' : 'levantar') + '</option></select></div>' +
     '<div class="field" id="e-field-local" style="' + (isCasa?'display:none':'') + '"><label>local de levantamento</label><input type="text" id="e-local" /></div>' +
     '<div class="field" id="e-field-pin" style="' + (isCasa?'display:none':'') + '"><label>pin / código de levantamento</label><input type="text" id="e-pin" /></div>' +
     '<div class="field"><label>código da encomenda</label><input type="text" id="e-codigo" /></div>' +
@@ -1245,7 +1245,7 @@ function editTipoChange() {
   const lbl = document.getElementById('e-label-dl'); if(lbl) lbl.textContent = isCasa?'data prevista de entrega':'data limite de levantamento';
   const se = document.getElementById('e-estado'); if(!se) return;
   se.innerHTML = isCasa
-    ? '<option value="preparacao">em preparação</option><option value="enviado">enviada</option>'
+    ? '<option value="preparacao">em preparação</option><option value="enviado">enviada</option><option value="vermelho">a entregar hoje</option>'
     : '<option value="preparacao">em preparação</option><option value="enviado">enviada</option><option value="vermelho">levantar</option>';
 }
 
