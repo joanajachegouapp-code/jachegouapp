@@ -1874,6 +1874,38 @@ if (isPWA) {
   // Android/Chrome: botão aparece via beforeinstallprompt
 }
 
+// ── PARTILHA DIRETA (Web Share Target — Gmail/Mail "partilhar com") ──────
+(function() {
+  const params = new URLSearchParams(location.search);
+  const partes = [params.get('share_title'), params.get('share_text'), params.get('share_url')].filter(Boolean);
+  const conteudo = partes.join('\n\n').trim();
+  if (!conteudo) return;
+
+  // limpa a URL para não reprocessar num refresh
+  history.replaceState(null, '', location.pathname);
+
+  // força a entrada direta na app, ignorando a landing/homepage
+  localStorage.setItem('chegou_entrou', '1');
+  const homeEl = document.getElementById('home');
+  if (homeEl) { homeEl.classList.remove('on'); homeEl.classList.add('off'); }
+  const landingEl = document.getElementById('browser-landing');
+  if (landingEl) landingEl.classList.remove('on');
+  document.getElementById('app').classList.add('on');
+  document.getElementById('nav').classList.add('on');
+
+  setTimeout(() => {
+    goTab('adicionar');
+    setAddMode('encomenda');
+    const txtArea = document.getElementById('email-txt');
+    if (txtArea) txtArea.value = conteudo;
+    if (conteudo.length > 30) {
+      processarEmail();
+    } else {
+      toast('email recebido — confirma e toca em analisar ✦');
+    }
+  }, 50);
+})();
+
 renderAtivas();
 renderHistorico();
 renderDevolucoes();
