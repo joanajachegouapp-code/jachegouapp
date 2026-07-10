@@ -125,6 +125,7 @@ body { font-family: 'Inter', -apple-system, sans-serif; background: #ffffff; col
 /* ── TABS ── */
 .tab { display: none; }
 .tab.on { display: block; }
+.overlay-tab.on { position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 9995; display: flex; align-items: flex-end; }
 
 /* ── CARDS ── */
 .cards { padding: 10px 16px; display: flex; flex-direction: column; gap: 10px; }
@@ -215,8 +216,18 @@ body { font-family: 'Inter', -apple-system, sans-serif; background: #ffffff; col
 /* ── CONFIG ── */
 .cfg-wrap { padding: 16px; }
 .cfg-card { background: #f5f5f5; border-radius: 18px; padding: 18px; margin-bottom: 12px; }
-.cfg-card h3 { font-size: 16px; font-weight: 800; margin-bottom: 6px; }
+.cfg-card h3 { font-size: 16px; font-weight: 800; margin-bottom: 0; }
 .cfg-card p { font-size: 13px; color: #666; margin-bottom: 12px; line-height: 1.5; }
+.cfg-section-label { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #aaa; padding: 4px 4px 10px; }
+.cfg-section-label.first { padding-top: 0; }
+.cfg-card-head { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+.cfg-icon { width: 34px; height: 34px; border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.fi-green { background: rgba(34,197,94,0.14); color: #16a34a; }
+.cfg-menu-item { display: flex; align-items: center; gap: 14px; width: 100%; padding: 14px 16px; background: #f5f5f5; border-radius: 16px; margin-bottom: 10px; border: none; cursor: pointer; font-family: inherit; text-align: left; }
+.cfg-menu-item:active { background: #ececec; }
+.cfg-menu-label { flex: 1; font-size: 15px; font-weight: 800; color: #111; }
+.cfg-menu-chevron { color: #ccc; flex-shrink: 0; }
+.subpage-back { background: none; border: none; cursor: pointer; font-family: inherit; font-size: 13px; font-weight: 700; color: #888; padding: 6px 0; display: flex; align-items: center; gap: 4px; }
 .api-input { width: 100%; padding: 12px 14px; border: 1.5px solid #e5e5e0; border-radius: 12px; font-size: 14px; font-family: monospace; color: #111; background: #f5f5f5; }
 .api-save { margin-top: 8px; padding: 12px; border: none; border-radius: 12px; background: #111; color: #fff; font-size: 14px; font-weight: 700; width: 100%; cursor: pointer; font-family: inherit; }
 .api-ok { font-size: 13px; color: #2a7a2a; margin-top: 6px; display: none; font-weight: 600; }
@@ -227,6 +238,7 @@ body { font-family: 'Inter', -apple-system, sans-serif; background: #ffffff; col
 .modal-box h2 { font-size: 20px; font-weight: 900; margin-bottom: 4px; letter-spacing: -0.5px; }
 .modal-sub { font-size: 13px; color: #888; margin-bottom: 16px; }
 .modal-close { float: right; background: #e5e5e0; border: none; border-radius: 50%; width: 30px; height: 30px; font-size: 16px; cursor: pointer; }
+.page-close { background: #e5e5e0; border: none; border-radius: 50%; width: 30px; height: 30px; font-size: 16px; cursor: pointer; flex-shrink: 0; }
 
 /* ── NAV / HAMBURGER ── */
 /* ── HEADER ── */
@@ -434,11 +446,14 @@ body { font-family: 'Inter', -apple-system, sans-serif; background: #ffffff; col
     <div class="cards" id="cards-list"></div>
   </div>
 
-  <div id="tab-historico" class="tab">
-    <div style="padding:10px 16px 0">
-      <button onclick="goTab('conta')" style="background:none;border:none;cursor:pointer;font-family:inherit;font-size:13px;font-weight:700;color:#888;padding:6px 0;display:flex;align-items:center;gap:4px">‹ conta</button>
+  <div id="tab-historico" class="tab overlay-tab">
+    <div class="modal-box">
+      <div style="padding:0 0 4px;display:flex;align-items:center;justify-content:space-between">
+        <div style="font-size:18px;font-weight:900;letter-spacing:-0.3px">histórico</div>
+        <button class="page-close" onclick="goTab('ativas')">✕</button>
+      </div>
+      <div class="hist-wrap" id="hist-list" style="padding-left:0;padding-right:0"></div>
     </div>
-    <div class="hist-wrap" id="hist-list"></div>
   </div>
 
   <div id="tab-adicionar" class="tab">
@@ -481,11 +496,13 @@ body { font-family: 'Inter', -apple-system, sans-serif; background: #ffffff; col
     </div>
   </div>
 
-  <div id="tab-calendario" class="tab">
-    <div style="padding:10px 16px 0">
-      <button onclick="goTab('conta')" style="background:none;border:none;cursor:pointer;font-family:inherit;font-size:13px;font-weight:700;color:#888;padding:6px 0;display:flex;align-items:center;gap:4px">‹ conta</button>
+  <div id="tab-calendario" class="tab overlay-tab">
+    <div class="modal-box">
+    <div style="padding:0 0 4px;display:flex;align-items:center;justify-content:space-between">
+      <div style="font-size:18px;font-weight:900;letter-spacing:-0.3px">calendário</div>
+      <button class="page-close" onclick="goTab('ativas')">✕</button>
     </div>
-    <div class="cal-wrap">
+    <div class="cal-wrap" style="padding-left:0;padding-right:0">
       <div class="cal-nav">
         <button class="cal-arrow" onclick="calPrev()">‹</button>
         <div class="cal-title" id="cal-title"></div>
@@ -506,6 +523,7 @@ body { font-family: 'Inter', -apple-system, sans-serif; background: #ffffff; col
       <div class="cal-detail-title" id="cal-dtitle" style="display:none"></div>
       <div id="cal-detail"></div>
     </div>
+    </div>
   </div>
 
   <div id="tab-devolucoes" class="tab">
@@ -513,27 +531,28 @@ body { font-family: 'Inter', -apple-system, sans-serif; background: #ffffff; col
     <div class="cards" id="devol-cards-list"></div>
   </div>
 
-  <div id="tab-conta" class="tab">
-    <div class="cfg-wrap">
+  <div id="tab-preferencias" class="tab overlay-tab">
+    <div class="modal-box">
+    <div style="padding:0 0 4px;display:flex;align-items:center;justify-content:space-between">
+      <div style="font-size:18px;font-weight:900;letter-spacing:-0.3px">preferências</div>
+      <button class="page-close" onclick="goTab('ativas')">✕</button>
+    </div>
+    <div class="cfg-wrap" style="padding:16px 0 0">
       <div class="cfg-card">
-        <h3>histórico</h3>
-        <p>consulta as encomendas entregues e devoluções já reembolsadas.</p>
-        <button class="btn" onclick="goTab('historico')" style="margin-top:0;border:1.5px solid #e5e5e0">ver histórico</button>
-      </div>
-      <div class="cfg-card">
-        <h3>calendário</h3>
-        <p>vê os prazos de levantamento e entregas organizados por dia.</p>
-        <button class="btn" onclick="goTab('calendario')" style="margin-top:0;border:1.5px solid #e5e5e0">ver calendário</button>
-      </div>
-      <div class="cfg-card">
-        <h3>notificações</h3>
+        <div class="cfg-card-head">
+          <div class="cfg-icon fi-red"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></div>
+          <h3>notificações</h3>
+        </div>
         <p>avisa-te quando uma encomenda está prestes a expirar ou chega o dia de entrega — mesmo com a app fechada.</p>
         <button class="api-save" id="btn-notif-perm" onclick="pedirPermissaoNotifs().then(atualizarBtnNotif)">ativar notificações</button>
         <div class="api-ok" id="notif-ok" style="display:none">✓ notificações ativas</div>
         <div style="font-size:12px;color:#FF0000;margin-top:6px;display:none" id="notif-bloq">notificações bloqueadas. ativa nas definições do browser.</div>
       </div>
       <div class="cfg-card">
-        <h3>as minhas moradas</h3>
+        <div class="cfg-card-head">
+          <div class="cfg-icon fi-dark"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+          <h3>as minhas moradas</h3>
+        </div>
         <p>a IA compara a morada do email com estas — se coincidir, associa automaticamente.</p>
         <div id="moradas-list" style="display:flex;flex-direction:column;gap:8px;margin-bottom:12px"></div>
         <button class="api-save" onclick="abrirModalMorada(null)" style="display:flex;align-items:center;justify-content:center;gap:8px">
@@ -541,47 +560,68 @@ body { font-family: 'Inter', -apple-system, sans-serif; background: #ffffff; col
           adicionar morada
         </button>
       </div>
+    </div>
+    </div>
+  </div>
 
+  <div id="tab-backup" class="tab overlay-tab">
+    <div class="modal-box">
+    <div style="padding:0 0 4px;display:flex;align-items:center;justify-content:space-between">
+      <div style="font-size:18px;font-weight:900;letter-spacing:-0.3px">backup</div>
+      <button class="page-close" onclick="goTab('ativas')">✕</button>
+    </div>
+    <div class="cfg-wrap" style="padding:16px 0 0">
       <div class="cfg-card">
-        <h3>apagar tudo</h3>
-        <p>remove todas as encomendas guardadas.</p>
-        <button class="btn d" onclick="apagarTudo()" style="margin-top:0">apagar tudo</button>
-      </div>
-      <div class="cfg-card">
-        <h3>backup</h3>
+        <div class="cfg-card-head">
+          <div class="cfg-icon fi-green"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="M12 15V3"/><polyline points="7 10 12 15 17 10"/><path d="M20 21H4"/></svg></div>
+          <h3>exportar / importar</h3>
+        </div>
         <p>exporta as tuas encomendas antes de mudar de dispositivo ou browser.</p>
         <button class="btn p" onclick="exportar()" style="margin-top:0">exportar backup</button>
         <button class="btn" onclick="document.getElementById('import-file').click()" style="margin-top:8px;border:1.5px solid #e5e5e0">importar backup</button>
         <input type="file" id="import-file" accept=".json" style="display:none" onchange="importar(event)" />
       </div>
       <div class="cfg-card">
-        <h3>apresentação</h3>
-        <p>ver a página de apresentação da app.</p>
-        <button class="btn" onclick="verHomepage()" style="margin-top:0;border:1.5px solid #e5e5e0">ver apresentação</button>
+        <div class="cfg-card-head">
+          <div class="cfg-icon fi-red"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></div>
+          <h3>apagar tudo</h3>
+        </div>
+        <p>remove todas as encomendas e devoluções guardadas. esta ação não pode ser desfeita.</p>
+        <button class="btn d" onclick="apagarTudo()" style="margin-top:0">apagar tudo</button>
       </div>
+    </div>
     </div>
   </div>
 </div>
 
 <!-- DRAWER -->
 <div class="drawer-bg" id="drawer-bg" onclick="fecharDrawer()"></div>
+
 <div class="drawer" id="drawer">
   <div class="drawer-header">
     <div class="drawer-logo">Já Chegou<span>?</span></div>
   </div>
   <div class="drawer-menu">
     <div class="drawer-section-label">ajuda & configurações</div>
-    <button class="drawer-item" id="nb-conta" onclick="goTab('conta')">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
-      conta & definições
+    <button class="drawer-item" onclick="goTab('historico')">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 14"/></svg>
+      histórico
+    </button>
+    <button class="drawer-item" onclick="goTab('calendario')">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      calendário
+    </button>
+    <button class="drawer-item" onclick="goTab('preferencias')">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+      preferências
+    </button>
+    <button class="drawer-item" onclick="goTab('backup')">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 15V3"/><polyline points="7 10 12 15 17 10"/><path d="M20 21H4"/></svg>
+      backup
     </button>
     <button class="drawer-item" onclick="abrirCardsPreview()">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
       como funciona?
-    </button>
-    <button class="drawer-item" onclick="verHomepage()">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>
-      apresentação da app
     </button>
   </div>
   <button class="drawer-close" onclick="fecharDrawer()">fechar ✕</button>
@@ -826,8 +866,36 @@ function renderHistorico() {
     return;
   }
   const byM = {};
-  ents.forEach(o => { const k = o.dataEntrega ? o.dataEntrega.substring(0,7) : '0000-00'; if (!byM[k]) byM[k]=[]; byM[k].push(o); });
-  el.innerHTML = Object.entries(byM).map(([m, items]) => {
+  ents.forEach(o => {
+    const k = o.dataEntregaISO ? o.dataEntregaISO.substring(0,7) : (o.dataEntrega ? o.dataEntrega.substring(0,7) : '0000-00');
+    if (!byM[k]) byM[k]=[]; byM[k].push(o);
+  });
+
+  // ── resumo mensal ──
+  const meses = Object.keys(byM).filter(k => /^\d{4}-\d{2}$/.test(k)).slice(0, 6);
+  let statsHTML = '';
+  if (meses.length) {
+    const maxTotal = Math.max(...meses.map(k => byM[k].length));
+    statsHTML = '<div style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#aaa;margin:2px 0 10px">resumo mensal</div>' +
+      '<div style="display:flex;flex-direction:column;margin-bottom:22px">' +
+      meses.map(k => {
+        const items = byM[k];
+        const nCompras = items.filter(o => o.categoria !== 'devolucao').length;
+        const nDevol = items.filter(o => o.categoria === 'devolucao').length;
+        const [y, mo] = k.split('-');
+        const lbl = (MESES_S[+mo-1]||mo) + ' ' + y;
+        const pct = Math.round((items.length / maxTotal) * 100);
+        const devolBadge = nDevol ? ' <span style="color:#22C55E;font-weight:700">· ' + nDevol + ' devolução' + (nDevol>1?'ões':'') + '</span>' : '';
+        return '<div style="display:flex;align-items:center;gap:10px;padding:7px 0">' +
+          '<div style="width:56px;font-size:12px;font-weight:700;color:#666;flex-shrink:0;text-transform:capitalize">' + lbl + '</div>' +
+          '<div style="flex:1;height:8px;background:#f0f0ec;border-radius:4px;overflow:hidden"><div style="height:100%;width:' + pct + '%;background:#FF0000;border-radius:4px"></div></div>' +
+          '<div style="font-size:13px;color:#111;flex-shrink:0;white-space:nowrap"><b>' + nCompras + '</b> compra' + (nCompras!==1?'s':'') + devolBadge + '</div>' +
+        '</div>';
+      }).join('') +
+      '</div>';
+  }
+
+  el.innerHTML = statsHTML + Object.entries(byM).map(([m, items]) => {
     let lbl = m;
     if (m !== '0000-00') { const [y,mo] = m.split('-'); lbl = (MESES[+mo-1]||m) + ' ' + y; }
     return '<div class="hist-month">' + lbl + '</div>' +
@@ -850,6 +918,7 @@ function marcarEntregue(i) {
   orders[i].estadoAnt = orders[i].estado;
   orders[i].estado = 'entregue';
   orders[i].dataEntrega = new Date().toLocaleDateString('pt-PT',{day:'2-digit',month:'short',year:'numeric'});
+  orders[i].dataEntregaISO = new Date().toISOString().split('T')[0];
   guardar(); toast('entregue! guardado no histórico ✓');
 }
 
@@ -913,6 +982,7 @@ function renderDevolucoes() {
 function marcarReembolsada(i) {
   orders[i].estado = 'reembolsada';
   orders[i].dataEntrega = new Date().toLocaleDateString('pt-PT',{day:'2-digit',month:'short',year:'numeric'});
+  orders[i].dataEntregaISO = new Date().toISOString().split('T')[0];
   guardar(); toast('reembolso registado ✓');
 }
 
@@ -988,130 +1058,46 @@ function abrirCardsPreview() {
   modal.className = 'modal-bg'; modal.id = 'modal-cards';
   modal.innerHTML = `<div class="modal-box" style="background:#ffffff;padding:20px 16px 40px">
     <button class="modal-close" onclick="fecharModal('modal-cards')" style="background:rgba(0,0,0,0.1)">✕</button>
-    <div style="font-size:20px;font-weight:900;letter-spacing:-0.5px;margin-bottom:4px">Como funciona</div>
-    <div style="font-size:13px;color:#666;margin-bottom:16px;font-weight:500">cada cor é um estado — encomenda ou devolução</div>
+    <div style="font-size:20px;font-weight:900;letter-spacing:-0.5px;margin-bottom:14px">Como funciona</div>
 
-    <div class="add-mode-toggle" style="margin-bottom:18px">
-      <button type="button" class="add-mode-btn on" id="cf-btn-encomendas" onclick="comoFuncionaTab('encomendas')">encomendas</button>
-      <button type="button" class="add-mode-btn" id="cf-btn-devolucoes" onclick="comoFuncionaTab('devolucoes')">devoluções</button>
+    <div style="display:flex;align-items:center;gap:12px;background:#f5f5f5;border-radius:14px;padding:12px 14px;margin-bottom:22px">
+      <div class="cfg-icon fi-red" style="width:36px;height:36px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="2,4 12,13 22,4"/></svg></div>
+      <div style="font-size:13px;color:#333;font-weight:600;line-height:1.5">Cola o email de uma loja ou transportadora na aba <b>adicionar</b> — a IA extrai tudo automaticamente.</div>
     </div>
 
-    <div id="cf-encomendas" style="display:flex;flex-direction:column;gap:16px">
-
-      <div>
-        <div style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#FF0000;margin-bottom:6px">— prioridade máxima</div>
-        <div class="card c-red">
-          <div class="card-top"><div class="card-estado-label">Está no Ponto! Vai Já</div><div class="card-deadline">hoje!</div></div>
-          <div class="card-produto">Sapatilhas Nike Air Max</div>
-          <div class="card-loja-nome">Zara · CTT Expresso</div>
-          <div class="card-pin">7842</div>
-          <div class="card-pin-label">P I N</div>
-          <div class="card-local">CTT Benfica — Estrada de Benfica 498</div>
-          <div class="card-actions">
-            <button class="btn-maps" style="color:#FF0000">maps ↗</button>
-            <button class="btn-edit">editar ✏</button>
-            <button class="btn-entregue">entregue ✓</button>
-          </div>
-        </div>
-        <div style="font-size:12px;color:#555;margin-top:8px;line-height:1.5;padding:0 4px">Chegou ao ponto de recolha (ou é entregue em casa hoje). O PIN está aqui — mostra ao balcão. Toca em <b>maps</b> para navegar.</div>
+    <div style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#aaa;margin-bottom:4px">encomendas</div>
+    <div style="display:flex;flex-direction:column;margin-bottom:16px">
+      <div style="display:flex;align-items:flex-start;gap:12px;padding:14px 0;border-bottom:1px solid rgba(0,0,0,0.06)">
+        <div style="width:14px;height:14px;border-radius:50%;background:#FF0000;flex-shrink:0;margin-top:3px"></div>
+        <div><div style="font-size:14px;font-weight:800;margin-bottom:2px">Vermelho — vai levantar</div><div style="font-size:12px;color:#666;line-height:1.5">Chegou ao ponto (ou é entregue em casa hoje). O PIN aparece no cartão.</div></div>
       </div>
-
-      <div>
-        <div style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#F472B6;margin-bottom:6px">— a caminho</div>
-        <div class="card c-orange">
-          <div class="card-top"><div class="card-estado-label">Em Trânsito! Quase Aí</div><div class="card-deadline">até 24 jun</div></div>
-          <div class="card-produto">Camisola de linho bege</div>
-          <div class="card-loja-nome">ASOS · DPD</div>
-          <div class="card-local">Ponto DPD — Rua Augusta 112</div>
-          <div class="card-actions">
-            <button class="btn-maps">maps ↗</button>
-            <button class="btn-edit">editar ✏</button>
-          </div>
-        </div>
-        <div style="font-size:12px;color:#555;margin-top:8px;line-height:1.5;padding:0 4px">Enviada pela loja, em trânsito. Quando chegar ao ponto (ou for entregue em casa) passa automaticamente a vermelho.</div>
+      <div style="display:flex;align-items:flex-start;gap:12px;padding:14px 0;border-bottom:1px solid rgba(0,0,0,0.06)">
+        <div style="width:14px;height:14px;border-radius:50%;background:#F472B6;flex-shrink:0;margin-top:3px"></div>
+        <div><div style="font-size:14px;font-weight:800;margin-bottom:2px">Rosa — a caminho</div><div style="font-size:12px;color:#666;line-height:1.5">Já saiu da loja, ainda em trânsito. Passa a vermelho quando chegar.</div></div>
       </div>
-
-      <div>
-        <div style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#FF5500;margin-bottom:6px">— confirmada</div>
-        <div class="card c-amber">
-          <div class="card-top"><div class="card-estado-label">Confirmada! A Preparar</div><div class="card-deadline">até 30 jun</div></div>
-          <div class="card-produto">Cenas Iolanda</div>
-          <div class="card-loja-nome">SHEIN</div>
-          <div class="card-local">Casa</div>
-          <div class="card-actions">
-            <button class="btn-maps">maps ↗</button>
-            <button class="btn-edit">editar ✏</button>
-            <button class="btn-entregue">entregue ✓</button>
-          </div>
-        </div>
-        <div style="font-size:12px;color:#555;margin-top:8px;line-height:1.5;padding:0 4px">Compra confirmada, a loja está a preparar. Ainda não saiu. Cola o email da transportadora quando chegar.</div>
+      <div style="display:flex;align-items:flex-start;gap:12px;padding:14px 0">
+        <div style="width:14px;height:14px;border-radius:50%;background:#FF5500;flex-shrink:0;margin-top:3px"></div>
+        <div><div style="font-size:14px;font-weight:800;margin-bottom:2px">Laranja — a preparar</div><div style="font-size:12px;color:#666;line-height:1.5">Compra confirmada, ainda não saiu da loja.</div></div>
       </div>
-
-      <div style="font-size:12px;color:#888;background:#f5f5f5;border-radius:12px;padding:12px 14px;line-height:1.5">Toca em <b>+ atualizar com novo email</b> num cartão para colar um email novo (ex: da transportadora) e completar dados que faltem, sem criar uma encomenda a mais.</div>
     </div>
 
-    <div id="cf-devolucoes" style="display:none;flex-direction:column;gap:16px">
-
-      <div>
-        <div style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#FF5500;margin-bottom:6px">— a preparar</div>
-        <div class="card c-amber">
-          <div class="card-top"><div class="card-estado-label">A Preparar Devolução</div><div class="card-deadline">até 18 jul</div></div>
-          <div class="card-produto">Sapatilhas Adidas</div>
-          <div class="card-loja-nome">Zalando</div>
-          <div class="card-local">Ponto CTT — Rua do Ouro 45</div>
-          <div class="card-valor">reembolso: 54,99€</div>
-          <div class="card-codigo"><span class="card-codigo-label">código de devolução</span><span>RMA-88213</span></div>
-          <div class="card-actions">
-            <button class="btn-maps">maps ↗</button>
-            <button class="btn-edit">editar ✏</button>
-            <button class="btn-entregue">reembolsada ✓</button>
-          </div>
-        </div>
-        <div style="font-size:12px;color:#555;margin-top:8px;line-height:1.5;padding:0 4px">Etiqueta de devolução gerada. Ainda tens de entregar o pacote — o prazo aqui é o limite para o fazeres.</div>
+    <div style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#aaa;margin-bottom:4px">devoluções</div>
+    <div style="display:flex;flex-direction:column">
+      <div style="display:flex;align-items:flex-start;gap:12px;padding:14px 0;border-bottom:1px solid rgba(0,0,0,0.06)">
+        <div style="width:14px;height:14px;border-radius:50%;background:#FF5500;flex-shrink:0;margin-top:3px"></div>
+        <div><div style="font-size:14px;font-weight:800;margin-bottom:2px">Laranja — a preparar devolução</div><div style="font-size:12px;color:#666;line-height:1.5">Etiqueta gerada, ainda tens de enviar o pacote.</div></div>
       </div>
-
-      <div>
-        <div style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#F472B6;margin-bottom:6px">— a caminho da loja</div>
-        <div class="card c-orange">
-          <div class="card-top"><div class="card-estado-label">A Caminho da Loja</div></div>
-          <div class="card-produto">Camisola de linho bege</div>
-          <div class="card-loja-nome">ASOS</div>
-          <div class="card-valor">reembolso: 24,99€</div>
-          <div class="card-actions">
-            <button class="btn-edit">editar ✏</button>
-          </div>
-        </div>
-        <div style="font-size:12px;color:#555;margin-top:8px;line-height:1.5;padding:0 4px">Já entregaste o pacote nos correios/ponto. Está a caminho da loja — falta só o reembolso ser processado.</div>
+      <div style="display:flex;align-items:flex-start;gap:12px;padding:14px 0;border-bottom:1px solid rgba(0,0,0,0.06)">
+        <div style="width:14px;height:14px;border-radius:50%;background:#F472B6;flex-shrink:0;margin-top:3px"></div>
+        <div><div style="font-size:14px;font-weight:800;margin-bottom:2px">Rosa — a caminho da loja</div><div style="font-size:12px;color:#666;line-height:1.5">Já entregaste o pacote, à espera do reembolso.</div></div>
       </div>
-
-      <div>
-        <div style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#22C55E;margin-bottom:6px">— concluída</div>
-        <div class="card c-green">
-          <div class="card-top"><div class="card-estado-label">Reembolsada!</div></div>
-          <div class="card-produto">Cenas Iolanda</div>
-          <div class="card-loja-nome">SHEIN</div>
-        </div>
-        <div style="font-size:12px;color:#555;margin-top:8px;line-height:1.5;padding:0 4px">A loja confirmou o reembolso. Passa automaticamente para o histórico, dentro de Conta.</div>
+      <div style="display:flex;align-items:flex-start;gap:12px;padding:14px 0">
+        <div style="width:14px;height:14px;border-radius:50%;background:#22C55E;flex-shrink:0;margin-top:3px"></div>
+        <div><div style="font-size:14px;font-weight:800;margin-bottom:2px">Verde — reembolsada</div><div style="font-size:12px;color:#666;line-height:1.5">Concluída. Passa para o histórico.</div></div>
       </div>
-
-      <div style="font-size:12px;color:#888;background:#f5f5f5;border-radius:12px;padding:12px 14px;line-height:1.5">Cria uma devolução na aba <b>adicionar</b>, no seletor no topo — cola o email de confirmação/RMA ou preenche à mão, tal como numa encomenda.</div>
     </div>
-
-    <div style="font-size:12px;color:#888;background:#f5f5f5;border-radius:12px;padding:12px 14px;line-height:1.5;margin-top:16px">💡 Histórico e calendário deixaram de estar na barra de baixo — agora vivem dentro de <b>Conta</b>.</div>
   </div>`;
   document.body.appendChild(modal);
-}
-
-function comoFuncionaTab(tipo) {
-  const be = document.getElementById('cf-btn-encomendas');
-  const bd = document.getElementById('cf-btn-devolucoes');
-  const de = document.getElementById('cf-encomendas');
-  const dd = document.getElementById('cf-devolucoes');
-  if (!be || !bd || !de || !dd) return;
-  be.classList.toggle('on', tipo === 'encomendas');
-  bd.classList.toggle('on', tipo === 'devolucoes');
-  de.style.display = tipo === 'encomendas' ? 'flex' : 'none';
-  dd.style.display = tipo === 'devolucoes' ? 'flex' : 'none';
 }
 
 function abrirDrawer() {
