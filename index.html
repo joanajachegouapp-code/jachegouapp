@@ -577,7 +577,7 @@ body { font-family: 'Inter', -apple-system, sans-serif; background: #ffffff; col
     </button>
     <button class="drawer-item" onclick="abrirCardsPreview()">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-      como funcionam os cards?
+      como funciona?
     </button>
     <button class="drawer-item" onclick="verHomepage()">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>
@@ -988,10 +988,15 @@ function abrirCardsPreview() {
   modal.className = 'modal-bg'; modal.id = 'modal-cards';
   modal.innerHTML = `<div class="modal-box" style="background:#ffffff;padding:20px 16px 40px">
     <button class="modal-close" onclick="fecharModal('modal-cards')" style="background:rgba(0,0,0,0.1)">✕</button>
-    <div style="font-size:20px;font-weight:900;letter-spacing:-0.5px;margin-bottom:4px">Como ler os cards</div>
-    <div style="font-size:13px;color:#666;margin-bottom:20px;font-weight:500">cada cor é um estado da tua encomenda</div>
+    <div style="font-size:20px;font-weight:900;letter-spacing:-0.5px;margin-bottom:4px">Como funciona</div>
+    <div style="font-size:13px;color:#666;margin-bottom:16px;font-weight:500">cada cor é um estado — encomenda ou devolução</div>
 
-    <div style="display:flex;flex-direction:column;gap:16px">
+    <div class="add-mode-toggle" style="margin-bottom:18px">
+      <button type="button" class="add-mode-btn on" id="cf-btn-encomendas" onclick="comoFuncionaTab('encomendas')">encomendas</button>
+      <button type="button" class="add-mode-btn" id="cf-btn-devolucoes" onclick="comoFuncionaTab('devolucoes')">devoluções</button>
+    </div>
+
+    <div id="cf-encomendas" style="display:flex;flex-direction:column;gap:16px">
 
       <div>
         <div style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#FF0000;margin-bottom:6px">— prioridade máxima</div>
@@ -1008,7 +1013,7 @@ function abrirCardsPreview() {
             <button class="btn-entregue">entregue ✓</button>
           </div>
         </div>
-        <div style="font-size:12px;color:#555;margin-top:8px;line-height:1.5;padding:0 4px">A encomenda chegou ao ponto de recolha. O PIN está aqui — mostra ao balcão. Toca em <b>maps</b> para navegar.</div>
+        <div style="font-size:12px;color:#555;margin-top:8px;line-height:1.5;padding:0 4px">Chegou ao ponto de recolha (ou é entregue em casa hoje). O PIN está aqui — mostra ao balcão. Toca em <b>maps</b> para navegar.</div>
       </div>
 
       <div>
@@ -1017,13 +1022,13 @@ function abrirCardsPreview() {
           <div class="card-top"><div class="card-estado-label">Em Trânsito! Quase Aí</div><div class="card-deadline">até 24 jun</div></div>
           <div class="card-produto">Camisola de linho bege</div>
           <div class="card-loja-nome">ASOS · DPD</div>
-                    <div class="card-local">Ponto DPD — Rua Augusta 112</div>
+          <div class="card-local">Ponto DPD — Rua Augusta 112</div>
           <div class="card-actions">
             <button class="btn-maps">maps ↗</button>
             <button class="btn-edit">editar ✏</button>
           </div>
         </div>
-        <div style="font-size:12px;color:#555;margin-top:8px;line-height:1.5;padding:0 4px">Enviada pela loja, em trânsito. Quando chegar ao ponto passa automaticamente a vermelho.</div>
+        <div style="font-size:12px;color:#555;margin-top:8px;line-height:1.5;padding:0 4px">Enviada pela loja, em trânsito. Quando chegar ao ponto (ou for entregue em casa) passa automaticamente a vermelho.</div>
       </div>
 
       <div>
@@ -1032,19 +1037,81 @@ function abrirCardsPreview() {
           <div class="card-top"><div class="card-estado-label">Confirmada! A Preparar</div><div class="card-deadline">até 30 jun</div></div>
           <div class="card-produto">Cenas Iolanda</div>
           <div class="card-loja-nome">SHEIN</div>
-                    <div class="card-local">Casa</div>
+          <div class="card-local">Casa</div>
           <div class="card-actions">
             <button class="btn-maps">maps ↗</button>
             <button class="btn-edit">editar ✏</button>
             <button class="btn-entregue">entregue ✓</button>
           </div>
         </div>
-        <div style="font-size:12px;color:#555;margin-top:8px;line-height:1.5;padding:0 4px">Compra confirmada, a loja está a preparar. Ainda não saiu. Cola o email da transportadora quando chegares.</div>
+        <div style="font-size:12px;color:#555;margin-top:8px;line-height:1.5;padding:0 4px">Compra confirmada, a loja está a preparar. Ainda não saiu. Cola o email da transportadora quando chegar.</div>
       </div>
 
+      <div style="font-size:12px;color:#888;background:#f5f5f5;border-radius:12px;padding:12px 14px;line-height:1.5">Toca em <b>+ atualizar com novo email</b> num cartão para colar um email novo (ex: da transportadora) e completar dados que faltem, sem criar uma encomenda a mais.</div>
     </div>
+
+    <div id="cf-devolucoes" style="display:none;flex-direction:column;gap:16px">
+
+      <div>
+        <div style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#FF5500;margin-bottom:6px">— a preparar</div>
+        <div class="card c-amber">
+          <div class="card-top"><div class="card-estado-label">A Preparar Devolução</div><div class="card-deadline">até 18 jul</div></div>
+          <div class="card-produto">Sapatilhas Adidas</div>
+          <div class="card-loja-nome">Zalando</div>
+          <div class="card-local">Ponto CTT — Rua do Ouro 45</div>
+          <div class="card-valor">reembolso: 54,99€</div>
+          <div class="card-codigo"><span class="card-codigo-label">código de devolução</span><span>RMA-88213</span></div>
+          <div class="card-actions">
+            <button class="btn-maps">maps ↗</button>
+            <button class="btn-edit">editar ✏</button>
+            <button class="btn-entregue">reembolsada ✓</button>
+          </div>
+        </div>
+        <div style="font-size:12px;color:#555;margin-top:8px;line-height:1.5;padding:0 4px">Etiqueta de devolução gerada. Ainda tens de entregar o pacote — o prazo aqui é o limite para o fazeres.</div>
+      </div>
+
+      <div>
+        <div style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#F472B6;margin-bottom:6px">— a caminho da loja</div>
+        <div class="card c-orange">
+          <div class="card-top"><div class="card-estado-label">A Caminho da Loja</div></div>
+          <div class="card-produto">Camisola de linho bege</div>
+          <div class="card-loja-nome">ASOS</div>
+          <div class="card-valor">reembolso: 24,99€</div>
+          <div class="card-actions">
+            <button class="btn-edit">editar ✏</button>
+          </div>
+        </div>
+        <div style="font-size:12px;color:#555;margin-top:8px;line-height:1.5;padding:0 4px">Já entregaste o pacote nos correios/ponto. Está a caminho da loja — falta só o reembolso ser processado.</div>
+      </div>
+
+      <div>
+        <div style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#22C55E;margin-bottom:6px">— concluída</div>
+        <div class="card c-green">
+          <div class="card-top"><div class="card-estado-label">Reembolsada!</div></div>
+          <div class="card-produto">Cenas Iolanda</div>
+          <div class="card-loja-nome">SHEIN</div>
+        </div>
+        <div style="font-size:12px;color:#555;margin-top:8px;line-height:1.5;padding:0 4px">A loja confirmou o reembolso. Passa automaticamente para o histórico, dentro de Conta.</div>
+      </div>
+
+      <div style="font-size:12px;color:#888;background:#f5f5f5;border-radius:12px;padding:12px 14px;line-height:1.5">Cria uma devolução na aba <b>adicionar</b>, no seletor no topo — cola o email de confirmação/RMA ou preenche à mão, tal como numa encomenda.</div>
+    </div>
+
+    <div style="font-size:12px;color:#888;background:#f5f5f5;border-radius:12px;padding:12px 14px;line-height:1.5;margin-top:16px">💡 Histórico e calendário deixaram de estar na barra de baixo — agora vivem dentro de <b>Conta</b>.</div>
   </div>`;
   document.body.appendChild(modal);
+}
+
+function comoFuncionaTab(tipo) {
+  const be = document.getElementById('cf-btn-encomendas');
+  const bd = document.getElementById('cf-btn-devolucoes');
+  const de = document.getElementById('cf-encomendas');
+  const dd = document.getElementById('cf-devolucoes');
+  if (!be || !bd || !de || !dd) return;
+  be.classList.toggle('on', tipo === 'encomendas');
+  bd.classList.toggle('on', tipo === 'devolucoes');
+  de.style.display = tipo === 'encomendas' ? 'flex' : 'none';
+  dd.style.display = tipo === 'devolucoes' ? 'flex' : 'none';
 }
 
 function abrirDrawer() {
