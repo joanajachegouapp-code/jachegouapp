@@ -44,7 +44,7 @@ function verificarENotificar(orders) {
   hoje.setHours(0, 0, 0, 0);
   const hojeStr = hoje.toISOString().split('T')[0];
 
-  orders.filter(o => o.estado !== 'entregue').forEach(o => {
+  orders.filter(o => o.categoria !== 'devolucao' && o.estado !== 'entregue').forEach(o => {
     const isCasa = o.tipo === 'casa';
     // Usar sempre dataLimite — nunca usar o.data (data de criação da encomenda)
     const ds = o.dataLimite;
@@ -81,6 +81,43 @@ function verificarENotificar(orders) {
     if (titulo) {
       // Tag única por encomenda + dia para evitar notificações repetidas no mesmo dia
       const tag = 'enc-' + (o.codigo || o.loja || 'x') + '-' + hojeStr;
+      self.registration.getNotifications({ tag }).then(existing => {
+        if (existing.length === 0) {
+          self.registration.showNotification(titulo, {
+            body: corpo,
+            icon: './icon-192.png',
+            badge: './icon-192.png',
+            tag,
+            renotify: false,
+            vibrate: [200, 100, 200],
+          });
+        }
+      });
+    }
+  });
+
+  orders.filter(o => o.categoria === 'devolucao' && o.estado !== 'reembolsada').forEach(o => {
+    const ds = o.dataLimite;
+    if (!ds) return;
+    const d = parseData(ds);
+    if (!d) return;
+    d.setHours(0, 0, 0, 0);
+    const diff = Math.round((d - hoje) / 86400000);
+
+    let titulo = '', corpo = '';
+    if (diff < 0) {
+      titulo = '↩ Prazo de devolução passou!';
+      corpo = (o.loja || 'Devolução') + ' — prazo expirou há ' + Math.abs(diff) + ' dia(s)!';
+    } else if (diff === 0) {
+      titulo = '↩ Último dia para devolver!';
+      corpo = (o.loja || 'Devolução') + ' — envia hoje!';
+    } else if (diff === 1) {
+      titulo = '↩ Amanhã é o último dia';
+      corpo = (o.loja || 'Devolução') + ' — para enviar a devolução.';
+    }
+
+    if (titulo) {
+      const tag = 'dev-' + (o.codigo || o.loja || 'x') + '-' + hojeStr;
       self.registration.getNotifications({ tag }).then(existing => {
         if (existing.length === 0) {
           self.registration.showNotification(titulo, {

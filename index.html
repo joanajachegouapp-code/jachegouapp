@@ -132,11 +132,12 @@ body { font-family: 'Inter', -apple-system, sans-serif; background: #ffffff; col
 .c-red    { background: #FF0000; color: #fff; }
 .c-orange { background: #F472B6; color: #fff; }
 .c-amber  { background: #FF5500; color: #fff; }
+.c-green  { background: #22C55E; color: #fff; }
 .card-top { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 1px; }
 .card-estado-label { font-size: 15px; font-weight: 900; letter-spacing: -0.5px; line-height: 1.1; }
-.card-deadline { font-size: 10px; font-weight: 700; opacity: 0.55; text-transform: uppercase; letter-spacing: 1px; flex-shrink: 0; margin-left: 8px; }
+.card-deadline { font-size: 10px; font-weight: 700; opacity: 0.7; text-transform: uppercase; letter-spacing: 1px; flex-shrink: 0; margin-left: 8px; }
 .card-produto { font-size: 12px; font-weight: 700; margin-bottom: 0px; opacity: 0.9; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.card-loja-nome { font-size: 10px; font-weight: 600; opacity: 0.5; margin-bottom: 4px; }
+.card-loja-nome { font-size: 10px; font-weight: 600; opacity: 0.65; margin-bottom: 4px; }
 .card-pin { font-size: 60px; font-weight: 900; line-height: 0.85; letter-spacing: -4px; margin-bottom: 0px; text-align: right; }
 .card-pin-label { font-size: 7px; font-weight: 700; letter-spacing: 5px; opacity: 0.3; text-align: right; margin-bottom: 6px; }
 .card-local { font-size: 12px; font-weight: 800; letter-spacing: -0.2px; margin-bottom: 8px; opacity: 0.9; }
@@ -147,9 +148,12 @@ body { font-family: 'Inter', -apple-system, sans-serif; background: #ffffff; col
 .c-red .btn-maps { background: #fff; color: #FF0000; }
 .c-orange .btn-maps { background: rgba(255,255,255,0.25); color: #fff; }
 .c-amber .btn-maps { background: rgba(255,255,255,0.25); color: #fff; }
+.c-green .btn-maps { background: rgba(255,255,255,0.25); color: #fff; }
+.card-valor { font-size: 13px; font-weight: 800; margin-bottom: 8px; opacity: 0.92; }
 .btn-edit { flex: 1; padding: 9px 8px; border-radius: 12px; border: none; background: rgba(0,0,0,0.15); color: #fff; font-size: 12px; font-weight: 700; cursor: pointer; font-family: inherit; }
 .btn-entregue { flex: 1; padding: 9px 8px; border-radius: 12px; border: none; background: rgba(0,0,0,0.22); color: #fff; font-size: 12px; font-weight: 800; cursor: pointer; font-family: inherit; }
-.btn-update { width: 100%; margin-top: 4px; padding: 5px; border-radius: 8px; border: none; background: transparent; font-size: 10px; font-weight: 600; cursor: pointer; color: #fff; opacity: 0.3; font-family: inherit; }
+.btn-update { width: 100%; margin-top: 6px; padding: 7px; border-radius: 8px; border: none; background: rgba(0,0,0,0.16); font-size: 10px; font-weight: 700; cursor: pointer; color: rgba(255,255,255,0.95); letter-spacing: 0.2px; font-family: inherit; }
+.btn-update:active { background: rgba(0,0,0,0.26); }
 .card-nota { font-size: 12px; background: rgba(0,0,0,0.1); border-radius: 10px; padding: 8px 12px; margin-top: 6px; line-height: 1.5; color: #fff; }
 
 /* ── HISTÓRICO ── */
@@ -167,6 +171,9 @@ body { font-family: 'Inter', -apple-system, sans-serif; background: #ffffff; col
 /* ── ADICIONAR ── */
 .add-wrap { padding: 16px; }
 .add-hint { font-size: 14px; color: #444; background: #f5f5f5; border-radius: 16px; padding: 14px 16px; margin-bottom: 14px; line-height: 1.5; }
+.add-mode-toggle { display: flex; gap: 6px; background: #f0f0ec; border-radius: 14px; padding: 4px; margin-bottom: 14px; }
+.add-mode-btn { flex: 1; padding: 10px; border: none; background: transparent; border-radius: 10px; font-size: 13px; font-weight: 800; cursor: pointer; font-family: inherit; color: #888; }
+.add-mode-btn.on { background: #111; color: #fff; }
 .add-wrap textarea { width: 100%; min-height: 120px; border: 1.5px solid #e5e5e0; border-radius: 16px; padding: 13px; font-size: 15px; font-family: inherit; color: #111; background: #f5f5f5; resize: vertical; }
 .add-wrap textarea::placeholder { color: #bbb; }
 .form-title { font-size: 11px; color: #888; margin: 16px 0 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
@@ -428,12 +435,19 @@ body { font-family: 'Inter', -apple-system, sans-serif; background: #ffffff; col
   </div>
 
   <div id="tab-historico" class="tab">
+    <div style="padding:10px 16px 0">
+      <button onclick="goTab('conta')" style="background:none;border:none;cursor:pointer;font-family:inherit;font-size:13px;font-weight:700;color:#888;padding:6px 0;display:flex;align-items:center;gap:4px">‹ conta</button>
+    </div>
     <div class="hist-wrap" id="hist-list"></div>
   </div>
 
   <div id="tab-adicionar" class="tab">
     <div class="add-wrap">
-      <div class="add-hint">cola qualquer email de encomenda — confirmação de loja ou transportadora. a IA identifica e trata automaticamente.</div>
+      <div class="add-mode-toggle">
+        <button type="button" class="add-mode-btn on" id="am-encomenda" onclick="setAddMode('encomenda')">nova encomenda</button>
+        <button type="button" class="add-mode-btn" id="am-devolucao" onclick="setAddMode('devolucao')">devolução</button>
+      </div>
+      <div class="add-hint" id="add-hint-txt">cola qualquer email de encomenda — confirmação de loja ou transportadora. a IA identifica e trata automaticamente.</div>
       <textarea id="email-txt" placeholder="cola aqui o texto do email..."></textarea>
       <button class="btn p" onclick="processarEmail()" style="margin-top:10px">analisar com IA ✦</button>
       <div class="loading" id="loading"><span class="spinner"></span> a analisar...</div>
@@ -442,7 +456,7 @@ body { font-family: 'Inter', -apple-system, sans-serif; background: #ffffff; col
         <div class="field"><label>loja</label><input type="text" id="f-loja" onblur="notaLoja()" /></div>
         <div class="field-nota" id="f-nota"></div>
         <div class="field"><label>produto</label><input type="text" id="f-produto" /></div>
-        <div class="field"><label>tipo de entrega</label>
+        <div class="field" id="field-tipo-entrega"><label>tipo de entrega</label>
           <select id="f-tipo" onchange="tipoChange()">
             <option value="recolha">levantamento num ponto</option>
             <option value="casa">entrega em casa</option>
@@ -457,7 +471,8 @@ body { font-family: 'Inter', -apple-system, sans-serif; background: #ffffff; col
         </div>
         <div class="field"><label>local</label><input type="text" id="f-local" placeholder="ex: ponto dpd benfica" /></div>
         <div class="field" id="field-pin"><label>pin / código de levantamento</label><input type="text" id="f-pin" placeholder="ex: 119274" /></div>
-        <div class="field"><label>código da encomenda</label><input type="text" id="f-codigo" placeholder="ex: #ZR-20481, PT123456789..." /></div>
+        <div class="field" id="field-valor" style="display:none"><label>valor a reembolsar</label><input type="text" id="f-valor" placeholder="ex: 24,99€" /></div>
+        <div class="field"><label id="label-codigo">código da encomenda</label><input type="text" id="f-codigo" placeholder="ex: #ZR-20481, PT123456789..." /></div>
         <div class="field"><label id="label-datalimite">data limite de levantamento</label><input type="text" id="f-datalimite" placeholder="dd/mm/aaaa" /></div>
         <div class="field"><label>data da encomenda</label><input type="text" id="f-data" placeholder="dd/mm/aaaa" /></div>
         <button class="btn p" onclick="guardarEncomenda()">guardar encomenda</button>
@@ -467,6 +482,9 @@ body { font-family: 'Inter', -apple-system, sans-serif; background: #ffffff; col
   </div>
 
   <div id="tab-calendario" class="tab">
+    <div style="padding:10px 16px 0">
+      <button onclick="goTab('conta')" style="background:none;border:none;cursor:pointer;font-family:inherit;font-size:13px;font-weight:700;color:#888;padding:6px 0;display:flex;align-items:center;gap:4px">‹ conta</button>
+    </div>
     <div class="cal-wrap">
       <div class="cal-nav">
         <button class="cal-arrow" onclick="calPrev()">‹</button>
@@ -490,8 +508,23 @@ body { font-family: 'Inter', -apple-system, sans-serif; background: #ffffff; col
     </div>
   </div>
 
+  <div id="tab-devolucoes" class="tab">
+    <div style="padding:6px 16px 0"><div class="app-sub" id="devol-subtitle">0 em curso</div></div>
+    <div class="cards" id="devol-cards-list"></div>
+  </div>
+
   <div id="tab-conta" class="tab">
     <div class="cfg-wrap">
+      <div class="cfg-card">
+        <h3>histórico</h3>
+        <p>consulta as encomendas entregues e devoluções já reembolsadas.</p>
+        <button class="btn" onclick="goTab('historico')" style="margin-top:0;border:1.5px solid #e5e5e0">ver histórico</button>
+      </div>
+      <div class="cfg-card">
+        <h3>calendário</h3>
+        <p>vê os prazos de levantamento e entregas organizados por dia.</p>
+        <button class="btn" onclick="goTab('calendario')" style="margin-top:0;border:1.5px solid #e5e5e0">ver calendário</button>
+      </div>
       <div class="cfg-card">
         <h3>notificações</h3>
         <p>avisa-te quando uma encomenda está prestes a expirar ou chega o dia de entrega — mesmo com a app fechada.</p>
@@ -556,21 +589,17 @@ body { font-family: 'Inter', -apple-system, sans-serif; background: #ffffff; col
 
 <!-- NAV BOTTOM -->
 <nav class="nav" id="nav">
-  <button class="nav-btn on" id="nb-ativas" onclick="goTab('ativas')">
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="18" rx="2"/><path d="M8 3v18M2 9h6M2 15h6"/></svg>
-    ativas
-  </button>
   <button class="nav-btn" id="nb-adicionar" onclick="goTab('adicionar')">
     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
     adicionar
   </button>
-  <button class="nav-btn" id="nb-historico" onclick="goTab('historico')">
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-    histórico
+  <button class="nav-btn on" id="nb-ativas" onclick="goTab('ativas')">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="18" rx="2"/><path d="M8 3v18M2 9h6M2 15h6"/></svg>
+    ativas
   </button>
-  <button class="nav-btn" id="nb-calendario" onclick="goTab('calendario')">
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-    calendário
+  <button class="nav-btn" id="nb-devolucoes" onclick="goTab('devolucoes')">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg>
+    devoluções
   </button>
   <button class="nav-btn" onclick="abrirDrawer()">
     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
@@ -616,6 +645,11 @@ function cfgLabel(o) {
   const cfg = ESTADO_CFG[estadoEfetivo(o)] || ESTADO_CFG['preparacao'];
   return o.tipo === 'casa' ? (cfg.labelCasa || cfg.label) : cfg.label;
 }
+const ESTADO_CFG_DEVOL = {
+  preparar:    { label: 'A Preparar Devolução', cls: 'c-amber' },
+  enviada:     { label: 'A Caminho da Loja',     cls: 'c-orange' },
+  reembolsada: { label: 'Reembolsada!',          cls: 'c-green' },
+};
 const ORDEM = ['vermelho','enviado','preparacao'];
 const MESES = ['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
 const MESES_S = ['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
@@ -646,14 +680,14 @@ function guardar() {
   try {
     localStorage.setItem('chegou_orders', JSON.stringify(orders));
   } catch(e) { console.error('erro ao guardar:', e); }
-  renderAtivas(); renderHistorico(); atualizarSub();
+  renderAtivas(); renderHistorico(); renderDevolucoes(); atualizarSub();
   const cal = document.getElementById('tab-calendario');
   if (cal && cal.classList.contains('on')) renderCal();
 }
 
 function atualizarSub() {
-  const n = orders.filter(o => o.estado !== 'entregue').length;
-  const lev = orders.filter(o => o.estado === 'vermelho').length;
+  const n = orders.filter(o => o.estado !== 'entregue' && o.categoria !== 'devolucao').length;
+  const lev = orders.filter(o => o.estado === 'vermelho' && o.categoria !== 'devolucao').length;
   let t = n + ' ativa' + (n !== 1 ? 's' : '');
   if (lev > 0) t += ' · ' + lev + ' para levantar';
   document.getElementById('subtitle').textContent = t;
@@ -737,7 +771,7 @@ function estadoEfetivo(o) {
 
 function renderAtivas() {
   const el = document.getElementById('cards-list');
-  const ativas = orders.filter(o => o.estado !== 'entregue')
+  const ativas = orders.filter(o => o.estado !== 'entregue' && o.categoria !== 'devolucao')
     .sort((a, b) => ordemPrioridade(a) - ordemPrioridade(b));
 
   if (!ativas.length) {
@@ -786,7 +820,7 @@ function renderAtivas() {
 // ── RENDER HISTÓRICO ──────────────────────────────────
 function renderHistorico() {
   const el = document.getElementById('hist-list');
-  const ents = orders.filter(o => o.estado === 'entregue').reverse();
+  const ents = orders.filter(o => o.estado === 'entregue' || o.estado === 'reembolsada').reverse();
   if (!ents.length) {
     el.innerHTML = '<div class="empty"><div class="empty-icon">—</div><p>ainda sem encomendas entregues.</p></div>';
     return;
@@ -799,11 +833,14 @@ function renderHistorico() {
     return '<div class="hist-month">' + lbl + '</div>' +
       items.map(o => {
         const idx = orders.indexOf(o);
+        const isDevol = o.categoria === 'devolucao';
+        const badge = isDevol ? ' <span style="font-size:9px;font-weight:800;color:#22C55E;background:rgba(34,197,94,0.14);padding:2px 6px;border-radius:6px;margin-left:4px;vertical-align:middle">devolução</span>' : '';
+        const produtoTxt = (o.produto||'—') + (isDevol && limpar(o.valor) ? ' · ' + limpar(o.valor) : '');
         return '<div class="hist-item">' +
-          '<div class="hist-icon">' + (o.loja||'?')[0].toUpperCase() + '</div>' +
-          '<div class="hist-info"><div class="hist-loja">' + (o.loja||'Loja') + '</div><div class="hist-produto">' + (o.produto||'—') + '</div></div>' +
+          '<div class="hist-icon" style="' + (isDevol?'background:#22C55E':'') + '">' + (isDevol?'↩':(o.loja||'?')[0].toUpperCase()) + '</div>' +
+          '<div class="hist-info"><div class="hist-loja">' + (o.loja||'Loja') + badge + '</div><div class="hist-produto">' + produtoTxt + '</div></div>' +
           '<div class="hist-right"><div class="hist-date">' + (o.dataEntrega||'') + '</div>' +
-            '<button class="btn-reativar" onclick="reativar(' + idx + ')">reativar</button>' +
+            '<button class="btn-reativar" onclick="' + (isDevol ? 'reativarDevolucao(' + idx + ')' : 'reativar(' + idx + ')') + '">reativar</button>' +
           '</div></div>';
       }).join('');
   }).join('');
@@ -820,6 +857,118 @@ function reativar(i) {
   orders[i].estado = orders[i].estadoAnt || 'preparacao';
   orders[i].dataEntrega = '';
   guardar(); goTab('ativas'); toast('encomenda reativada ✓');
+}
+
+// ── DEVOLUÇÕES ────────────────────────────────────────
+function devolDeadlineStr(o) {
+  const d = parseData(o.dataLimite);
+  if (!d) return '';
+  const hoje = new Date(); hoje.setHours(0,0,0,0); d.setHours(0,0,0,0);
+  const diff = Math.round((d - hoje) / 86400000);
+  const fmt = d.getDate() + ' ' + MESES_S[d.getMonth()];
+  if (diff < 0) return 'passou ' + Math.abs(diff) + 'd';
+  if (diff === 0) return 'hoje!';
+  if (diff === 1) return 'amanhã';
+  return 'até ' + fmt;
+}
+
+function renderDevolucoes() {
+  const el = document.getElementById('devol-cards-list');
+  const sub = document.getElementById('devol-subtitle');
+  if (!el) return;
+  const ativas = orders.filter(o => o.categoria === 'devolucao' && o.estado !== 'reembolsada')
+    .sort((a, b) => {
+      const da = parseData(a.dataLimite), db = parseData(b.dataLimite);
+      return (da ? da.getTime() : Infinity) - (db ? db.getTime() : Infinity);
+    });
+  if (sub) sub.textContent = ativas.length + ' em curso';
+  if (!ativas.length) {
+    el.innerHTML = '<div class="empty"><div class="empty-icon">↩</div><p>nenhuma devolução em curso.</p></div>';
+    return;
+  }
+  el.innerHTML = ativas.map(o => {
+    const idx = orders.indexOf(o);
+    const cfg = ESTADO_CFG_DEVOL[o.estado] || ESTADO_CFG_DEVOL['preparar'];
+    const dl = devolDeadlineStr(o);
+    const localVal = limpar(o.local);
+    const codigoH = limpar(o.codigo) ? '<div class="card-codigo"><span class="card-codigo-label">código de devolução</span><span>' + limpar(o.codigo) + '</span></div>' : '';
+    const localH = localVal ? '<div class="card-local">' + localVal + '</div>' : '';
+    const valorH = limpar(o.valor) ? '<div class="card-valor">reembolso: ' + limpar(o.valor) + '</div>' : '';
+    const mapsH = localVal
+      ? '<button class="btn-maps" data-url="https://maps.google.com/?q=' + encodeURIComponent(localVal) + '" onclick="window.open(this.dataset.url,\'_blank\')">maps ↗</button>'
+      : '';
+    return '<div class="card ' + cfg.cls + '">' +
+      '<div class="card-top"><div class="card-estado-label">' + cfg.label + '</div>' + (dl ? '<div class="card-deadline">' + dl + '</div>' : '') + '</div>' +
+      '<div class="card-produto">' + (o.produto || '—') + '</div>' +
+      '<div class="card-loja-nome">' + (o.loja || '') + '</div>' +
+      localH + valorH + codigoH +
+      '<div class="card-actions">' + mapsH +
+        '<button class="btn-edit" onclick="abrirEditarDevolucao(' + idx + ')">editar ✏</button>' +
+        '<button class="btn-entregue" onclick="marcarReembolsada(' + idx + ')">reembolsada ✓</button>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+}
+
+function marcarReembolsada(i) {
+  orders[i].estado = 'reembolsada';
+  orders[i].dataEntrega = new Date().toLocaleDateString('pt-PT',{day:'2-digit',month:'short',year:'numeric'});
+  guardar(); toast('reembolso registado ✓');
+}
+
+function reativarDevolucao(i) {
+  orders[i].estado = 'enviada';
+  orders[i].dataEntrega = '';
+  guardar(); goTab('devolucoes'); toast('devolução reativada ✓');
+}
+
+function abrirEditarDevolucao(idx) {
+  window._editIdx = idx;
+  const o = orders[idx];
+  const modal = document.createElement('div');
+  modal.className = 'modal-bg'; modal.id = 'modal-edit-devol';
+  const sP = o.estado==='preparar'?'selected':'', sE = o.estado==='enviada'?'selected':'', sR = o.estado==='reembolsada'?'selected':'';
+  modal.innerHTML = '<div class="modal-box">' +
+    '<button class="modal-close" onclick="fecharModal(\'modal-edit-devol\')">✕</button>' +
+    '<h2>editar devolução</h2>' +
+    '<div class="modal-sub">' + (o.loja||'') + '</div>' +
+    '<div class="field"><label>loja</label><input type="text" id="ed-loja" /></div>' +
+    '<div class="field"><label>produto</label><input type="text" id="ed-produto" /></div>' +
+    '<div class="field"><label>estado</label><select id="ed-estado">' +
+      '<option value="preparar" ' + sP + '>a preparar devolução</option>' +
+      '<option value="enviada" ' + sE + '>enviada para a loja</option>' +
+      '<option value="reembolsada" ' + sR + '>reembolsada</option>' +
+    '</select></div>' +
+    '<div class="field"><label>ponto de entrega da devolução</label><input type="text" id="ed-local" /></div>' +
+    '<div class="field"><label>código de devolução (RMA)</label><input type="text" id="ed-codigo" /></div>' +
+    '<div class="field"><label>valor a reembolsar</label><input type="text" id="ed-valor" /></div>' +
+    '<div class="field"><label>prazo para devolver</label><input type="text" id="ed-datalimite" placeholder="dd/mm/aaaa" /></div>' +
+    '<button class="btn p" onclick="guardarEditarDevolucao()" style="margin-top:8px">guardar alterações</button>' +
+    '<button class="btn d" onclick="apagarDevolucao()" style="margin-top:6px">apagar devolução</button>' +
+    '</div>';
+  document.body.appendChild(modal);
+  document.getElementById('ed-loja').value = o.loja||'';
+  document.getElementById('ed-produto').value = o.produto||'';
+  document.getElementById('ed-local').value = o.local||'';
+  document.getElementById('ed-codigo').value = o.codigo||'';
+  document.getElementById('ed-valor').value = o.valor||'';
+  document.getElementById('ed-datalimite').value = o.dataLimite||'';
+}
+
+function guardarEditarDevolucao() {
+  const i = window._editIdx;
+  orders[i].loja = document.getElementById('ed-loja').value;
+  orders[i].produto = document.getElementById('ed-produto').value;
+  orders[i].estado = document.getElementById('ed-estado').value;
+  orders[i].local = document.getElementById('ed-local').value;
+  orders[i].codigo = document.getElementById('ed-codigo').value;
+  orders[i].valor = document.getElementById('ed-valor').value;
+  orders[i].dataLimite = document.getElementById('ed-datalimite').value;
+  guardar(); fecharModal('modal-edit-devol'); toast('atualizado ✓');
+}
+
+function apagarDevolucao() {
+  if (confirm('apagar esta devolução?')) { orders.splice(window._editIdx,1); guardar(); fecharModal('modal-edit-devol'); toast('apagada'); }
 }
 
 // ── TABS ──────────────────────────────────────────────
@@ -1051,6 +1200,7 @@ async function chamarAI(prompt, texto) {
 async function processarEmail() {
   const txt = document.getElementById('email-txt').value.trim();
   if (!txt) { alert('cola primeiro o texto do email.'); return; }
+  if (addCategoria === 'devolucao') { return processarEmailDevolucao(txt); }
   document.getElementById('loading').style.display = 'block';
   document.getElementById('form').style.display = 'none';
   try {
@@ -1129,9 +1279,47 @@ async function processarEmail() {
   }
 }
 
+async function processarEmailDevolucao(txt) {
+  document.getElementById('loading').style.display = 'block';
+  document.getElementById('form').style.display = 'none';
+  try {
+    const p = await chamarAI(buildPromptDevolucao(), txt);
+    if (!p) { document.getElementById('loading').style.display='none'; return; }
+    document.getElementById('f-loja').value = limpar(p.loja);
+    document.getElementById('f-produto').value = limpar(p.produto);
+    document.getElementById('f-datalimite').value = limpar(p.prazo);
+    document.getElementById('f-local').value = limpar(p.local);
+    document.getElementById('f-codigo').value = limpar(p.codigo);
+    document.getElementById('f-valor').value = limpar(p.valor);
+    document.getElementById('f-estado').value = limpar(p.estado) || 'preparar';
+    document.getElementById('form').style.display = 'block';
+  } catch(e) {
+    alert('erro ao analisar. preenche manualmente.');
+    document.getElementById('form').style.display = 'block';
+  }
+  document.getElementById('loading').style.display = 'none';
+}
+
 function guardarEncomenda() {
   const loja = document.getElementById('f-loja').value.trim();
   if (!loja) { alert('preenche o nome da loja.'); return; }
+
+  if (addCategoria === 'devolucao') {
+    orders.unshift({
+      categoria: 'devolucao',
+      loja,
+      produto: document.getElementById('f-produto').value,
+      dataLimite: document.getElementById('f-datalimite').value,
+      local: document.getElementById('f-local').value,
+      codigo: document.getElementById('f-codigo').value,
+      valor: document.getElementById('f-valor').value,
+      estado: document.getElementById('f-estado').value || 'preparar',
+      criado: new Date().toISOString()
+    });
+    guardar(); resetForm(); goTab('devolucoes'); toast('devolução guardada!');
+    return;
+  }
+
   const tipo = document.getElementById('f-tipo').value;
   const localVal = document.getElementById('f-local').value;
   orders.unshift({ loja, produto: document.getElementById('f-produto').value, data: document.getElementById('f-data').value, dataLimite: document.getElementById('f-datalimite').value, local: localVal, pin: document.getElementById('f-pin').value, codigo: document.getElementById('f-codigo').value, estado: document.getElementById('f-estado').value, tipo, criado: new Date().toISOString() });
@@ -1145,6 +1333,7 @@ function resetForm() {
 }
 
 function notaLoja() {
+  if (addCategoria === 'devolucao') return;
   const info = LOJAS[(document.getElementById('f-loja')?.value||'').toLowerCase().trim()];
   const n = document.getElementById('f-nota'); if (!n) return;
   if (info) {
@@ -1164,6 +1353,53 @@ function tipoChange() {
     : '<option value="preparacao">em preparação</option><option value="enviado">enviada</option><option value="vermelho">levantar</option>';
   const lbl = document.getElementById('label-datalimite');
   if (lbl) lbl.textContent = tipo === 'casa' ? 'data prevista de entrega' : 'data limite de levantamento';
+}
+
+// ── MODO DEVOLUÇÃO (aba adicionar) ────────────────────
+let addCategoria = 'encomenda';
+
+function setAddMode(modo) {
+  addCategoria = modo;
+  document.getElementById('am-encomenda').classList.toggle('on', modo === 'encomenda');
+  document.getElementById('am-devolucao').classList.toggle('on', modo === 'devolucao');
+  const hint = document.getElementById('add-hint-txt');
+  const txtArea = document.getElementById('email-txt');
+  const fieldTipo = document.getElementById('field-tipo-entrega');
+  const fieldValor = document.getElementById('field-valor');
+  const labelDL = document.getElementById('label-datalimite');
+  const labelCodigo = document.getElementById('label-codigo');
+
+  if (modo === 'devolucao') {
+    if (hint) hint.textContent = 'cola o email de confirmação da devolução, etiqueta de devolução, ou confirmação de reembolso. a IA identifica e trata automaticamente.';
+    if (txtArea) txtArea.placeholder = 'cola aqui o texto do email de devolução...';
+    if (fieldTipo) fieldTipo.style.display = 'none';
+    if (fieldValor) fieldValor.style.display = 'block';
+    if (labelDL) labelDL.textContent = 'prazo para devolver';
+    if (labelCodigo) labelCodigo.textContent = 'código de devolução (RMA)';
+    const pf = document.getElementById('field-pin'); if (pf) pf.style.display = 'none';
+    const se = document.getElementById('f-estado');
+    if (se) se.innerHTML = '<option value="preparar">a preparar devolução</option><option value="enviada">enviada para a loja</option><option value="reembolsada">reembolsada</option>';
+  } else {
+    if (hint) hint.textContent = 'cola qualquer email de encomenda — confirmação de loja ou transportadora. a IA identifica e trata automaticamente.';
+    if (txtArea) txtArea.placeholder = 'cola aqui o texto do email...';
+    if (fieldTipo) fieldTipo.style.display = 'block';
+    if (fieldValor) fieldValor.style.display = 'none';
+    if (labelCodigo) labelCodigo.textContent = 'código da encomenda';
+    tipoChange();
+  }
+  resetForm();
+}
+
+function buildPromptDevolucao() {
+  const hoje = new Date();
+  return 'Analisa este email relacionado com uma DEVOLUÇÃO de uma compra online (confirmação de devolução, etiqueta/RMA de devolução, ou confirmação de reembolso). Hoje é ' + hoje.getDate() + '/' + (hoje.getMonth()+1) + '/' + hoje.getFullYear() + '. Responde APENAS com JSON sem markdown:\n' +
+    '{"loja":"ou vazio","produto":"máx 4 palavras","prazo":"DD/MM/AAAA ou vazio","codigo":"código RMA/devolução ou vazio","local":"ponto de entrega da devolução ou vazio","valor":"valor a reembolsar ex: 24,99€ ou vazio","estado":"preparar|enviada|reembolsada"}\n\n' +
+    'REGRAS ESTADO:\n' +
+    '- estado="preparar": a devolução foi aceite/gerada a etiqueta, ainda não foi entregue nos correios/ponto.\n' +
+    '- estado="enviada": a devolução já foi entregue no ponto/correios e está a caminho da loja.\n' +
+    '- estado="reembolsada": a loja confirma que o dinheiro foi devolvido/creditado.\n\n' +
+    'REGRAS PRAZO: converte sempre para DD/MM/AAAA a data limite para enviar a devolução, se indicada.\n\n' +
+    'Email:';
 }
 
 // ── ASSOCIAR EMAIL ────────────────────────────────────
@@ -1343,25 +1579,34 @@ function verificarNotifs() {
   // Barra dentro da app (sempre)
   const hoje = new Date(); hoje.setHours(0,0,0,0);
   const alertas = [];
-  orders.filter(o => o.estado !== 'entregue' && o.estado !== 'preparacao').forEach(o => {
+  orders.filter(o => o.categoria !== 'devolucao' && o.estado !== 'entregue' && o.estado !== 'preparacao').forEach(o => {
     const isCasa = o.tipo === 'casa';
     const ds = o.dataLimite;
     if (!ds) return;
     const d = parseData(ds); if (!d) return; d.setHours(0,0,0,0);
     const diff = Math.round((d - hoje) / 86400000);
     if (isCasa) {
-      if (diff===0) alertas.push('📦 ' + o.loja + ' — entrega hoje! fica em casa!');
-      else if (diff===1) alertas.push('📦 ' + o.loja + ' — entrega amanhã!');
+      if (diff===0) alertas.push({tab:'ativas', txt:'📦 ' + o.loja + ' — entrega hoje! fica em casa!'});
+      else if (diff===1) alertas.push({tab:'ativas', txt:'📦 ' + o.loja + ' — entrega amanhã!'});
     } else {
-      if (diff<0) alertas.push('🚨 ' + o.loja + ' — prazo passou há ' + Math.abs(diff) + ' dia(s)!' + (o.pin?' · pin: '+o.pin:''));
-      else if (diff===0) alertas.push('⚠️ ' + o.loja + ' — último dia para levantar!' + (o.pin?' · pin: '+o.pin:''));
-      else if (diff===1) alertas.push('📬 ' + o.loja + ' — amanhã é o último dia!' + (o.pin?' · pin: '+o.pin:''));
+      if (diff<0) alertas.push({tab:'ativas', txt:'🚨 ' + o.loja + ' — prazo passou há ' + Math.abs(diff) + ' dia(s)!' + (o.pin?' · pin: '+o.pin:'')});
+      else if (diff===0) alertas.push({tab:'ativas', txt:'⚠️ ' + o.loja + ' — último dia para levantar!' + (o.pin?' · pin: '+o.pin:'')});
+      else if (diff===1) alertas.push({tab:'ativas', txt:'📬 ' + o.loja + ' — amanhã é o último dia!' + (o.pin?' · pin: '+o.pin:'')});
     }
+  });
+  orders.filter(o => o.categoria === 'devolucao' && o.estado !== 'reembolsada').forEach(o => {
+    const ds = o.dataLimite;
+    if (!ds) return;
+    const d = parseData(ds); if (!d) return; d.setHours(0,0,0,0);
+    const diff = Math.round((d - hoje) / 86400000);
+    if (diff<0) alertas.push({tab:'devolucoes', txt:'↩ ' + o.loja + ' — prazo de devolução passou há ' + Math.abs(diff) + ' dia(s)!'});
+    else if (diff===0) alertas.push({tab:'devolucoes', txt:'↩ ' + o.loja + ' — último dia para devolver!'});
+    else if (diff===1) alertas.push({tab:'devolucoes', txt:'↩ ' + o.loja + ' — amanhã é o último dia para devolver!'});
   });
   const wrap = document.getElementById('notif-wrap');
   if (wrap) {
     if (alertas.length) {
-      wrap.innerHTML = '<div class="notif-bar" onclick="goTab(\'ativas\')">' + alertas[0] + '<span>›</span></div>';
+      wrap.innerHTML = '<div class="notif-bar" onclick="goTab(\'' + alertas[0].tab + '\')">' + alertas[0].txt + '<span>›</span></div>';
       setTimeout(() => { if(wrap) wrap.innerHTML=''; }, 8000);
     } else { wrap.innerHTML = ''; }
   }
@@ -1578,6 +1823,7 @@ if (isPWA) {
 
 renderAtivas();
 renderHistorico();
+renderDevolucoes();
 renderMoradas();
 atualizarSub();
 backupAutomatico();
