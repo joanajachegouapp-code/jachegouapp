@@ -990,11 +990,11 @@ function abrirGraficoCompras() {
 
   const modal = document.createElement('div');
   modal.className = 'modal-bg'; modal.id = 'modal-grafico';
+  modal.style.zIndex = '9999';
   modal.innerHTML = '<div class="modal-box">' +
     '<button class="modal-close" onclick="fecharModal(\'modal-grafico\')">✕</button>' +
     '<h2>compras mensais</h2>' +
-    '<div class="modal-sub">' + meses.length + ' mes' + (meses.length !== 1 ? 'es' : '') + ' · desliza para ver tudo →</div>' +
-    '<div id="grafico-scroll" style="overflow-x:auto;padding:8px 0 4px;background:#f5f5f5;border-radius:16px">' + svg + '</div>' +
+    '<div id="grafico-scroll" style="overflow-x:auto;padding:8px 0 4px;background:#f5f5f5;border-radius:16px;margin-top:12px">' + svg + '</div>' +
     '<div style="display:flex;gap:8px;margin-top:14px">' +
       '<div style="flex:1;text-align:center;background:#f5f5f5;border-radius:14px;padding:12px 8px"><div style="font-size:20px;font-weight:900">' + totalCompras + '</div><div style="font-size:10px;color:#888;font-weight:700;text-transform:uppercase;letter-spacing:0.5px">total</div></div>' +
       '<div style="flex:1;text-align:center;background:#f5f5f5;border-radius:14px;padding:12px 8px"><div style="font-size:20px;font-weight:900">' + mediaCompras + '</div><div style="font-size:10px;color:#888;font-weight:700;text-transform:uppercase;letter-spacing:0.5px">média / mês</div></div>' +
