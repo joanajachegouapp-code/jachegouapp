@@ -958,7 +958,7 @@ function abrirGraficoCompras() {
     if (!byM[k]) byM[k] = { compras: 0, devol: 0 };
     if (o.categoria === 'devolucao') byM[k].devol++; else byM[k].compras++;
   });
-  const meses = Object.keys(byM).sort().slice(-12);
+  const meses = Object.keys(byM).sort();
 
   if (!meses.length) {
     toast('ainda não há encomendas entregues para mostrar');
@@ -980,7 +980,7 @@ function abrirGraficoCompras() {
       '<text x="' + (x + barW / 2) + '" y="' + (y - 8) + '" text-anchor="middle" font-size="11" font-weight="800" fill="#111" font-family="Inter, sans-serif">' + val + '</text>' +
       '<text x="' + (x + barW / 2) + '" y="' + (chartH + 42) + '" text-anchor="middle" font-size="10" font-weight="700" fill="#999" font-family="Inter, sans-serif">' + lbl + '</text>';
   });
-  const svg = '<svg viewBox="0 0 ' + svgW + ' ' + (chartH + 52) + '" width="100%" height="180" style="display:block;min-width:' + Math.max(svgW, 280) + 'px">' + bars + '</svg>';
+  const svg = '<svg viewBox="0 0 ' + svgW + ' ' + (chartH + 52) + '" width="' + svgW + '" height="' + (chartH + 52) + '" style="display:block;flex-shrink:0">' + bars + '</svg>';
 
   const totalCompras = meses.reduce((s, k) => s + byM[k].compras, 0);
   const mediaCompras = (totalCompras / meses.length).toFixed(1);
@@ -993,8 +993,8 @@ function abrirGraficoCompras() {
   modal.innerHTML = '<div class="modal-box">' +
     '<button class="modal-close" onclick="fecharModal(\'modal-grafico\')">✕</button>' +
     '<h2>compras mensais</h2>' +
-    '<div class="modal-sub">últimos ' + meses.length + ' mes' + (meses.length !== 1 ? 'es' : '') + ' com atividade</div>' +
-    '<div style="overflow-x:auto;padding:8px 0 4px;background:#f5f5f5;border-radius:16px">' + svg + '</div>' +
+    '<div class="modal-sub">' + meses.length + ' mes' + (meses.length !== 1 ? 'es' : '') + ' · desliza para ver tudo →</div>' +
+    '<div id="grafico-scroll" style="overflow-x:auto;padding:8px 0 4px;background:#f5f5f5;border-radius:16px">' + svg + '</div>' +
     '<div style="display:flex;gap:8px;margin-top:14px">' +
       '<div style="flex:1;text-align:center;background:#f5f5f5;border-radius:14px;padding:12px 8px"><div style="font-size:20px;font-weight:900">' + totalCompras + '</div><div style="font-size:10px;color:#888;font-weight:700;text-transform:uppercase;letter-spacing:0.5px">total</div></div>' +
       '<div style="flex:1;text-align:center;background:#f5f5f5;border-radius:14px;padding:12px 8px"><div style="font-size:20px;font-weight:900">' + mediaCompras + '</div><div style="font-size:10px;color:#888;font-weight:700;text-transform:uppercase;letter-spacing:0.5px">média / mês</div></div>' +
@@ -1002,6 +1002,8 @@ function abrirGraficoCompras() {
     '</div>' +
   '</div>';
   document.body.appendChild(modal);
+  const scrollEl = document.getElementById('grafico-scroll');
+  if (scrollEl) scrollEl.scrollLeft = scrollEl.scrollWidth;
 }
 
 function marcarEntregue(i) {
