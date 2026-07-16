@@ -487,6 +487,7 @@ body { font-family: 'Inter', -apple-system, sans-serif; background: #ffffff; col
         <div class="field"><label>local</label><input type="text" id="f-local" placeholder="ex: ponto dpd benfica" /></div>
         <div class="field" id="field-pin"><label>pin / código de levantamento</label><input type="text" id="f-pin" placeholder="ex: 119274" /></div>
         <div class="field" id="field-valor" style="display:none"><label>valor a reembolsar</label><input type="text" id="f-valor" placeholder="ex: 24,99€" /></div>
+        <div class="field"><label>transportadora</label><input type="text" id="f-transportadora" placeholder="ex: CTT Expresso, DPD, GLS..." /></div>
         <div class="field"><label id="label-codigo">código da encomenda</label><input type="text" id="f-codigo" placeholder="ex: #ZR-20481, PT123456789..." /></div>
         <div class="field"><label id="label-datalimite">data limite de levantamento</label><input type="text" id="f-datalimite" placeholder="dd/mm/aaaa" /></div>
         <div class="field"><label>data da encomenda</label><input type="text" id="f-data" placeholder="dd/mm/aaaa" /></div>
@@ -675,6 +676,34 @@ const LOJAS = {
   'wook':{'tipo':'casa','sep':false,'nota':'entrega em casa'},
 };
 
+const LOJA_SITES = {
+  'zara':'https://www.zara.com/pt/',
+  'pull&bear':'https://www.pullandbear.com/pt/',
+  'bershka':'https://www.bershka.com/pt/',
+  'massimo dutti':'https://www.massimodutti.com/pt/',
+  'stradivarius':'https://www.stradivarius.com/pt/',
+  'shein':'https://www.shein.com/pt/',
+  'temu':'https://www.temu.com/pt/',
+  'asos':'https://www.asos.com/pt/',
+  'vinted':'https://www.vinted.pt',
+  'amazon':'https://www.amazon.pt',
+  'fnac':'https://www.fnac.pt',
+  'worten':'https://www.worten.pt',
+  'ikea':'https://www.ikea.com/pt/pt/',
+  'continente':'https://www.continente.pt',
+  'el corte inglés':'https://www.elcorteingles.pt',
+  'decathlon':'https://www.decathlon.pt',
+  'aliexpress':'https://www.aliexpress.com',
+  'showroomprive':'https://www.showroomprive.pt',
+  'la redoute':'https://www.laredoute.pt',
+  'lanidor':'https://www.lanidor.com',
+  'wook':'https://www.wook.pt',
+};
+function siteLojaUrl(loja) {
+  const key = (loja||'').toLowerCase().trim();
+  return LOJA_SITES[key] || ('https://www.google.com/search?q=' + encodeURIComponent((loja||'') + ' site oficial'));
+}
+
 const ESTADO_CFG = {
   vermelho:   { label: 'Vai Buscar!',  labelCasa: 'Entrega Hoje!', cls: 'c-red' },
   enviado:    { label: 'Enviada!',     labelCasa: 'A Caminho!',  cls: 'c-orange' },
@@ -843,10 +872,11 @@ function renderAtivas() {
     const mapsH = localMaps
       ? '<button class="btn-maps" data-url="https://maps.google.com/?q=' + encodeURIComponent(localMaps) + '" onclick="window.open(this.dataset.url,\'_blank\')">maps ↗</button>'
       : '';
+    const transpVal = limpar(o.transportadora);
     return '<div class="card ' + cfg.cls + '">' +
       '<div class="card-top"><div class="card-estado-label">' + cfgLabel(o) + '</div>' + (dl ? '<div class="card-deadline">' + dl + '</div>' : '') + '</div>' +
       '<div class="card-produto">' + (o.produto || '—') + '</div>' +
-      '<div class="card-loja-nome">' + (o.loja || '') + '</div>' +
+      '<div class="card-loja-nome">' + (o.loja || '') + (transpVal ? ' · ' + transpVal : '') + '</div>' +
       pinH + casaIconH + localH + codigoH +
       '<div class="card-actions">' + mapsH +
         '<button class="btn-edit" onclick="abrirEditar(' + idx + ')">editar ✏</button>' +
@@ -904,9 +934,10 @@ function renderHistorico() {
         const isDevol = o.categoria === 'devolucao';
         const badge = isDevol ? ' <span style="font-size:9px;font-weight:800;color:#22C55E;background:rgba(34,197,94,0.14);padding:2px 6px;border-radius:6px;margin-left:4px;vertical-align:middle">devolução</span>' : '';
         const produtoTxt = (o.produto||'—') + (isDevol && limpar(o.valor) ? ' · ' + limpar(o.valor) : '');
+        const pinHist = (!isDevol && limpar(o.pin)) ? '<div style="font-size:11px;color:#FF0000;font-weight:800;font-family:monospace;margin-top:2px">PIN: ' + limpar(o.pin) + '</div>' : '';
         return '<div class="hist-item">' +
           '<div class="hist-icon" style="' + (isDevol?'background:#22C55E':'') + '">' + (isDevol?'↩':(o.loja||'?')[0].toUpperCase()) + '</div>' +
-          '<div class="hist-info"><div class="hist-loja">' + (o.loja||'Loja') + badge + '</div><div class="hist-produto">' + produtoTxt + '</div></div>' +
+          '<div class="hist-info"><div class="hist-loja">' + (o.loja||'Loja') + badge + '</div><div class="hist-produto">' + produtoTxt + '</div>' + pinHist + '</div>' +
           '<div class="hist-right"><div class="hist-date">' + (o.dataEntrega||'') + '</div>' +
             '<button class="btn-reativar" onclick="' + (isDevol ? 'reativarDevolucao(' + idx + ')' : 'reativar(' + idx + ')') + '">reativar</button>' +
           '</div></div>';
@@ -963,15 +994,15 @@ function renderDevolucoes() {
     const codigoH = limpar(o.codigo) ? '<div class="card-codigo"><span class="card-codigo-label">código de devolução</span><span>' + limpar(o.codigo) + '</span></div>' : '';
     const localH = localVal ? '<div class="card-local">' + localVal + '</div>' : '';
     const valorH = limpar(o.valor) ? '<div class="card-valor">reembolso: ' + limpar(o.valor) + '</div>' : '';
-    const mapsH = localVal
-      ? '<button class="btn-maps" data-url="https://maps.google.com/?q=' + encodeURIComponent(localVal) + '" onclick="window.open(this.dataset.url,\'_blank\')">maps ↗</button>'
+    const siteH = o.loja
+      ? '<button class="btn-maps" data-url="' + siteLojaUrl(o.loja) + '" onclick="window.open(this.dataset.url,\'_blank\')">site da loja ↗</button>'
       : '';
     return '<div class="card ' + cfg.cls + '">' +
       '<div class="card-top"><div class="card-estado-label">' + cfg.label + '</div>' + (dl ? '<div class="card-deadline">' + dl + '</div>' : '') + '</div>' +
       '<div class="card-produto">' + (o.produto || '—') + '</div>' +
       '<div class="card-loja-nome">' + (o.loja || '') + '</div>' +
       localH + valorH + codigoH +
-      '<div class="card-actions">' + mapsH +
+      '<div class="card-actions">' + siteH +
         '<button class="btn-edit" onclick="abrirEditarDevolucao(' + idx + ')">editar ✏</button>' +
         '<button class="btn-entregue" onclick="marcarReembolsada(' + idx + ')">reembolsada ✓</button>' +
       '</div>' +
@@ -1188,10 +1219,11 @@ function calMostrar(d) {
   title.textContent = d + ' de ' + MESES[calM] + ' — ' + es.length + ' encomenda' + (es.length>1?'s':'');
   det.innerHTML = es.map(o => {
     const cfg = ESTADO_CFG[estadoEfetivo(o)] || ESTADO_CFG['preparacao'];
+    const transpValC = limpar(o.transportadora);
     return '<div class="card ' + cfg.cls + '" style="margin-bottom:10px">' +
       '<div class="card-top"><div class="card-estado-label">' + cfgLabel(o) + '</div></div>' +
       '<div class="card-produto">' + (o.produto||'—') + '</div>' +
-      '<div class="card-loja-nome">' + (o.loja||'') + '</div>' +
+      '<div class="card-loja-nome">' + (o.loja||'') + (transpValC ? ' · ' + transpValC : '') + '</div>' +
       (o.pin ? '<div class="card-pin" style="font-size:40px">' + o.pin + '</div><div class="card-pin-label">P I N</div>' : '') +
       (o.local ? '<div class="card-local" style="font-size:15px">' + o.local + '</div>' : '') +
     '</div>';
@@ -1212,7 +1244,7 @@ function buildPromptGeral() {
   }
   const hoje = new Date();
   return 'Analisa este email de encomenda. Hoje é ' + hoje.getDate() + '/' + (hoje.getMonth()+1) + '/' + hoje.getFullYear() + ' (' + ['domingo','segunda','terça','quarta','quinta','sexta','sábado'][hoje.getDay()] + '). Responde APENAS com JSON sem markdown:\n' +
-    '{"tipo":"novo|atualizacao","loja":"ou vazio","produto":"máx 4 palavras, ex: Sapatilhas Nike Air Max","data":"DD/MM/AAAA ou vazio","dataLimite":"DD/MM/AAAA ou vazio","rastreio":"ou vazio","codigo":"ou vazio","local":"ou vazio","pin":"ou vazio","estado":"preparacao|enviado|vermelho","tipo_entrega":"recolha|casa"}\n\n' +
+    '{"tipo":"novo|atualizacao","loja":"ou vazio","produto":"máx 4 palavras, ex: Sapatilhas Nike Air Max","data":"DD/MM/AAAA ou vazio","dataLimite":"DD/MM/AAAA ou vazio","rastreio":"ou vazio","codigo":"ou vazio","transportadora":"nome da transportadora, ex: CTT Expresso, DPD, GLS, Chronopost, MRW, SEUR, Correos, ou vazio","local":"ou vazio","pin":"ou vazio","estado":"preparacao|enviado|vermelho","tipo_entrega":"recolha|casa"}\n\n' +
     'REGRAS TIPO — muito importante:\n' +
     '- tipo="novo": email de CONFIRMAÇÃO DE COMPRA de uma loja (Zara, ASOS, Shein, Amazon, Vinted, etc). Tem número de encomenda, produto comprado, valor pago. CRIA card novo.\n' +
     '- tipo="atualizacao": email de TRANSPORTADORA (CTT, DPD, GLS, Chronopost, MRW, SEUR, Correos) sobre uma encomenda já enviada. Não tem produto nem loja de origem clara. ATUALIZA card existente.\n' +
@@ -1227,7 +1259,7 @@ function buildPromptGeral() {
 }
 
 const PROMPT_UPDATE = `Analisa este email de transportadora. Responde APENAS com JSON sem markdown:
-{"rastreio":"ou vazio","dataLimite":"DD/MM/AAAA ou vazio","local":"ou vazio","pin":"código pin ou vazio","estado":"manter"}
+{"rastreio":"ou vazio","transportadora":"nome da transportadora, ex: CTT Expresso, DPD, GLS ou vazio","dataLimite":"DD/MM/AAAA ou vazio","local":"ou vazio","pin":"código pin ou vazio","estado":"manter"}
 estado: "vermelho"=chegou ao ponto, "enviado"=em trânsito, "manter"=sem info nova
 Email:`;
 
@@ -1285,6 +1317,7 @@ async function processarEmail() {
         const dl = limpar(p.dataLimite); if (dl) orders[idx].dataLimite = dl;
         if (p.estado && p.estado !== 'manter') orders[idx].estado = p.estado;
         const rastr = limpar(p.rastreio); if (rastr && !orders[idx].rastreio) orders[idx].rastreio = rastr;
+        const transp = limpar(p.transportadora); if (transp && !orders[idx].transportadora) orders[idx].transportadora = transp;
         guardar(); document.getElementById('email-txt').value = '';
         goTab('ativas'); toast(pin ? '✓ ' + orders[idx].loja + ' · pin: ' + pin : '✓ encomenda atualizada');
       } else {
@@ -1299,6 +1332,7 @@ async function processarEmail() {
             local: limpar(p.local),
             pin: limpar(p.pin),
             codigo: limpar(p.codigo),
+            transportadora: limpar(p.transportadora),
             rastreio: limpar(p.rastreio),
             estado: p.estado && p.estado !== 'manter' ? p.estado : 'enviado',
             tipo: limpar(p.tipo_entrega) || 'recolha',
@@ -1319,6 +1353,7 @@ async function processarEmail() {
       document.getElementById('f-local').value = limpar(p.local);
       document.getElementById('f-pin').value = limpar(p.pin);
       document.getElementById('f-codigo').value = limpar(p.codigo);
+      document.getElementById('f-transportadora').value = limpar(p.transportadora);
       document.getElementById('f-estado').value = limpar(p.estado)||'preparacao';
       document.getElementById('f-tipo').value = limpar(p.tipo_entrega)||'recolha';
       notaLoja(); tipoChange();
@@ -1375,7 +1410,7 @@ function guardarEncomenda() {
 
   const tipo = document.getElementById('f-tipo').value;
   const localVal = document.getElementById('f-local').value;
-  orders.unshift({ loja, produto: document.getElementById('f-produto').value, data: document.getElementById('f-data').value, dataLimite: document.getElementById('f-datalimite').value, local: localVal, pin: document.getElementById('f-pin').value, codigo: document.getElementById('f-codigo').value, estado: document.getElementById('f-estado').value, tipo, criado: new Date().toISOString() });
+  orders.unshift({ loja, produto: document.getElementById('f-produto').value, data: document.getElementById('f-data').value, dataLimite: document.getElementById('f-datalimite').value, local: localVal, pin: document.getElementById('f-pin').value, codigo: document.getElementById('f-codigo').value, transportadora: document.getElementById('f-transportadora').value, estado: document.getElementById('f-estado').value, tipo, criado: new Date().toISOString() });
   guardar(); resetForm(); goTab('ativas'); toast('encomenda guardada!');
 }
 
@@ -1399,7 +1434,8 @@ function notaLoja() {
 
 function tipoChange() {
   const tipo = document.getElementById('f-tipo')?.value||'recolha';
-  const pf = document.getElementById('field-pin'); if(pf) pf.style.display = tipo==='casa'?'none':'block';
+  const pf = document.getElementById('field-pin'); if(pf) pf.style.display = 'block';
+  const pl = document.querySelector('#field-pin label'); if(pl) pl.textContent = tipo==='casa' ? 'pin / código de entrega (se aplicável)' : 'pin / código de levantamento';
   const se = document.getElementById('f-estado'); if(!se) return;
   se.innerHTML = tipo==='casa'
     ? '<option value="preparacao">em preparação</option><option value="enviado">enviada</option><option value="vermelho">a entregar hoje</option>'
@@ -1486,6 +1522,7 @@ function associar(idx) {
   if (d.dataLimite) orders[idx].dataLimite = d.dataLimite;
   if (d.estado && d.estado !== 'manter') orders[idx].estado = d.estado;
   if (d.rastreio && !orders[idx].rastreio) orders[idx].rastreio = d.rastreio;
+  if (d.transportadora && !orders[idx].transportadora) orders[idx].transportadora = d.transportadora;
   guardar(); fecharModal('modal-assoc');
   document.getElementById('email-txt').value = '';
   goTab('ativas'); toast(d.pin ? '✓ pin: ' + d.pin : '✓ encomenda atualizada');
@@ -1509,7 +1546,8 @@ function abrirEditar(idx) {
     '<div class="field"><label>tipo de entrega</label><select id="e-tipo" onchange="editTipoChange()"><option value="recolha" ' + tR + '>levantamento num ponto</option><option value="casa" ' + tC + '>entrega em casa</option></select></div>' +
     '<div class="field"><label>estado</label><select id="e-estado"><option value="preparacao" ' + sP + '>em preparação</option><option value="enviado" ' + sE + '>enviada</option><option value="vermelho" ' + sV + '>' + (o.tipo==='casa' ? 'a entregar hoje' : 'levantar') + '</option></select></div>' +
     '<div class="field" id="e-field-local" style="' + (isCasa?'display:none':'') + '"><label>local de levantamento</label><input type="text" id="e-local" /></div>' +
-    '<div class="field" id="e-field-pin" style="' + (isCasa?'display:none':'') + '"><label>pin / código de levantamento</label><input type="text" id="e-pin" /></div>' +
+    '<div class="field" id="e-field-pin"><label id="e-label-pin">' + (isCasa?'pin / código de entrega (se aplicável)':'pin / código de levantamento') + '</label><input type="text" id="e-pin" /></div>' +
+    '<div class="field"><label>transportadora</label><input type="text" id="e-transportadora" placeholder="ex: CTT Expresso, DPD, GLS..." /></div>' +
     '<div class="field"><label>código da encomenda</label><input type="text" id="e-codigo" /></div>' +
     '<div class="field"><label id="e-label-dl">' + (isCasa?'data prevista de entrega':'data limite de levantamento') + '</label><input type="text" id="e-datalimite" placeholder="dd/mm/aaaa" /></div>' +
     '<div class="field"><label>data da encomenda</label><input type="text" id="e-data" placeholder="dd/mm/aaaa" /></div>' +
@@ -1522,6 +1560,7 @@ function abrirEditar(idx) {
   document.getElementById('e-local').value = o.local||'';
   document.getElementById('e-pin').value = o.pin||'';
   document.getElementById('e-codigo').value = o.codigo||'';
+  document.getElementById('e-transportadora').value = o.transportadora||'';
   document.getElementById('e-datalimite').value = o.dataLimite||'';
   document.getElementById('e-data').value = o.data||'';
 }
@@ -1530,7 +1569,7 @@ function editTipoChange() {
   const tipo = document.getElementById('e-tipo')?.value || 'recolha';
   const isCasa = tipo === 'casa';
   const fl = document.getElementById('e-field-local'); if(fl) fl.style.display = isCasa?'none':'block';
-  const fp = document.getElementById('e-field-pin'); if(fp) fp.style.display = isCasa?'none':'block';
+  const lblPin = document.getElementById('e-label-pin'); if(lblPin) lblPin.textContent = isCasa?'pin / código de entrega (se aplicável)':'pin / código de levantamento';
   const lbl = document.getElementById('e-label-dl'); if(lbl) lbl.textContent = isCasa?'data prevista de entrega':'data limite de levantamento';
   const se = document.getElementById('e-estado'); if(!se) return;
   se.innerHTML = isCasa
@@ -1547,6 +1586,7 @@ function guardarEditar() {
   orders[i].local = document.getElementById('e-local').value;
   orders[i].pin = document.getElementById('e-pin').value;
   orders[i].codigo = document.getElementById('e-codigo').value;
+  orders[i].transportadora = document.getElementById('e-transportadora').value;
   orders[i].dataLimite = document.getElementById('e-datalimite').value;
   orders[i].data = document.getElementById('e-data').value;
   guardar(); fecharModal('modal-edit'); toast('atualizado ✓');
@@ -1584,6 +1624,7 @@ async function processarUpdate() {
     if (!p) { document.getElementById('update-load').style.display='none'; return; }
     const i = window._updateIdx;
     if (p.rastreio) orders[i].rastreio = p.rastreio;
+    if (p.transportadora) orders[i].transportadora = p.transportadora;
     if (p.dataLimite) orders[i].dataLimite = p.dataLimite;
     if (p.local) orders[i].local = p.local;
     if (p.pin) orders[i].pin = p.pin;
