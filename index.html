@@ -450,7 +450,10 @@ body { font-family: 'Inter', -apple-system, sans-serif; background: #ffffff; col
     <div class="modal-box">
       <div style="padding:0 0 4px;display:flex;align-items:center;justify-content:space-between">
         <div style="font-size:18px;font-weight:900;letter-spacing:-0.3px">histórico</div>
-        <button class="page-close" onclick="goTab('ativas')">✕</button>
+        <div style="display:flex;align-items:center;gap:8px">
+          <button class="page-close" onclick="abrirGraficoCompras()" title="gráfico de compras mensais" style="font-size:15px">📊</button>
+          <button class="page-close" onclick="goTab('ativas')">✕</button>
+        </div>
       </div>
       <div class="hist-wrap" id="hist-list" style="padding-left:0;padding-right:0"></div>
     </div>
@@ -943,6 +946,62 @@ function renderHistorico() {
           '</div></div>';
       }).join('');
   }).join('');
+}
+
+// ── GRÁFICO DE COMPRAS MENSAIS ─────────────────────────
+function abrirGraficoCompras() {
+  const ents = orders.filter(o => (o.estado === 'entregue' || o.estado === 'reembolsada') && o.dataEntregaISO);
+  const byM = {};
+  ents.forEach(o => {
+    const k = (o.dataEntregaISO || '').substring(0, 7);
+    if (!/^\d{4}-\d{2}$/.test(k)) return;
+    if (!byM[k]) byM[k] = { compras: 0, devol: 0 };
+    if (o.categoria === 'devolucao') byM[k].devol++; else byM[k].compras++;
+  });
+  const meses = Object.keys(byM).sort().slice(-12);
+
+  if (!meses.length) {
+    toast('ainda não há encomendas entregues para mostrar');
+    return;
+  }
+
+  const maxVal = Math.max(...meses.map(k => byM[k].compras), 1);
+  const barW = 28, gap = 16, chartH = 130;
+  const svgW = meses.length * (barW + gap) + gap;
+  let bars = '';
+  meses.forEach((k, i) => {
+    const val = byM[k].compras;
+    const h = val ? Math.max(Math.round((val / maxVal) * chartH), 6) : 0;
+    const x = gap + i * (barW + gap);
+    const y = chartH - h + 24;
+    const [yy, mo] = k.split('-');
+    const lbl = MESES_S[+mo - 1] || mo;
+    bars += '<rect x="' + x + '" y="' + y + '" width="' + barW + '" height="' + h + '" rx="7" fill="#FF0000"></rect>' +
+      '<text x="' + (x + barW / 2) + '" y="' + (y - 8) + '" text-anchor="middle" font-size="11" font-weight="800" fill="#111" font-family="Inter, sans-serif">' + val + '</text>' +
+      '<text x="' + (x + barW / 2) + '" y="' + (chartH + 42) + '" text-anchor="middle" font-size="10" font-weight="700" fill="#999" font-family="Inter, sans-serif">' + lbl + '</text>';
+  });
+  const svg = '<svg viewBox="0 0 ' + svgW + ' ' + (chartH + 52) + '" width="100%" height="180" style="display:block;min-width:' + Math.max(svgW, 280) + 'px">' + bars + '</svg>';
+
+  const totalCompras = meses.reduce((s, k) => s + byM[k].compras, 0);
+  const mediaCompras = (totalCompras / meses.length).toFixed(1);
+  const mesTop = meses.reduce((best, k) => byM[k].compras > byM[best].compras ? k : best, meses[0]);
+  const [ty, tm] = mesTop.split('-');
+  const mesTopLbl = (MESES[+tm - 1] || tm) + ' ' + ty;
+
+  const modal = document.createElement('div');
+  modal.className = 'modal-bg'; modal.id = 'modal-grafico';
+  modal.innerHTML = '<div class="modal-box">' +
+    '<button class="modal-close" onclick="fecharModal(\'modal-grafico\')">✕</button>' +
+    '<h2>compras mensais</h2>' +
+    '<div class="modal-sub">últimos ' + meses.length + ' mes' + (meses.length !== 1 ? 'es' : '') + ' com atividade</div>' +
+    '<div style="overflow-x:auto;padding:8px 0 4px;background:#f5f5f5;border-radius:16px">' + svg + '</div>' +
+    '<div style="display:flex;gap:8px;margin-top:14px">' +
+      '<div style="flex:1;text-align:center;background:#f5f5f5;border-radius:14px;padding:12px 8px"><div style="font-size:20px;font-weight:900">' + totalCompras + '</div><div style="font-size:10px;color:#888;font-weight:700;text-transform:uppercase;letter-spacing:0.5px">total</div></div>' +
+      '<div style="flex:1;text-align:center;background:#f5f5f5;border-radius:14px;padding:12px 8px"><div style="font-size:20px;font-weight:900">' + mediaCompras + '</div><div style="font-size:10px;color:#888;font-weight:700;text-transform:uppercase;letter-spacing:0.5px">média / mês</div></div>' +
+      '<div style="flex:1;text-align:center;background:#f5f5f5;border-radius:14px;padding:12px 8px"><div style="font-size:14px;font-weight:900;text-transform:capitalize;padding-top:3px">' + mesTopLbl + '</div><div style="font-size:10px;color:#888;font-weight:700;text-transform:uppercase;letter-spacing:0.5px">mês com mais compras</div></div>' +
+    '</div>' +
+  '</div>';
+  document.body.appendChild(modal);
 }
 
 function marcarEntregue(i) {
