@@ -870,6 +870,7 @@ function renderAtivas() {
     const codigoH = limpar(o.codigo)
       ? '<div class="card-codigo"><span class="card-codigo-label">código da encomenda</span><span>' + limpar(o.codigo) + '</span></div>'
       : '';
+    const localH = localVal2 ? '<div class="card-local">' + localVal2 + '</div>' : '';
     const transpVal = limpar(o.transportadora);
     const transpH = transpVal ? '<div class="card-loja-nome">' + transpVal + '</div>' : '';
     const siteH = o.loja

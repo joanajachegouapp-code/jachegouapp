@@ -1,4 +1,4 @@
-const CACHE = 'chegou-v6';
+const CACHE = 'chegou-v7';
 const FILES = ['./index.html', './manifest.json'];
 
 self.addEventListener('install', e => {
