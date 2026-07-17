@@ -145,14 +145,14 @@ body { font-family: 'Inter', -apple-system, sans-serif; background: #ffffff; col
 .card-codigo { font-size: 11px; font-weight: 800; margin-bottom: 10px; font-family: monospace; letter-spacing: 0.5px; background: rgba(0,0,0,0.1); border-radius: 6px; padding: 4px 8px; display: inline-flex; flex-direction: column; gap: 1px; }
 .card-codigo-label { font-size: 8px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; opacity: 0.55; font-family: 'Inter', sans-serif; }
 .card-actions { display: flex; gap: 4px; flex-wrap: nowrap; }
-.btn-maps { flex: 1 1 0; min-width: 0; padding: 8px 2px; border-radius: 11px; border: none; background: rgba(255,255,255,0.25); font-size: 10.5px; letter-spacing: -0.2px; font-weight: 800; cursor: pointer; font-family: inherit; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-decoration: none; display: flex; align-items: center; justify-content: center; box-sizing: border-box; }
+.btn-maps { flex: 0.8 1 0; min-width: 0; padding: 8px 2px; border-radius: 11px; border: none; background: rgba(255,255,255,0.25); font-size: 10px; letter-spacing: -0.2px; font-weight: 800; cursor: pointer; font-family: inherit; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-decoration: none; display: flex; align-items: center; justify-content: center; box-sizing: border-box; }
 .c-red .btn-maps { background: #fff; color: #FF0000; }
 .c-orange .btn-maps { background: rgba(255,255,255,0.25); color: #fff; }
 .c-amber .btn-maps { background: rgba(255,255,255,0.25); color: #fff; }
 .c-green .btn-maps { background: rgba(255,255,255,0.25); color: #fff; }
 .card-valor { font-size: 13px; font-weight: 800; margin-bottom: 8px; opacity: 0.92; }
-.btn-edit { flex: 1 1 0; min-width: 0; padding: 8px 2px; border-radius: 11px; border: none; background: rgba(0,0,0,0.15); color: #fff; font-size: 10.5px; letter-spacing: -0.2px; font-weight: 700; cursor: pointer; font-family: inherit; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; box-sizing: border-box; }
-.btn-entregue { flex: 1 1 0; min-width: 0; padding: 8px 2px; border-radius: 11px; border: none; background: rgba(0,0,0,0.22); color: #fff; font-size: 10.5px; letter-spacing: -0.2px; font-weight: 800; cursor: pointer; font-family: inherit; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; box-sizing: border-box; }
+.btn-edit { flex: 0.8 1 0; min-width: 0; padding: 8px 2px; border-radius: 11px; border: none; background: rgba(0,0,0,0.15); color: #fff; font-size: 10px; letter-spacing: -0.2px; font-weight: 700; cursor: pointer; font-family: inherit; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; box-sizing: border-box; }
+.btn-entregue { flex: 1.6 1 0; min-width: 0; padding: 8px 4px; border-radius: 11px; border: none; background: rgba(0,0,0,0.22); color: #fff; font-size: 11.5px; letter-spacing: -0.1px; font-weight: 800; cursor: pointer; font-family: inherit; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; box-sizing: border-box; }
 .btn-update { width: 100%; margin-top: 6px; padding: 7px; border-radius: 8px; border: none; background: rgba(0,0,0,0.16); font-size: 10px; font-weight: 700; cursor: pointer; color: rgba(255,255,255,0.95); letter-spacing: 0.2px; font-family: inherit; }
 .btn-update:active { background: rgba(0,0,0,0.26); }
 .card-nota { font-size: 12px; background: rgba(0,0,0,0.1); border-radius: 10px; padding: 8px 12px; margin-top: 6px; line-height: 1.5; color: #fff; }
@@ -858,7 +858,6 @@ function renderAtivas() {
     const info = LOJAS[(o.loja||'').toLowerCase().trim()];
     const pinVal = limpar(o.pin);
     const localVal2 = o.tipo === 'casa' ? 'Casa' : limpar(o.local);
-    const localMaps = limpar(o.local) && o.tipo !== 'casa' ? limpar(o.local) : '';
 
     const isCasaVermelho = o.tipo === 'casa' && estadoEfetivo(o) === 'vermelho';
     const pinH = pinVal
@@ -871,10 +870,6 @@ function renderAtivas() {
     const codigoH = limpar(o.codigo)
       ? '<div class="card-codigo"><span class="card-codigo-label">código da encomenda</span><span>' + limpar(o.codigo) + '</span></div>'
       : '';
-    const localH = localVal2 ? '<div class="card-local">' + localVal2 + '</div>' : '';
-    const mapsH = localMaps
-      ? '<button class="btn-maps" data-url="https://maps.google.com/?q=' + encodeURIComponent(localMaps) + '" onclick="window.open(this.dataset.url,\'_blank\')">maps ↗</button>'
-      : '';
     const transpVal = limpar(o.transportadora);
     const transpH = transpVal ? '<div class="card-loja-nome">' + transpVal + '</div>' : '';
     const siteH = o.loja
@@ -885,11 +880,12 @@ function renderAtivas() {
       '<div class="card-produto">' + (o.produto || '—') + '</div>' +
       transpH +
       pinH + casaIconH + localH + codigoH +
-      '<div class="card-actions">' + siteH + mapsH +
+      '<div class="card-actions">' +
+        '<button class="btn-edit" onclick="abrirAtualizar(' + idx + ')">+ email</button>' +
         '<button class="btn-edit" onclick="abrirEditar(' + idx + ')">editar ✏</button>' +
+        siteH +
         '<button class="btn-entregue" onclick="marcarEntregue(' + idx + ')">entregue ✓</button>' +
       '</div>' +
-      '<button class="btn-update" onclick="abrirAtualizar(' + idx + ')">+ atualizar com novo email</button>' +
     '</div>';
   }).join('');
 }
@@ -1071,15 +1067,17 @@ function renderDevolucoes() {
     const localH = localVal ? '<div class="card-local">' + localVal + '</div>' : '';
     const valorH = limpar(o.valor) ? '<div class="card-valor">reembolso: ' + limpar(o.valor) + '</div>' : '';
     const siteH = o.loja
-      ? '<a class="btn-maps" href="' + siteLojaUrl(o.loja) + '" target="_blank" rel="noopener">site da loja ↗</a>'
+      ? '<a class="btn-maps" href="' + siteLojaUrl(o.loja) + '" target="_blank" rel="noopener">loja ↗</a>'
       : '';
     return '<div class="card ' + cfg.cls + '">' +
       '<div class="card-top"><div class="card-estado-label">' + cfg.label + '</div>' + (dl ? '<div class="card-deadline">' + dl + '</div>' : '') + '</div>' +
       '<div class="card-produto">' + (o.produto || '—') + '</div>' +
       '<div class="card-loja-nome">' + (o.loja || '') + '</div>' +
       localH + valorH + codigoH +
-      '<div class="card-actions">' + siteH +
+      '<div class="card-actions">' +
+        '<button class="btn-edit" onclick="abrirAtualizarDevolucao(' + idx + ')">+ email</button>' +
         '<button class="btn-edit" onclick="abrirEditarDevolucao(' + idx + ')">editar ✏</button>' +
+        siteH +
         '<button class="btn-entregue" onclick="marcarReembolsada(' + idx + ')">reembolsada ✓</button>' +
       '</div>' +
     '</div>';
@@ -1712,6 +1710,49 @@ async function processarUpdate() {
 }
 
 function fecharModal(id) { const m = document.getElementById(id); if (m) m.remove(); }
+
+// ── ATUALIZAR DEVOLUÇÃO COM EMAIL ─────────────────────
+const PROMPT_UPDATE_DEVOL = `Analisa este email relacionado com uma devolução já em curso (ex: confirmação de entrega da devolução no ponto de recolha, atualização de estado, confirmação de reembolso). Responde APENAS com JSON sem markdown:
+{"local":"ponto de entrega da devolução ou vazio","codigo":"código RMA/devolução ou vazio","valor":"valor a reembolsar ou vazio","dataLimite":"DD/MM/AAAA ou vazio","estado":"preparar|enviada|reembolsada|manter"}
+estado: "enviada"=devolução entregue/a caminho da loja, "reembolsada"=reembolso confirmado, "manter"=sem info nova de estado
+Email:`;
+
+function abrirAtualizarDevolucao(idx) {
+  window._updateDevolIdx = idx;
+  const o = orders[idx];
+  const modal = document.createElement('div');
+  modal.className = 'modal-bg'; modal.id = 'modal-update-devol';
+  modal.innerHTML = '<div class="modal-box">' +
+    '<button class="modal-close" onclick="fecharModal(\'modal-update-devol\')">✕</button>' +
+    '<h2>atualizar devolução</h2>' +
+    '<div class="modal-sub">' + (o.loja||'') + ' · ' + (o.produto||'') + '</div>' +
+    '<div class="field"><label>cola o novo email</label></div>' +
+    '<textarea id="update-devol-txt" style="width:100%;min-height:100px;border:1.5px solid #e5e5e0;border-radius:12px;padding:12px;font-size:14px;font-family:inherit;margin-bottom:10px" placeholder="email da loja, correios, confirmação de reembolso..."></textarea>' +
+    '<div class="loading" id="update-devol-load"><span class="spinner"></span> a analisar...</div>' +
+    '<button class="btn p" onclick="processarUpdateDevolucao()">extrair com ia ✦</button>' +
+    '<button class="btn" onclick="fecharModal(\'modal-update-devol\')" style="margin-top:8px;border:1.5px solid #e5e5e0">cancelar</button>' +
+    '</div>';
+  document.body.appendChild(modal);
+}
+
+async function processarUpdateDevolucao() {
+  const txt = document.getElementById('update-devol-txt').value.trim();
+  if (!txt) { alert('cola primeiro o texto do email.'); return; }
+  document.getElementById('update-devol-load').style.display = 'block';
+  try {
+    const p = await chamarAI(PROMPT_UPDATE_DEVOL, txt);
+    if (!p) { document.getElementById('update-devol-load').style.display='none'; return; }
+    const i = window._updateDevolIdx;
+    if (limpar(p.local)) orders[i].local = limpar(p.local);
+    if (limpar(p.codigo)) orders[i].codigo = limpar(p.codigo);
+    if (limpar(p.valor)) orders[i].valor = limpar(p.valor);
+    if (limpar(p.dataLimite)) orders[i].dataLimite = limpar(p.dataLimite);
+    if (p.estado && p.estado !== 'manter') orders[i].estado = p.estado;
+    guardar(); fecharModal('modal-update-devol');
+    toast('devolução atualizada ✓');
+  } catch(e) { alert('erro. tenta de novo.'); }
+  document.getElementById('update-devol-load').style.display = 'none';
+}
 
 // ── NOTIFICAÇÕES ──────────────────────────────────────
 async function pedirPermissaoNotifs() {
