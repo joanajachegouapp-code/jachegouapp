@@ -583,7 +583,7 @@ body { font-family: 'Inter', -apple-system, sans-serif; background: #ffffff; col
         <p>exporta as tuas encomendas antes de mudar de dispositivo ou browser.</p>
         <button class="btn p" onclick="exportar()" style="margin-top:0">exportar backup</button>
         <button class="btn" onclick="document.getElementById('import-file').click()" style="margin-top:8px;border:1.5px solid #e5e5e0">importar backup</button>
-        <input type="file" id="import-file" accept=".json" style="display:none" onchange="importar(event)" />
+        <input type="file" id="import-file" accept=".json,application/json,text/plain" style="display:none" onchange="importar(event)" />
       </div>
       <div class="cfg-card">
         <div class="cfg-card-head">
@@ -1901,17 +1901,59 @@ function apagarMorada(idx) {
 }
 
 function exportar() {
-  const blob = new Blob([JSON.stringify(orders,null,2)],{type:'application/json'});
-  const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
-  a.download = 'chegou-backup-' + new Date().toISOString().split('T')[0] + '.json'; a.click();
+  const data = JSON.stringify(orders, null, 2);
+  const filename = 'chegou-backup-' + new Date().toISOString().split('T')[0] + '.json';
+  if (navigator.canShare) {
+    try {
+      const file = new File([data], filename, { type: 'application/json' });
+      if (navigator.canShare({ files: [file] })) {
+        navigator.share({ files: [file], title: 'Backup Já Chegou?' })
+          .then(() => toast('backup partilhado ✓'))
+          .catch(() => exportarDownload(data, filename));
+        return;
+      }
+    } catch(e) {}
+  }
+  exportarDownload(data, filename);
+}
+
+function exportarDownload(data, filename) {
+  const blob = new Blob([data], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
   toast('backup exportado ✓');
 }
 
 function importar(e) {
-  const f = e.target.files[0]; if (!f) return;
+  const f = e.target.files[0];
+  if (!f) return;
   const r = new FileReader();
-  r.onload = ev => { try { const d = JSON.parse(ev.target.result); if(Array.isArray(d)){orders=d;guardar();toast(d.length+' encomendas importadas ✓');}else alert('ficheiro inválido.'); } catch(e){alert('erro ao importar.');} };
+  r.onload = ev => {
+    try {
+      const texto = (ev.target.result || '').trim();
+      if (!texto) { alert('o ficheiro está vazio.'); return; }
+      const d = JSON.parse(texto);
+      if (Array.isArray(d)) {
+        orders = d; guardar();
+        toast(d.length + ' encomendas importadas ✓');
+      } else if (d && Array.isArray(d.orders)) {
+        orders = d.orders; guardar();
+        toast(d.orders.length + ' encomendas importadas ✓');
+      } else {
+        alert('ficheiro inválido — não parece ser um backup desta app.');
+      }
+    } catch (err) {
+      alert('erro ao ler o ficheiro: ' + err.message);
+    }
+  };
+  r.onerror = () => alert('não foi possível ler o ficheiro.');
   r.readAsText(f);
+  e.target.value = '';
 }
 
 function apagarTudo() { if(confirm('apagar tudo?')){orders=[];guardar();toast('apagado');} }
