@@ -462,8 +462,9 @@ body { font-family: 'Inter', -apple-system, sans-serif; background: #ffffff; col
   <div id="tab-adicionar" class="tab">
     <div class="add-wrap">
       <div class="add-mode-toggle">
-        <button type="button" class="add-mode-btn on" id="am-encomenda" onclick="setAddMode('encomenda')">nova encomenda</button>
+        <button type="button" class="add-mode-btn on" id="am-encomenda" onclick="setAddMode('encomenda')">compra</button>
         <button type="button" class="add-mode-btn" id="am-devolucao" onclick="setAddMode('devolucao')">devolução</button>
+        <button type="button" class="add-mode-btn" id="am-venda" onclick="setAddMode('venda')">venda</button>
       </div>
       <div class="add-hint" id="add-hint-txt">cola qualquer email de encomenda — confirmação de loja ou transportadora. a IA identifica e trata automaticamente.</div>
       <textarea id="email-txt" placeholder="cola aqui o texto do email..."></textarea>
@@ -471,9 +472,10 @@ body { font-family: 'Inter', -apple-system, sans-serif; background: #ffffff; col
       <div class="loading" id="loading"><span class="spinner"></span> a analisar...</div>
       <div class="extracted" id="form">
         <div class="form-title">confirma os dados</div>
-        <div class="field"><label>loja</label><input type="text" id="f-loja" onblur="notaLoja()" /></div>
+        <div class="field"><label id="label-loja">loja</label><input type="text" id="f-loja" onblur="notaLoja()" /></div>
         <div class="field-nota" id="f-nota"></div>
         <div class="field"><label>produto</label><input type="text" id="f-produto" /></div>
+        <div class="field" id="field-comprador" style="display:none"><label>comprador (opcional)</label><input type="text" id="f-comprador" placeholder="ex: nome de utilizador Vinted" /></div>
         <div class="field" id="field-tipo-entrega"><label>tipo de entrega</label>
           <select id="f-tipo" onchange="tipoChange()">
             <option value="recolha">levantamento num ponto</option>
@@ -489,7 +491,7 @@ body { font-family: 'Inter', -apple-system, sans-serif; background: #ffffff; col
         </div>
         <div class="field"><label>local</label><input type="text" id="f-local" placeholder="ex: ponto dpd benfica" /></div>
         <div class="field" id="field-pin"><label>pin / código de levantamento</label><input type="text" id="f-pin" placeholder="ex: 119274" /></div>
-        <div class="field" id="field-valor" style="display:none"><label>valor a reembolsar</label><input type="text" id="f-valor" placeholder="ex: 24,99€" /></div>
+        <div class="field" id="field-valor"><label id="label-valor">valor da compra</label><input type="text" id="f-valor" placeholder="ex: 24,99€" /></div>
         <div class="field"><label>transportadora</label><input type="text" id="f-transportadora" placeholder="ex: CTT Expresso, DPD, GLS..." /></div>
         <div class="field"><label id="label-codigo">código da encomenda</label><input type="text" id="f-codigo" placeholder="ex: #ZR-20481, PT123456789..." /></div>
         <div class="field"><label id="label-datalimite">data limite de levantamento</label><input type="text" id="f-datalimite" placeholder="dd/mm/aaaa" /></div>
@@ -533,6 +535,17 @@ body { font-family: 'Inter', -apple-system, sans-serif; background: #ffffff; col
   <div id="tab-devolucoes" class="tab">
     <div style="padding:6px 16px 0"><div class="app-sub" id="devol-subtitle">0 em curso</div></div>
     <div class="cards" id="devol-cards-list"></div>
+  </div>
+
+  <div id="tab-vendas" class="tab overlay-tab">
+    <div class="modal-box">
+      <div style="padding:0 0 4px;display:flex;align-items:center;justify-content:space-between">
+        <div style="font-size:18px;font-weight:900;letter-spacing:-0.3px">vendas</div>
+        <button class="page-close" onclick="goTab('ativas')">✕</button>
+      </div>
+      <div style="padding:6px 0 0"><div class="app-sub" id="vendas-subtitle">0 em curso</div></div>
+      <div class="cards" id="vendas-cards-list" style="padding-left:0;padding-right:0"></div>
+    </div>
   </div>
 
   <div id="tab-preferencias" class="tab overlay-tab">
@@ -614,6 +627,10 @@ body { font-family: 'Inter', -apple-system, sans-serif; background: #ffffff; col
     <button class="drawer-item" onclick="goTab('calendario')">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
       calendário
+    </button>
+    <button class="drawer-item" onclick="goTab('vendas')">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+      vendas
     </button>
     <button class="drawer-item" onclick="goTab('preferencias')">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
@@ -722,6 +739,11 @@ const ESTADO_CFG_DEVOL = {
   enviada:     { label: 'A Caminho da Loja',     cls: 'c-orange' },
   reembolsada: { label: 'Reembolsada!',          cls: 'c-green' },
 };
+const ESTADO_CFG_VENDA = {
+  preparar:    { label: 'A Preparar Envio',        cls: 'c-amber' },
+  enviada:     { label: 'A Caminho do Comprador',  cls: 'c-orange' },
+  vendida:     { label: 'Vendida!',                cls: 'c-green' },
+};
 const ORDEM = ['vermelho','enviado','preparacao'];
 const MESES = ['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
 const MESES_S = ['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
@@ -752,7 +774,7 @@ function guardar() {
   try {
     localStorage.setItem('chegou_orders', JSON.stringify(orders));
   } catch(e) { console.error('erro ao guardar:', e); }
-  renderAtivas(); renderHistorico(); renderDevolucoes(); atualizarSub();
+  renderAtivas(); renderHistorico(); renderDevolucoes(); renderVendas(); atualizarSub();
   const cal = document.getElementById('tab-calendario');
   if (cal && cal.classList.contains('on')) renderCal();
 }
@@ -873,13 +895,15 @@ function renderAtivas() {
     const localH = localVal2 ? '<div class="card-local">' + localVal2 + '</div>' : '';
     const transpVal = limpar(o.transportadora);
     const transpH = transpVal ? '<div class="card-loja-nome">' + transpVal + '</div>' : '';
+    const valorVal = limpar(o.valor);
+    const valorH = valorVal ? '<div class="card-valor">' + valorVal + '</div>' : '';
     const siteH = o.loja
       ? '<a class="btn-maps" href="' + siteLojaUrl(o.loja) + '" target="_blank" rel="noopener">loja ↗</a>'
       : '';
     return '<div class="card ' + cfg.cls + '">' +
       '<div class="card-top"><div class="card-estado-label">' + cfgLabel(o) + '</div>' + (dl ? '<div class="card-deadline">' + dl + '</div>' : '') + '</div>' +
       '<div class="card-produto">' + (o.produto || '—') + '</div>' +
-      transpH +
+      transpH + valorH +
       pinH + casaIconH + localH + codigoH +
       '<div class="card-actions">' +
         '<button class="btn-edit" onclick="abrirAtualizar(' + idx + ')">+ email</button>' +
@@ -908,7 +932,7 @@ function obterChaveMes(o) {
 // ── RENDER HISTÓRICO ──────────────────────────────────
 function renderHistorico() {
   const el = document.getElementById('hist-list');
-  const ents = orders.filter(o => o.estado === 'entregue' || o.estado === 'reembolsada').reverse();
+  const ents = orders.filter(o => o.estado === 'entregue' || o.estado === 'reembolsada' || o.estado === 'vendida').reverse();
   if (!ents.length) {
     el.innerHTML = '<div class="empty"><div class="empty-icon">—</div><p>ainda sem encomendas entregues.</p></div>';
     return;
@@ -917,21 +941,24 @@ function renderHistorico() {
   el.innerHTML = ents.map(o => {
         const idx = orders.indexOf(o);
         const isDevol = o.categoria === 'devolucao';
-        const badge = isDevol ? ' <span style="font-size:9px;font-weight:800;color:#22C55E;background:rgba(34,197,94,0.14);padding:2px 6px;border-radius:6px;margin-left:4px;vertical-align:middle">devolução</span>' : '';
-        const produtoTxt = (o.produto||'—') + (isDevol && limpar(o.valor) ? ' · ' + limpar(o.valor) : '');
-        const pinHist = (!isDevol && limpar(o.pin)) ? '<div style="font-size:11px;color:#FF0000;font-weight:800;font-family:monospace;margin-top:2px">PIN: ' + limpar(o.pin) + '</div>' : '';
+        const isVenda = o.categoria === 'venda';
+        const badge = isDevol ? ' <span style="font-size:9px;font-weight:800;color:#22C55E;background:rgba(34,197,94,0.14);padding:2px 6px;border-radius:6px;margin-left:4px;vertical-align:middle">devolução</span>'
+          : isVenda ? ' <span style="font-size:9px;font-weight:800;color:#c4005a;background:rgba(244,114,182,0.15);padding:2px 6px;border-radius:6px;margin-left:4px;vertical-align:middle">venda</span>' : '';
+        const produtoTxt = (o.produto||'—') + (limpar(o.valor) ? ' · ' + limpar(o.valor) : '');
+        const pinHist = (!isDevol && !isVenda && limpar(o.pin)) ? '<div style="font-size:11px;color:#FF0000;font-weight:800;font-family:monospace;margin-top:2px">PIN: ' + limpar(o.pin) + '</div>' : '';
+        const acao = isDevol ? 'reativarDevolucao(' + idx + ')' : isVenda ? 'reativarVenda(' + idx + ')' : 'reativar(' + idx + ')';
         return '<div class="hist-item">' +
-          '<div class="hist-icon" style="' + (isDevol?'background:#22C55E':'') + '">' + (isDevol?'↩':(o.loja||'?')[0].toUpperCase()) + '</div>' +
+          '<div class="hist-icon" style="' + (isDevol?'background:#22C55E':isVenda?'background:#F472B6':'') + '">' + (isDevol?'↩':isVenda?'↑':(o.loja||'?')[0].toUpperCase()) + '</div>' +
           '<div class="hist-info"><div class="hist-loja">' + (o.loja||'Loja') + badge + '</div><div class="hist-produto">' + produtoTxt + '</div>' + pinHist + '</div>' +
           '<div class="hist-right"><div class="hist-date">' + (o.dataEntrega||'') + '</div>' +
-            '<button class="btn-reativar" onclick="' + (isDevol ? 'reativarDevolucao(' + idx + ')' : 'reativar(' + idx + ')') + '">reativar</button>' +
+            '<button class="btn-reativar" onclick="' + acao + '">reativar</button>' +
           '</div></div>';
       }).join('');
 }
 
 // ── RESUMO MENSAL (usado dentro do gráfico) ───────────
 function buildResumoMensalHTML() {
-  const ents = orders.filter(o => o.estado === 'entregue' || o.estado === 'reembolsada');
+  const ents = orders.filter(o => o.estado === 'entregue' || o.estado === 'reembolsada' || o.estado === 'vendida');
   const byM = {};
   ents.forEach(o => {
     const k = obterChaveMes(o) || '0000-00';
@@ -940,20 +967,33 @@ function buildResumoMensalHTML() {
   const meses = Object.keys(byM).filter(k => /^\d{4}-\d{2}$/.test(k)).sort().reverse();
   if (!meses.length) return '';
   const maxTotal = Math.max(...meses.map(k => byM[k].length));
+  const totalGastoGeral = ents.filter(o => o.categoria !== 'devolucao' && o.categoria !== 'venda').reduce((s,o) => s + parseValor(o.valor), 0);
+  const totalHtml = totalGastoGeral > 0
+    ? '<div style="display:flex;align-items:center;justify-content:space-between;background:#f5f5f5;border-radius:14px;padding:12px 16px;margin-bottom:14px">' +
+        '<div style="font-size:13px;font-weight:700;color:#666">total gasto em compras online</div>' +
+        '<div style="font-size:17px;font-weight:900;color:#111">' + formatEuro(totalGastoGeral) + '</div>' +
+      '</div>'
+    : '';
   return '<div style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#aaa;margin:0 0 10px">resumo mensal</div>' +
+    totalHtml +
     '<div style="display:flex;flex-direction:column;margin-bottom:6px">' +
     meses.map(k => {
       const items = byM[k];
-      const nCompras = items.filter(o => o.categoria !== 'devolucao').length;
+      const nCompras = items.filter(o => o.categoria !== 'devolucao' && o.categoria !== 'venda').length;
       const nDevol = items.filter(o => o.categoria === 'devolucao').length;
+      const nVenda = items.filter(o => o.categoria === 'venda').length;
+      const gastoMes = items.filter(o => o.categoria !== 'devolucao' && o.categoria !== 'venda').reduce((s,o) => s + parseValor(o.valor), 0);
+      const vendidoMes = items.filter(o => o.categoria === 'venda').reduce((s,o) => s + parseValor(o.valor), 0);
       const [y, mo] = k.split('-');
       const lbl = (MESES_S[+mo-1]||mo) + ' ' + y;
       const pct = Math.round((items.length / maxTotal) * 100);
       const devolBadge = nDevol ? ' <span style="color:#22C55E;font-weight:700">· ' + nDevol + ' devolução' + (nDevol>1?'ões':'') + '</span>' : '';
+      const vendaBadge = nVenda ? ' <span style="color:#c4005a;font-weight:700">· ' + nVenda + ' venda' + (nVenda>1?'s':'') + (vendidoMes ? ' (' + formatEuro(vendidoMes) + ')' : '') + '</span>' : '';
+      const gastoBadge = gastoMes ? ' <span style="color:#888;font-weight:700">· ' + formatEuro(gastoMes) + '</span>' : '';
       return '<div style="display:flex;align-items:center;gap:10px;padding:7px 0">' +
         '<div style="width:56px;font-size:12px;font-weight:700;color:#666;flex-shrink:0;text-transform:capitalize">' + lbl + '</div>' +
         '<div style="flex:1;height:8px;background:#f0f0ec;border-radius:4px;overflow:hidden"><div style="height:100%;width:' + pct + '%;background:#FF0000;border-radius:4px"></div></div>' +
-        '<div style="font-size:13px;color:#111;flex-shrink:0;white-space:nowrap"><b>' + nCompras + '</b> compra' + (nCompras!==1?'s':'') + devolBadge + '</div>' +
+        '<div style="font-size:13px;color:#111;flex-shrink:0;white-space:nowrap"><b>' + nCompras + '</b> compra' + (nCompras!==1?'s':'') + gastoBadge + devolBadge + vendaBadge + '</div>' +
       '</div>';
     }).join('') +
     '</div>';
@@ -961,13 +1001,15 @@ function buildResumoMensalHTML() {
 
 // ── GRÁFICO DE COMPRAS MENSAIS ─────────────────────────
 function abrirGraficoCompras() {
-  const ents = orders.filter(o => o.estado === 'entregue' || o.estado === 'reembolsada');
+  const ents = orders.filter(o => o.estado === 'entregue' || o.estado === 'reembolsada' || o.estado === 'vendida');
   const byM = {};
   ents.forEach(o => {
     const k = obterChaveMes(o);
     if (!k) return;
-    if (!byM[k]) byM[k] = { compras: 0, devol: 0 };
-    if (o.categoria === 'devolucao') byM[k].devol++; else byM[k].compras++;
+    if (!byM[k]) byM[k] = { compras: 0, devol: 0, venda: 0 };
+    if (o.categoria === 'devolucao') byM[k].devol++;
+    else if (o.categoria === 'venda') byM[k].venda++;
+    else byM[k].compras++;
   });
   const meses = Object.keys(byM).sort();
 
@@ -998,6 +1040,7 @@ function abrirGraficoCompras() {
   const mesTop = meses.reduce((best, k) => byM[k].compras > byM[best].compras ? k : best, meses[0]);
   const [ty, tm] = mesTop.split('-');
   const mesTopLbl = (MESES[+tm - 1] || tm) + ' ' + ty;
+  const totalGastoTopo = orders.filter(o => (o.estado === 'entregue') && o.categoria !== 'devolucao' && o.categoria !== 'venda').reduce((s,o) => s + parseValor(o.valor), 0);
 
   const modal = document.createElement('div');
   modal.className = 'modal-bg'; modal.id = 'modal-grafico';
@@ -1011,6 +1054,7 @@ function abrirGraficoCompras() {
       '<div style="flex:1;text-align:center;background:#f5f5f5;border-radius:14px;padding:12px 8px"><div style="font-size:20px;font-weight:900">' + mediaCompras + '</div><div style="font-size:10px;color:#888;font-weight:700;text-transform:uppercase;letter-spacing:0.5px">média / mês</div></div>' +
       '<div style="flex:1;text-align:center;background:#f5f5f5;border-radius:14px;padding:12px 8px"><div style="font-size:14px;font-weight:900;text-transform:capitalize;padding-top:3px">' + mesTopLbl + '</div><div style="font-size:10px;color:#888;font-weight:700;text-transform:uppercase;letter-spacing:0.5px">mês com mais compras</div></div>' +
     '</div>' +
+    (totalGastoTopo > 0 ? '<div style="text-align:center;background:#111;border-radius:14px;padding:14px 8px;margin-top:8px"><div style="font-size:22px;font-weight:900;color:#fff">' + formatEuro(totalGastoTopo) + '</div><div style="font-size:10px;color:rgba(255,255,255,0.6);font-weight:700;text-transform:uppercase;letter-spacing:0.5px">total gasto em compras online</div></div>' : '') +
     '<div style="margin-top:18px;padding-top:16px;border-top:1px solid rgba(0,0,0,0.06)">' + buildResumoMensalHTML() + '</div>' +
   '</div>';
   document.body.appendChild(modal);
@@ -1145,6 +1189,163 @@ function guardarEditarDevolucao() {
 
 function apagarDevolucao() {
   if (confirm('apagar esta devolução?')) { orders.splice(window._editIdx,1); guardar(); fecharModal('modal-edit-devol'); toast('apagada'); }
+}
+
+// ── VENDAS ────────────────────────────────────────────
+function vendaDeadlineStr(o) {
+  const d = parseData(o.dataLimite);
+  if (!d) return '';
+  const hoje = new Date(); hoje.setHours(0,0,0,0); d.setHours(0,0,0,0);
+  const diff = Math.round((d - hoje) / 86400000);
+  const fmt = d.getDate() + ' ' + MESES_S[d.getMonth()];
+  if (diff < 0) return 'passou ' + Math.abs(diff) + 'd';
+  if (diff === 0) return 'hoje!';
+  if (diff === 1) return 'amanhã';
+  return 'até ' + fmt;
+}
+
+function renderVendas() {
+  const el = document.getElementById('vendas-cards-list');
+  const sub = document.getElementById('vendas-subtitle');
+  if (!el) return;
+  const ativas = orders.filter(o => o.categoria === 'venda' && o.estado !== 'vendida')
+    .sort((a, b) => {
+      const da = parseData(a.dataLimite), db = parseData(b.dataLimite);
+      return (da ? da.getTime() : Infinity) - (db ? db.getTime() : Infinity);
+    });
+  if (sub) sub.textContent = ativas.length + ' em curso';
+  if (!ativas.length) {
+    el.innerHTML = '<div class="empty"><div class="empty-icon">↑</div><p>nenhuma venda em curso.</p></div>';
+    return;
+  }
+  el.innerHTML = ativas.map(o => {
+    const idx = orders.indexOf(o);
+    const cfg = ESTADO_CFG_VENDA[o.estado] || ESTADO_CFG_VENDA['preparar'];
+    const dl = vendaDeadlineStr(o);
+    const localVal = limpar(o.local);
+    const codigoH = limpar(o.codigo) ? '<div class="card-codigo"><span class="card-codigo-label">código de envio</span><span>' + limpar(o.codigo) + '</span></div>' : '';
+    const localH = localVal ? '<div class="card-local">' + localVal + '</div>' : '';
+    const valorH = limpar(o.valor) ? '<div class="card-valor">venda: ' + limpar(o.valor) + '</div>' : '';
+    const compradorH = limpar(o.comprador) ? '<div class="card-loja-nome">comprador: ' + limpar(o.comprador) + '</div>' : '';
+    return '<div class="card ' + cfg.cls + '">' +
+      '<div class="card-top"><div class="card-estado-label">' + cfg.label + '</div>' + (dl ? '<div class="card-deadline">' + dl + '</div>' : '') + '</div>' +
+      '<div class="card-produto">' + (o.produto || '—') + '</div>' +
+      '<div class="card-loja-nome">' + (o.loja || '') + '</div>' +
+      compradorH + localH + valorH + codigoH +
+      '<div class="card-actions">' +
+        '<button class="btn-edit" onclick="abrirAtualizarVenda(' + idx + ')">+ email</button>' +
+        '<button class="btn-edit" onclick="abrirEditarVenda(' + idx + ')">editar ✏</button>' +
+        '<button class="btn-entregue" onclick="marcarVendida(' + idx + ')">vendida ✓</button>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+}
+
+function marcarVendida(i) {
+  orders[i].estado = 'vendida';
+  orders[i].dataEntrega = new Date().toLocaleDateString('pt-PT',{day:'2-digit',month:'short',year:'numeric'});
+  orders[i].dataEntregaISO = new Date().toISOString().split('T')[0];
+  guardar(); toast('venda concluída ✓');
+}
+
+function reativarVenda(i) {
+  orders[i].estado = 'enviada';
+  orders[i].dataEntrega = '';
+  guardar(); goTab('vendas'); toast('venda reativada ✓');
+}
+
+function abrirEditarVenda(idx) {
+  window._editIdx = idx;
+  const o = orders[idx];
+  const modal = document.createElement('div');
+  modal.className = 'modal-bg'; modal.id = 'modal-edit-venda';
+  const sP = o.estado==='preparar'?'selected':'', sE = o.estado==='enviada'?'selected':'', sV = o.estado==='vendida'?'selected':'';
+  modal.innerHTML = '<div class="modal-box">' +
+    '<button class="modal-close" onclick="fecharModal(\'modal-edit-venda\')">✕</button>' +
+    '<h2>editar venda</h2>' +
+    '<div class="modal-sub">' + (o.loja||'') + '</div>' +
+    '<div class="field"><label>plataforma</label><input type="text" id="ev-loja" /></div>' +
+    '<div class="field"><label>produto</label><input type="text" id="ev-produto" /></div>' +
+    '<div class="field"><label>comprador</label><input type="text" id="ev-comprador" /></div>' +
+    '<div class="field"><label>estado</label><select id="ev-estado">' +
+      '<option value="preparar" ' + sP + '>a preparar envio</option>' +
+      '<option value="enviada" ' + sE + '>a caminho do comprador</option>' +
+      '<option value="vendida" ' + sV + '>vendida — dinheiro recebido</option>' +
+    '</select></div>' +
+    '<div class="field"><label>ponto de envio</label><input type="text" id="ev-local" /></div>' +
+    '<div class="field"><label>código de envio</label><input type="text" id="ev-codigo" /></div>' +
+    '<div class="field"><label>valor de venda</label><input type="text" id="ev-valor" /></div>' +
+    '<div class="field"><label>prazo para enviar</label><input type="text" id="ev-datalimite" placeholder="dd/mm/aaaa" /></div>' +
+    '<button class="btn p" onclick="guardarEditarVenda()" style="margin-top:8px">guardar alterações</button>' +
+    '<button class="btn d" onclick="apagarVenda()" style="margin-top:6px">apagar venda</button>' +
+    '</div>';
+  document.body.appendChild(modal);
+  document.getElementById('ev-loja').value = o.loja||'';
+  document.getElementById('ev-produto').value = o.produto||'';
+  document.getElementById('ev-comprador').value = o.comprador||'';
+  document.getElementById('ev-local').value = o.local||'';
+  document.getElementById('ev-codigo').value = o.codigo||'';
+  document.getElementById('ev-valor').value = o.valor||'';
+  document.getElementById('ev-datalimite').value = o.dataLimite||'';
+}
+
+function guardarEditarVenda() {
+  const i = window._editIdx;
+  orders[i].loja = document.getElementById('ev-loja').value;
+  orders[i].produto = document.getElementById('ev-produto').value;
+  orders[i].comprador = document.getElementById('ev-comprador').value;
+  orders[i].estado = document.getElementById('ev-estado').value;
+  orders[i].local = document.getElementById('ev-local').value;
+  orders[i].codigo = document.getElementById('ev-codigo').value;
+  orders[i].valor = document.getElementById('ev-valor').value;
+  orders[i].dataLimite = document.getElementById('ev-datalimite').value;
+  guardar(); fecharModal('modal-edit-venda'); toast('atualizado ✓');
+}
+
+function apagarVenda() {
+  if (confirm('apagar esta venda?')) { orders.splice(window._editIdx,1); guardar(); fecharModal('modal-edit-venda'); toast('apagada'); }
+}
+
+const PROMPT_UPDATE_VENDA = `Analisa este email relacionado com uma venda já em curso (ex: confirmação de entrega do artigo no ponto de envio, atualização de estado, confirmação de pagamento ao vendedor). Responde APENAS com JSON sem markdown:
+{"local":"ponto de envio ou vazio","codigo":"código de envio/rastreio ou vazio","valor":"valor da venda ou vazio","dataLimite":"DD/MM/AAAA ou vazio","estado":"preparar|enviada|vendida|manter"}
+estado: "enviada"=artigo entregue/a caminho do comprador, "vendida"=pagamento confirmado, "manter"=sem info nova de estado
+Email:`;
+
+function abrirAtualizarVenda(idx) {
+  window._updateVendaIdx = idx;
+  const o = orders[idx];
+  const modal = document.createElement('div');
+  modal.className = 'modal-bg'; modal.id = 'modal-update-venda';
+  modal.innerHTML = '<div class="modal-box">' +
+    '<button class="modal-close" onclick="fecharModal(\'modal-update-venda\')">✕</button>' +
+    '<h2>atualizar venda</h2>' +
+    '<div class="modal-sub">' + (o.loja||'') + ' · ' + (o.produto||'') + '</div>' +
+    '<div class="field"><label>cola o novo email</label></div>' +
+    '<textarea id="update-venda-txt" style="width:100%;min-height:100px;border:1.5px solid #e5e5e0;border-radius:12px;padding:12px;font-size:14px;font-family:inherit;margin-bottom:10px" placeholder="email da plataforma, correios, confirmação de pagamento..."></textarea>' +
+    '<div class="loading" id="update-venda-load"><span class="spinner"></span> a analisar...</div>' +
+    '<button class="btn p" onclick="processarUpdateVenda()">extrair com ia ✦</button>' +
+    '<button class="btn" onclick="fecharModal(\'modal-update-venda\')" style="margin-top:8px;border:1.5px solid #e5e5e0">cancelar</button>' +
+    '</div>';
+  document.body.appendChild(modal);
+}
+
+async function processarUpdateVenda() {
+  const txt = document.getElementById('update-venda-txt').value.trim();
+  if (!txt) { alert('cola primeiro o texto do email.'); return; }
+  document.getElementById('update-venda-load').style.display = 'block';
+  try {
+    const p = await chamarAI(PROMPT_UPDATE_VENDA, txt);
+    if (!p) { document.getElementById('update-venda-load').style.display='none'; return; }
+    const i = window._updateVendaIdx;
+    if (limpar(p.local)) orders[i].local = limpar(p.local);
+    if (limpar(p.codigo)) orders[i].codigo = limpar(p.codigo);
+    if (limpar(p.valor)) orders[i].valor = limpar(p.valor);
+    if (limpar(p.dataLimite)) orders[i].dataLimite = limpar(p.dataLimite);
+    if (p.estado && p.estado !== 'manter') orders[i].estado = p.estado;
+    guardar(); fecharModal('modal-update-venda');
+    toast('venda atualizada ✓');
+  } catch(e) { alert('erro. tenta de novo.'); }
+  document.getElementById('update-venda-load').style.display = 'none';
 }
 
 // ── TABS ──────────────────────────────────────────────
@@ -1338,6 +1539,23 @@ const PROMPT_UPDATE = `Analisa este email de transportadora. Responde APENAS com
 estado: "vermelho"=chegou ao ponto, "enviado"=em trânsito, "manter"=sem info nova
 Email:`;
 
+// Converte um valor monetário em texto (ex: "24,99€") para número
+function parseValor(v) {
+  if (!v) return 0;
+  let s = v.toString().replace(/[^\d,.\-]/g, '').trim();
+  if (!s) return 0;
+  if (s.includes(',') && s.includes('.')) {
+    s = s.replace(/\./g, '').replace(',', '.');
+  } else if (s.includes(',')) {
+    s = s.replace(',', '.');
+  }
+  const n = parseFloat(s);
+  return isNaN(n) ? 0 : n;
+}
+function formatEuro(n) {
+  return n.toLocaleString('pt-PT', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + '€';
+}
+
 // Limpa valores placeholder que a IA às vezes devolve literalmente
 function limpar(v) {
   if (!v) return "";
@@ -1361,6 +1579,7 @@ async function processarEmail() {
   const txt = document.getElementById('email-txt').value.trim();
   if (!txt) { alert('cola primeiro o texto do email.'); return; }
   if (addCategoria === 'devolucao') { return processarEmailDevolucao(txt); }
+  if (addCategoria === 'venda') { return processarEmailVenda(txt); }
   document.getElementById('loading').style.display = 'block';
   document.getElementById('form').style.display = 'none';
   try {
@@ -1483,9 +1702,26 @@ function guardarEncomenda() {
     return;
   }
 
+  if (addCategoria === 'venda') {
+    orders.unshift({
+      categoria: 'venda',
+      loja,
+      produto: document.getElementById('f-produto').value,
+      comprador: document.getElementById('f-comprador').value,
+      dataLimite: document.getElementById('f-datalimite').value,
+      local: document.getElementById('f-local').value,
+      codigo: document.getElementById('f-codigo').value,
+      valor: document.getElementById('f-valor').value,
+      estado: document.getElementById('f-estado').value || 'preparar',
+      criado: new Date().toISOString()
+    });
+    guardar(); resetForm(); goTab('vendas'); toast('venda guardada!');
+    return;
+  }
+
   const tipo = document.getElementById('f-tipo').value;
   const localVal = document.getElementById('f-local').value;
-  orders.unshift({ loja, produto: document.getElementById('f-produto').value, data: document.getElementById('f-data').value, dataLimite: document.getElementById('f-datalimite').value, local: localVal, pin: document.getElementById('f-pin').value, codigo: document.getElementById('f-codigo').value, transportadora: document.getElementById('f-transportadora').value, estado: document.getElementById('f-estado').value, tipo, criado: new Date().toISOString() });
+  orders.unshift({ loja, produto: document.getElementById('f-produto').value, data: document.getElementById('f-data').value, dataLimite: document.getElementById('f-datalimite').value, local: localVal, pin: document.getElementById('f-pin').value, codigo: document.getElementById('f-codigo').value, transportadora: document.getElementById('f-transportadora').value, valor: document.getElementById('f-valor').value, estado: document.getElementById('f-estado').value, tipo, criado: new Date().toISOString() });
   guardar(); resetForm(); goTab('ativas'); toast('encomenda guardada!');
 }
 
@@ -1496,7 +1732,7 @@ function resetForm() {
 }
 
 function notaLoja() {
-  if (addCategoria === 'devolucao') return;
+  if (addCategoria !== 'encomenda') return;
   const info = LOJAS[(document.getElementById('f-loja')?.value||'').toLowerCase().trim()];
   const n = document.getElementById('f-nota'); if (!n) return;
   if (info) {
@@ -1526,28 +1762,51 @@ function setAddMode(modo) {
   addCategoria = modo;
   document.getElementById('am-encomenda').classList.toggle('on', modo === 'encomenda');
   document.getElementById('am-devolucao').classList.toggle('on', modo === 'devolucao');
+  document.getElementById('am-venda').classList.toggle('on', modo === 'venda');
   const hint = document.getElementById('add-hint-txt');
   const txtArea = document.getElementById('email-txt');
   const fieldTipo = document.getElementById('field-tipo-entrega');
   const fieldValor = document.getElementById('field-valor');
+  const fieldComprador = document.getElementById('field-comprador');
   const labelDL = document.getElementById('label-datalimite');
   const labelCodigo = document.getElementById('label-codigo');
+  const labelValor = document.getElementById('label-valor');
+  const labelLoja = document.getElementById('label-loja');
+  const pf = document.getElementById('field-pin');
+  const se = document.getElementById('f-estado');
 
   if (modo === 'devolucao') {
     if (hint) hint.textContent = 'cola o email de confirmação da devolução, etiqueta de devolução, ou confirmação de reembolso. a IA identifica e trata automaticamente.';
     if (txtArea) txtArea.placeholder = 'cola aqui o texto do email de devolução...';
     if (fieldTipo) fieldTipo.style.display = 'none';
     if (fieldValor) fieldValor.style.display = 'block';
+    if (fieldComprador) fieldComprador.style.display = 'none';
+    if (labelValor) labelValor.textContent = 'valor a reembolsar';
+    if (labelLoja) labelLoja.textContent = 'loja';
     if (labelDL) labelDL.textContent = 'prazo para devolver';
     if (labelCodigo) labelCodigo.textContent = 'código de devolução (RMA)';
-    const pf = document.getElementById('field-pin'); if (pf) pf.style.display = 'none';
-    const se = document.getElementById('f-estado');
+    if (pf) pf.style.display = 'none';
     if (se) se.innerHTML = '<option value="preparar">a preparar devolução</option><option value="enviada">enviada para a loja</option><option value="reembolsada">reembolsada</option>';
+  } else if (modo === 'venda') {
+    if (hint) hint.textContent = 'cola o email de confirmação de venda (ex: Vinted) ou de envio. a IA identifica e trata automaticamente.';
+    if (txtArea) txtArea.placeholder = 'cola aqui o texto do email de venda...';
+    if (fieldTipo) fieldTipo.style.display = 'none';
+    if (fieldValor) fieldValor.style.display = 'block';
+    if (fieldComprador) fieldComprador.style.display = 'block';
+    if (labelValor) labelValor.textContent = 'valor de venda';
+    if (labelLoja) labelLoja.textContent = 'plataforma (ex: Vinted)';
+    if (labelDL) labelDL.textContent = 'prazo para enviar';
+    if (labelCodigo) labelCodigo.textContent = 'código de envio';
+    if (pf) pf.style.display = 'none';
+    if (se) se.innerHTML = '<option value="preparar">a preparar envio</option><option value="enviada">a caminho do comprador</option><option value="vendida">vendida — dinheiro recebido</option>';
   } else {
     if (hint) hint.textContent = 'cola qualquer email de encomenda — confirmação de loja ou transportadora. a IA identifica e trata automaticamente.';
     if (txtArea) txtArea.placeholder = 'cola aqui o texto do email...';
     if (fieldTipo) fieldTipo.style.display = 'block';
-    if (fieldValor) fieldValor.style.display = 'none';
+    if (fieldValor) fieldValor.style.display = 'block';
+    if (fieldComprador) fieldComprador.style.display = 'none';
+    if (labelValor) labelValor.textContent = 'valor da compra';
+    if (labelLoja) labelLoja.textContent = 'loja';
     if (labelCodigo) labelCodigo.textContent = 'código da encomenda';
     tipoChange();
   }
@@ -1564,6 +1823,40 @@ function buildPromptDevolucao() {
     '- estado="reembolsada": a loja confirma que o dinheiro foi devolvido/creditado.\n\n' +
     'REGRAS PRAZO: converte sempre para DD/MM/AAAA a data limite para enviar a devolução, se indicada.\n\n' +
     'Email:';
+}
+
+function buildPromptVenda() {
+  const hoje = new Date();
+  return 'Analisa este email relacionado com a VENDA de um artigo em segunda mão (ex: Vinted, confirmação de venda, etiqueta/código de envio, ou confirmação de pagamento ao vendedor). Hoje é ' + hoje.getDate() + '/' + (hoje.getMonth()+1) + '/' + hoje.getFullYear() + '. Responde APENAS com JSON sem markdown:\n' +
+    '{"loja":"nome da plataforma, ex: Vinted, ou vazio","produto":"máx 4 palavras","comprador":"nome/utilizador do comprador ou vazio","prazo":"DD/MM/AAAA ou vazio","codigo":"código de envio/rastreio ou vazio","local":"ponto de envio ou vazio","valor":"valor da venda ex: 24,99€ ou vazio","estado":"preparar|enviada|vendida"}\n\n' +
+    'REGRAS ESTADO:\n' +
+    '- estado="preparar": a venda foi confirmada/etiqueta gerada, ainda não foi enviado o artigo.\n' +
+    '- estado="enviada": o artigo já foi entregue no ponto de envio/correios e está a caminho do comprador.\n' +
+    '- estado="vendida": o pagamento/dinheiro já foi libertado/recebido pelo vendedor.\n\n' +
+    'REGRAS PRAZO: converte sempre para DD/MM/AAAA o prazo limite para enviar o artigo, se indicado.\n\n' +
+    'Email:';
+}
+
+async function processarEmailVenda(txt) {
+  document.getElementById('loading').style.display = 'block';
+  document.getElementById('form').style.display = 'none';
+  try {
+    const p = await chamarAI(buildPromptVenda(), txt);
+    if (!p) { document.getElementById('loading').style.display='none'; return; }
+    document.getElementById('f-loja').value = limpar(p.loja);
+    document.getElementById('f-produto').value = limpar(p.produto);
+    document.getElementById('f-comprador').value = limpar(p.comprador);
+    document.getElementById('f-datalimite').value = limpar(p.prazo);
+    document.getElementById('f-local').value = limpar(p.local);
+    document.getElementById('f-codigo').value = limpar(p.codigo);
+    document.getElementById('f-valor').value = limpar(p.valor);
+    document.getElementById('f-estado').value = limpar(p.estado) || 'preparar';
+    document.getElementById('form').style.display = 'block';
+  } catch(e) {
+    alert('erro ao analisar. preenche manualmente.');
+    document.getElementById('form').style.display = 'block';
+  }
+  document.getElementById('loading').style.display = 'none';
 }
 
 // ── ASSOCIAR EMAIL ────────────────────────────────────
@@ -1626,6 +1919,7 @@ function abrirEditar(idx) {
     '<div class="field"><label>código da encomenda</label><input type="text" id="e-codigo" /></div>' +
     '<div class="field"><label id="e-label-dl">' + (isCasa?'data prevista de entrega':'data limite de levantamento') + '</label><input type="text" id="e-datalimite" placeholder="dd/mm/aaaa" /></div>' +
     '<div class="field"><label>data da encomenda</label><input type="text" id="e-data" placeholder="dd/mm/aaaa" /></div>' +
+    '<div class="field"><label>valor da compra</label><input type="text" id="e-valor" placeholder="ex: 24,99€" /></div>' +
     '<button class="btn p" onclick="guardarEditar()" style="margin-top:8px">guardar alterações</button>' +
     '<button class="btn d" onclick="apagarEncomenda()" style="margin-top:6px">apagar encomenda</button>' +
     '</div>';
@@ -1638,6 +1932,7 @@ function abrirEditar(idx) {
   document.getElementById('e-transportadora').value = o.transportadora||'';
   document.getElementById('e-datalimite').value = o.dataLimite||'';
   document.getElementById('e-data').value = o.data||'';
+  document.getElementById('e-valor').value = o.valor||'';
 }
 
 function editTipoChange() {
@@ -1664,6 +1959,7 @@ function guardarEditar() {
   orders[i].transportadora = document.getElementById('e-transportadora').value;
   orders[i].dataLimite = document.getElementById('e-datalimite').value;
   orders[i].data = document.getElementById('e-data').value;
+  orders[i].valor = document.getElementById('e-valor').value;
   guardar(); fecharModal('modal-edit'); toast('atualizado ✓');
 }
 
@@ -2110,6 +2406,7 @@ if (isPWA) {
 renderAtivas();
 renderHistorico();
 renderDevolucoes();
+renderVendas();
 renderMoradas();
 atualizarSub();
 backupAutomatico();
