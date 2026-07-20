@@ -1,4 +1,4 @@
-const CACHE = 'chegou-v7';
+const CACHE = 'chegou-v8';
 const FILES = ['./index.html', './manifest.json'];
 
 self.addEventListener('install', e => {
@@ -44,7 +44,7 @@ function verificarENotificar(orders) {
   hoje.setHours(0, 0, 0, 0);
   const hojeStr = hoje.toISOString().split('T')[0];
 
-  orders.filter(o => o.categoria !== 'devolucao' && o.estado !== 'entregue').forEach(o => {
+  orders.filter(o => o.categoria !== 'devolucao' && o.categoria !== 'venda' && o.estado !== 'entregue').forEach(o => {
     const isCasa = o.tipo === 'casa';
     // Usar sempre dataLimite — nunca usar o.data (data de criação da encomenda)
     const ds = o.dataLimite;

@@ -774,8 +774,8 @@ function guardar() {
 }
 
 function atualizarSub() {
-  const n = orders.filter(o => o.estado !== 'entregue' && o.categoria !== 'devolucao').length;
-  const lev = orders.filter(o => o.estado === 'vermelho' && o.categoria !== 'devolucao').length;
+  const n = orders.filter(o => o.estado !== 'entregue' && o.categoria !== 'devolucao' && o.categoria !== 'venda').length;
+  const lev = orders.filter(o => o.estado === 'vermelho' && o.categoria !== 'devolucao' && o.categoria !== 'venda').length;
   let t = n + ' ativa' + (n !== 1 ? 's' : '');
   if (lev > 0) t += ' · ' + lev + ' para levantar';
   document.getElementById('subtitle').textContent = t;
@@ -859,7 +859,7 @@ function estadoEfetivo(o) {
 
 function renderAtivas() {
   const el = document.getElementById('cards-list');
-  const ativas = orders.filter(o => o.estado !== 'entregue' && o.categoria !== 'devolucao')
+  const ativas = orders.filter(o => o.estado !== 'entregue' && o.categoria !== 'devolucao' && o.categoria !== 'venda')
     .sort((a, b) => ordemPrioridade(a) - ordemPrioridade(b));
 
   if (!ativas.length) {
@@ -2086,7 +2086,7 @@ function verificarNotifs() {
   // Barra dentro da app (sempre)
   const hoje = new Date(); hoje.setHours(0,0,0,0);
   const alertas = [];
-  orders.filter(o => o.categoria !== 'devolucao' && o.estado !== 'entregue' && o.estado !== 'preparacao').forEach(o => {
+  orders.filter(o => o.categoria !== 'devolucao' && o.categoria !== 'venda' && o.estado !== 'entregue' && o.estado !== 'preparacao').forEach(o => {
     const isCasa = o.tipo === 'casa';
     const ds = o.dataLimite;
     if (!ds) return;
